@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import './App.css'
-import Menu from './components/Menu/Menu'
+import { Header } from './components/header'
 
 function App() {
   return (
     <>
-      <Menu />
+      <Header />
       <div style={{ padding: '20px' }}>
       </div>
     </>
