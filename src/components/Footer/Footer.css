@@ -1,5 +1,5 @@
 .footer {
-  background-color: #004a99;
+  background: radial-gradient(circle at top left, #1f2933 0, #111827 40%, #020617 100%);
   color: #ffffff;
   padding: 40px 0 24px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

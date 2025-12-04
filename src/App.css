@@ -4,7 +4,7 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  background-color: #f5f7fb;
+  background: radial-gradient(circle at top left, #ffe2c2 0, #fff7f0 40%, #ffffff 100%);
   display: block;
 }
 
@@ -20,7 +20,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7fb;
+  background: transparent;
 }
 
 .app-content {

@@ -1,7 +1,7 @@
 .menu-container {
     width: 100%;
-    border-bottom: 2px solid #009cd7;
-    background-color: #fff;
+    border-bottom: 2px solid #fb923c;
+    background: linear-gradient(90deg, #ffedd5, #fff7ed);
     font-family: Arial, sans-serif;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .menu-home-icon {
-    color: #009cd7;
+    color: #ea580c;
     margin-right: 15px;
     display: flex;
     align-items: center;
@@ -47,5 +47,5 @@
 }
 
 .menu-link:hover {
-    color: #009cd7;
+    color: #ea580c;
 }
