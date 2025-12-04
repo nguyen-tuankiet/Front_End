@@ -4,12 +4,9 @@ import './HealthPage.css';
 const HEALTH_URL = 'https://thanhnien.vn/suc-khoe.htm';
 
 // Proxy CORS chỉ dùng cho môi trường học tập/dev.
-// Trong production nên tự dựng backend/proxy của bạn, có thỏa thuận bản quyền rõ ràng.
 const DEV_PROXY = 'https://api.allorigins.win/raw?url=';
 
 // Lưu ý: Việc sử dụng nội dung từ Báo Thanh Niên cần tuân thủ bản quyền.
-// Đoạn fetch dưới đây chỉ nên dùng cho mục đích học tập/phát triển nội bộ.
-
 const normalizeUrl = (href) => {
   if (!href) return HEALTH_URL;
   try {
@@ -22,7 +19,6 @@ const normalizeUrl = (href) => {
 const extractArticles = (doc) => {
   const candidates = [];
 
-  // Thử lấy theo các mẫu class thường gặp trên trang báo
   const possibleSelectors = [
     'article.story',
     '.story', // generic
@@ -37,7 +33,6 @@ const extractArticles = (doc) => {
   });
 
   if (candidates.length === 0) {
-    // fallback: mọi thẻ a trong khu vực chính
     const main = doc.querySelector('main') || doc.body;
     const links = Array.from(main.querySelectorAll('a'))
       .filter((a) => a.textContent && a.textContent.trim().length > 30);
@@ -114,8 +109,7 @@ const HealthPage = () => {
       setLoading(true);
       setError('');
       try {
-        // Thử dùng proxy để tránh CORS trong môi trường dev.
-        // Nếu proxy lỗi, có thể đổi sang backend/proxy nội bộ của bạn.
+        // proxy để tránh CORS trong môi trường dev.
         const targetUrl = encodeURIComponent(HEALTH_URL);
         const res = await fetch(`${DEV_PROXY}${targetUrl}`, {
           method: 'GET',
