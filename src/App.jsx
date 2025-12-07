@@ -1,14 +1,16 @@
 import { useState } from 'react'
+import { Routes, Route, Outlet } from "react-router-dom";
 import './App.css'
 import { Header } from './components/header'
 import Footer from './components/Footer/Footer';
 import HealthPage from './components/Health/HealthPage';
+
 function App() {
   return (
     <div className="app-root">
       <Header />
         <div className="app-content" style={{padding: '20px'}}>
-            <HealthPage/>
+            <Outlet/>
         </div>
         <Footer />
     </div>
