@@ -4,7 +4,6 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  background: radial-gradient(circle at top left, #ffe2c2 0, #fff7f0 40%, #ffffff 100%);
   display: block;
 }
 
@@ -33,9 +32,11 @@ body {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -44,6 +45,7 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
