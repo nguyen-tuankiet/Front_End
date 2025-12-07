@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, Menu, X, Bell, User, ChevronDown, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -224,6 +224,7 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedMobile, setExpandedMobile] = useState(null);
+  const [isCompact, setIsCompact] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = () => {
@@ -240,79 +241,108 @@ export function Header() {
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 120) {
+        setIsCompact(true);
+      } else {
+        setIsCompact(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-      {/* Top bar */}
-      <div className="border-b border-gray-100">
-        <div className="container mx-auto px-4 flex items-center justify-between py-2">
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <span>Thứ Hai, 01/12/2025</span>
-            <span className="hidden sm:inline">|</span>
-            <span className="hidden sm:inline">TP. Hồ Chí Minh: 29°C</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
-              <Sun className="h-4 w-4 text-gray-600" />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
-              <Bell className="h-4 w-4 text-gray-600" />
-            </button>
-            <Link to="/dang-nhap">
-              <button className="hidden sm:flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md transition-colors">
-                <User className="h-4 w-4 text-gray-600" />
-                <span className="text-sm text-gray-700">Đăng nhập</span>
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Main header */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex flex-col items-start">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                <span className="text-orange-600">TIN</span>
-                <span className="text-gray-900"> TỨC</span>
-              </h1>
-              <span className="text-[10px] text-gray-500 tracking-widest uppercase">
-                Báo điện tử Việt Nam
-              </span>
+    <header
+      className={cn(
+        "sticky top-0 z-50 bg-white border-b border-gray-200 transition-all duration-300",
+        isCompact && "shadow-sm bg-white/95 backdrop-blur"
+      )}
+    >
+      {/* Top bar + main header (thu gọn khi scroll) */}
+      <div
+        className={cn(
+          "transition-all duration-300 overflow-hidden",
+          isCompact ? "max-h-0 opacity-0 pointer-events-none" : "max-h-[200px] opacity-100"
+        )}
+      >
+        {/* Top bar */}
+        <div className="border-b border-gray-100">
+          <div className="container mx-auto px-4 flex items-center justify-between py-2">
+            <div className="flex items-center gap-4 text-sm text-gray-600">
+              <span>Thứ Hai, 01/12/2025</span>
+              <span className="hidden sm:inline">|</span>
+              <span className="hidden sm:inline">TP. Hồ Chí Minh: 29°C</span>
             </div>
-          </Link>
+            <div className="flex items-center gap-2">
+              <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
+                <Sun className="h-4 w-4 text-gray-600" />
+              </button>
+              <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
+                <Bell className="h-4 w-4 text-gray-600" />
+              </button>
+              <Link to="/dang-nhap">
+                <button className="hidden sm:flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md transition-colors">
+                  <User className="h-4 w-4 text-gray-600" />
+                  <span className="text-sm text-gray-700">Đăng nhập</span>
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
 
-          {/* Search */}
-          <div className="flex items-center gap-2">
-            {isSearchOpen && (
-              <Input
-                placeholder="Tìm kiếm..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className="w-48 md:w-64 animate-fade-in"
-              />
-            )}
-            <button
-              className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-              onClick={() => {
-                if (isSearchOpen && searchQuery.trim()) {
-                  handleSearch();
-                } else {
-                  setIsSearchOpen(!isSearchOpen);
-                }
-              }}
-            >
-              <Search className="h-5 w-5 text-gray-600" />
-            </button>
+        {/* Main header */}
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2">
+              <div className="flex flex-col items-start">
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+                  <span className="text-orange-600">TIN</span>
+                  <span className="text-gray-900"> TỨC</span>
+                </h1>
+                <span className="text-[10px] text-gray-500 tracking-widest uppercase">
+                  Báo điện tử Việt Nam
+                </span>
+              </div>
+            </Link>
+
+            {/* Search */}
+            <div className="flex items-center gap-2">
+              {isSearchOpen && (
+                <Input
+                  placeholder="Tìm kiếm..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="w-48 md:w-64 animate-fade-in"
+                />
+              )}
+              <button
+                className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+                onClick={() => {
+                  if (isSearchOpen && searchQuery.trim()) {
+                    handleSearch();
+                  } else {
+                    setIsSearchOpen(!isSearchOpen);
+                  }
+                }}
+              >
+                <Search className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-
-      {/* Navigation */}
-      <nav className="border-t border-gray-100">
+      {/* Navigation (luôn hiển thị) */}
+      <nav className={cn("border-t border-gray-100 bg-white", isCompact && "border-t-0")}>
         <div className="container mx-auto px-4">
           {/* Desktop nav */}
           <ul className="hidden lg:flex items-center gap-1 py-0 flex-wrap justify-center">
