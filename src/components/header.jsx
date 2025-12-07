@@ -1,231 +1,46 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Menu, X, Bell, User, ChevronDown, Sun } from "lucide-react";
+import { Search, Menu, X, ChevronDown, Sun, Moon, Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { categories } from "@/data/categories";
 
-import placeholderImg from "@/assets/react.svg";
-
+// Build categoriesWithSubs from RSS data
 const categoriesWithSubs = [
-  { name: "Trang chủ", href: "/", subs: [], featured: null },
-  {
-    name: "Chính trị",
-    href: "/danh-muc/chinh-tri",
-    subs: [
-      { name: "Đảng - Nhà nước", href: "/danh-muc/chinh-tri/dang-nha-nuoc" },
-      { name: "Quốc hội", href: "/danh-muc/chinh-tri/quoc-hoi" },
-      { name: "Chính sách", href: "/danh-muc/chinh-tri/chinh-sach" },
-      { name: "Đối ngoại", href: "/danh-muc/chinh-tri/doi-ngoai" },
-    ],
-    featured: {
-      title: "Thủ tướng chỉ đạo đẩy mạnh cải cách hành chính",
-      image: placeholderImg,
-      category: "Chính trị",
-    },
-  },
-  {
-    name: "Thời sự",
-    href: "/danh-muc/thoi-su",
-    subs: [
-      { name: "Phóng sự", href: "/danh-muc/thoi-su/phong-su" },
-      { name: "Điều tra", href: "/danh-muc/thoi-su/dieu-tra" },
-      { name: "Góc nhìn", href: "/danh-muc/thoi-su/goc-nhin" },
-      { name: "An ninh trật tự", href: "/danh-muc/thoi-su/an-ninh-trat-tu" },
-    ],
-    featured: {
-      title: "TP.HCM triển khai kế hoạch phát triển kinh tế 2025",
-      image: placeholderImg,
-      category: "Thời sự",
-    },
-  },
-  {
-    name: "Thế giới",
-    href: "/danh-muc/the-gioi",
-    subs: [
-      { name: "Châu Á", href: "/danh-muc/the-gioi/chau-a" },
-      { name: "Châu Âu", href: "/danh-muc/the-gioi/chau-au" },
-      { name: "Châu Mỹ", href: "/danh-muc/the-gioi/chau-my" },
-      { name: "Quân sự", href: "/danh-muc/the-gioi/quan-su" },
-      { name: "Hồ sơ", href: "/danh-muc/the-gioi/ho-so" },
-    ],
-    featured: {
-      title: "Hội nghị thượng đỉnh G20 thảo luận vấn đề khí hậu",
-      image: placeholderImg,
-      category: "Thế giới",
-    },
-  },
-  {
-    name: "Kinh tế",
-    href: "/danh-muc/kinh-te",
-    subs: [
-      { name: "Tài chính", href: "/danh-muc/kinh-te/tai-chinh" },
-      { name: "Chứng khoán", href: "/danh-muc/kinh-te/chung-khoan" },
-      { name: "Bất động sản", href: "/danh-muc/kinh-te/bat-dong-san" },
-      { name: "Doanh nghiệp", href: "/danh-muc/kinh-te/doanh-nghiep" },
-      { name: "Khởi nghiệp", href: "/danh-muc/kinh-te/khoi-nghiep" },
-    ],
-    featured: {
-      title: "Thị trường chứng khoán tăng điểm mạnh nhất năm",
-      image: placeholderImg,
-      category: "Kinh tế",
-    },
-  },
-  {
-    name: "Đời sống",
-    href: "/danh-muc/doi-song",
-    subs: [
-      { name: "Gia đình", href: "/danh-muc/doi-song/gia-dinh" },
-      { name: "Tình yêu", href: "/danh-muc/doi-song/tinh-yeu" },
-      { name: "Làm đẹp", href: "/danh-muc/doi-song/lam-dep" },
-      { name: "Ẩm thực", href: "/danh-muc/doi-song/am-thuc" },
-    ],
-    featured: null,
-  },
-  {
-    name: "Sức khỏe",
-    href: "/danh-muc/suc-khoe",
-    subs: [
-      { name: "Y tế", href: "/danh-muc/suc-khoe/y-te" },
-      { name: "Dinh dưỡng", href: "/danh-muc/suc-khoe/dinh-duong" },
-      { name: "Làm đẹp", href: "/danh-muc/suc-khoe/lam-dep" },
-      { name: "Giới tính", href: "/danh-muc/suc-khoe/gioi-tinh" },
-    ],
-    featured: null,
-  },
-  {
-    name: "Giới trẻ",
-    href: "/danh-muc/gioi-tre",
-    subs: [
-      { name: "Sống trẻ", href: "/danh-muc/gioi-tre/song-tre" },
-      { name: "Học đường", href: "/danh-muc/gioi-tre/hoc-duong" },
-      { name: "Tình cảm", href: "/danh-muc/gioi-tre/tinh-cam" },
-      { name: "Nghề nghiệp", href: "/danh-muc/gioi-tre/nghe-nghiep" },
-    ],
-    featured: null,
-  },
-  {
-    name: "Giáo dục",
-    href: "/danh-muc/giao-duc",
-    subs: [
-      { name: "Tuyển sinh", href: "/danh-muc/giao-duc/tuyen-sinh" },
-      { name: "Du học", href: "/danh-muc/giao-duc/du-hoc" },
-      { name: "Học bổng", href: "/danh-muc/giao-duc/hoc-bong" },
-      { name: "Tin tức", href: "/danh-muc/giao-duc/tin-tuc" },
-    ],
-    featured: null,
-  },
-  {
-    name: "Du lịch",
-    href: "/danh-muc/du-lich",
-    subs: [
-      { name: "Điểm đến", href: "/danh-muc/du-lich/diem-den" },
-      { name: "Ẩm thực", href: "/danh-muc/du-lich/am-thuc" },
-      { name: "Khách sạn", href: "/danh-muc/du-lich/khach-san" },
-      { name: "Kinh nghiệm", href: "/danh-muc/du-lich/kinh-nghiem" },
-    ],
-    featured: {
-      title: "Top 10 điểm đến hot nhất mùa đông 2025",
-      image: placeholderImg,
-      category: "Du lịch",
-    },
-  },
-  {
-    name: "Văn hóa",
-    href: "/danh-muc/van-hoa",
-    subs: [
-      { name: "Nghệ thuật", href: "/danh-muc/van-hoa/nghe-thuat" },
-      { name: "Sách", href: "/danh-muc/van-hoa/sach" },
-      { name: "Di sản", href: "/danh-muc/van-hoa/di-san" },
-      { name: "Lễ hội", href: "/danh-muc/van-hoa/le-hoi" },
-    ],
-    featured: null,
-  },
-  {
-    name: "Giải trí",
-    href: "/danh-muc/giai-tri",
-    subs: [
-      { name: "Sao Việt", href: "/danh-muc/giai-tri/sao-viet" },
-      { name: "Sao Quốc tế", href: "/danh-muc/giai-tri/sao-quoc-te" },
-      { name: "Phim ảnh", href: "/danh-muc/giai-tri/phim-anh" },
-      { name: "Âm nhạc", href: "/danh-muc/giai-tri/am-nhac" },
-      { name: "Thời trang", href: "/danh-muc/giai-tri/thoi-trang" },
-    ],
-    featured: null,
-  },
-  {
-    name: "Thể thao",
-    href: "/danh-muc/the-thao",
-    subs: [
-      { name: "Bóng đá Việt Nam", href: "/danh-muc/the-thao/bong-da-viet-nam" },
-      { name: "Bóng đá Quốc tế", href: "/danh-muc/the-thao/bong-da-quoc-te" },
-      { name: "Tennis", href: "/danh-muc/the-thao/tennis" },
-      { name: "Võ thuật", href: "/danh-muc/the-thao/vo-thuat" },
-      { name: "Esports", href: "/danh-muc/the-thao/esports" },
-    ],
-    featured: {
-      title: "Đội tuyển Việt Nam giành chiến thắng ấn tượng",
-      image: placeholderImg,
-      category: "Thể thao",
-    },
-  },
-  {
-    name: "Công nghệ",
-    href: "/danh-muc/cong-nghe",
-    subs: [
-      { name: "Sản phẩm", href: "/danh-muc/cong-nghe/san-pham" },
-      { name: "Di động", href: "/danh-muc/cong-nghe/di-dong" },
-      { name: "Máy tính", href: "/danh-muc/cong-nghe/may-tinh" },
-      { name: "Internet", href: "/danh-muc/cong-nghe/internet" },
-      { name: "Game", href: "/danh-muc/cong-nghe/game" },
-    ],
-    featured: {
-      title: "Apple ra mắt iPhone 17 với công nghệ AI đột phá",
-      image: placeholderImg,
-      category: "Công nghệ",
-    },
-  },
-  {
-    name: "Xe",
-    href: "/danh-muc/xe",
-    subs: [
-      { name: "Ô tô", href: "/danh-muc/xe/o-to" },
-      { name: "Xe máy", href: "/danh-muc/xe/xe-may" },
-      { name: "Thị trường", href: "/danh-muc/xe/thi-truong" },
-      { name: "Đánh giá", href: "/danh-muc/xe/danh-gia" },
-    ],
-    featured: null,
-  },
-  { name: "Video", href: "/danh-muc/video", subs: [], featured: null },
-  {
-    name: "Tiêu dùng",
-    href: "/danh-muc/tieu-dung",
-    subs: [
-      { name: "Khuyến mãi", href: "/danh-muc/tieu-dung/khuyen-mai" },
-      { name: "Đánh giá", href: "/danh-muc/tieu-dung/danh-gia" },
-      { name: "Mua sắm", href: "/danh-muc/tieu-dung/mua-sam" },
-    ],
-    featured: null,
-  },
-  {
-    name: "Thời trang",
-    href: "/danh-muc/thoi-trang-tre",
-    subs: [
-      { name: "Xu hướng", href: "/danh-muc/thoi-trang-tre/xu-huong" },
-      { name: "Làm đẹp", href: "/danh-muc/thoi-trang-tre/lam-dep" },
-      { name: "Street style", href: "/danh-muc/thoi-trang-tre/street-style" },
-    ],
-    featured: null,
-  },
+  { name: "Trang chủ", href: "/", subs: [] },
+  ...categories.map(cat => ({
+    name: cat.name,
+    href: `/danh-muc/${cat.slug}`,
+    subs: cat.subs ? cat.subs.map(sub => ({
+      name: sub.name,
+      href: `/danh-muc/${cat.slug}/${sub.slug}`,
+    })) : [],
+  })),
 ];
+
+// Split categories for two-row nav
+const navRow1 = categoriesWithSubs.slice(0, 13);
+const navRow2 = categoriesWithSubs.slice(13);
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedMobile, setExpandedMobile] = useState(null);
-  const [isCompact, setIsCompact] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   const navigate = useNavigate();
+
+  // Scroll detection for collapsing header
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsCollapsed(window.scrollY > 80);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -241,137 +56,149 @@ export function Header() {
     }
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 120) {
-        setIsCompact(true);
-      } else {
-        setIsCompact(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 bg-white border-b border-gray-200 transition-all duration-300",
-        isCompact && "shadow-sm bg-white/95 backdrop-blur"
-      )}
-    >
-      {/* Top bar + main header (thu gọn khi scroll) */}
-      <div
-        className={cn(
-          "transition-all duration-300 overflow-hidden",
-          isCompact ? "max-h-0 opacity-0 pointer-events-none" : "max-h-[200px] opacity-100"
-        )}
-      >
-        {/* Top bar */}
-        <div className="border-b border-gray-100">
-          <div className="container mx-auto px-4 flex items-center justify-between py-2">
-            <div className="flex items-center gap-4 text-sm text-gray-600">
-              <span>Thứ Hai, 01/12/2025</span>
-              <span className="hidden sm:inline">|</span>
-              <span className="hidden sm:inline">TP. Hồ Chí Minh: 29°C</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
-                <Sun className="h-4 w-4 text-gray-600" />
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-md transition-colors">
-                <Bell className="h-4 w-4 text-gray-600" />
-              </button>
-              <Link to="/dang-nhap">
-                <button className="hidden sm:flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-md transition-colors">
-                  <User className="h-4 w-4 text-gray-600" />
-                  <span className="text-sm text-gray-700">Đăng nhập</span>
-                </button>
-              </Link>
-            </div>
+    <header className={cn(
+      "bg-white font-sans border-b border-gray-100 sticky top-0 z-50 transition-all duration-300",
+      isCollapsed && "shadow-md"
+    )}>
+      {/* Row 1: Top Utility Bar - Hidden when collapsed */}
+      <div className={cn(
+        "border-b border-gray-100 overflow-hidden transition-all duration-300",
+        isCollapsed ? "max-h-0 opacity-0" : "max-h-12 opacity-100"
+      )}>
+        <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span>Thứ Hai, 01/12/2025</span>
+            <span className="text-gray-300">|</span>
+            <span>TP. Hồ Chí Minh: 29°C</span>
           </div>
-        </div>
-
-        {/* Main header */}
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex flex-col items-start">
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                  <span className="text-orange-600">TIN</span>
-                  <span className="text-gray-900"> TỨC</span>
-                </h1>
-                <span className="text-[10px] text-gray-500 tracking-widest uppercase">
-                  Báo điện tử Việt Nam
-                </span>
-              </div>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <button
+              onClick={toggleDarkMode}
+              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </button>
+            <button className="p-1.5 hover:bg-gray-100 rounded-full transition-colors">
+              <Bell className="h-4 w-4" />
+            </button>
+            <Link to="/dang-nhap" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+              <User className="h-4 w-4" />
+              <span>Đăng nhập</span>
             </Link>
-
-            {/* Search */}
-            <div className="flex items-center gap-2">
-              {isSearchOpen && (
-                <Input
-                  placeholder="Tìm kiếm..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="w-48 md:w-64 animate-fade-in"
-                />
-              )}
-              <button
-                className="p-2 hover:bg-gray-100 rounded-md transition-colors"
-                onClick={() => {
-                  if (isSearchOpen && searchQuery.trim()) {
-                    handleSearch();
-                  } else {
-                    setIsSearchOpen(!isSearchOpen);
-                  }
-                }}
-              >
-                <Search className="h-5 w-5 text-gray-600" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation (luôn hiển thị) */}
-      <nav className={cn("border-t border-gray-100 bg-white", isCompact && "border-t-0")}>
+      {/* Row 2: Logo & Search */}
+      <div className="border-b border-gray-100">
+        <div className={cn(
+          "container mx-auto px-4 flex items-center justify-between transition-all duration-300",
+          isCollapsed ? "py-1.5" : "py-3"
+        )}>
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 -ml-2 text-gray-700"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+
+          {/* Logo */}
+          <Link to="/" className="flex flex-col items-start group">
+            <h1 className={cn(
+              "font-extrabold tracking-tight leading-none transition-all duration-300",
+              isCollapsed ? "text-xl md:text-2xl" : "text-2xl md:text-3xl"
+            )}>
+              <span className="text-primary">TIN</span>
+              <span className="text-secondary"> TỨC</span>
+            </h1>
+            <span className={cn(
+              "text-gray-400 tracking-[0.15em] uppercase transition-all duration-300",
+              isCollapsed ? "text-[7px]" : "text-[9px]"
+            )}>
+              Báo điện tử Việt Nam
+            </span>
+          </Link>
+
+          {/* Right side icons (visible when collapsed) + Search */}
+          <div className="flex items-center gap-2">
+            {/* Show utility icons when collapsed */}
+            {isCollapsed && (
+              <div className="hidden sm:flex items-center gap-2 mr-2">
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+                >
+                  {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                </button>
+                <button className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
+                  <Bell className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
+            {isSearchOpen && (
+              <div className="flex items-center mr-2 animate-in fade-in slide-in-from-right-3 duration-200">
+                <Input
+                  className="w-48 md:w-64 h-8 text-sm rounded border-gray-200 focus-visible:ring-primary"
+                  placeholder="Tìm kiếm..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  autoFocus
+                />
+              </div>
+            )}
+            <button
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600"
+              onClick={() => {
+                if (isSearchOpen && searchQuery.trim()) {
+                  handleSearch();
+                } else {
+                  setIsSearchOpen(!isSearchOpen);
+                }
+              }}
+            >
+              <Search className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Row 3: Navigation (Desktop - 2 rows) */}
+      <nav className="hidden lg:block border-b border-gray-100">
         <div className="container mx-auto px-4">
-          {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-1 py-0 flex-wrap justify-center">
-            {categoriesWithSubs.map((cat, index) => (
-              <li
-                key={cat.name}
-                className="relative group"
-              >
+          {/* Nav Row 1 */}
+          <ul className="flex items-center justify-center gap-0 border-b border-gray-50">
+            {navRow1.map((cat, index) => (
+              <li key={cat.name} className="relative group">
                 <Link
                   to={cat.href}
                   className={cn(
-                    "flex items-center gap-1 px-3 py-3 text-sm hover:text-orange-600 transition-colors",
-                    index === 0 ? "text-orange-600 font-medium" : "text-gray-700"
+                    "flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors",
+                    index === 0 && "text-primary"
                   )}
                 >
                   {cat.name}
                   {cat.subs.length > 0 && (
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="h-3 w-3 text-gray-400 group-hover:text-primary transition-colors" />
                   )}
                 </Link>
 
-                {/* Simple Dropdown */}
+                {/* Dropdown */}
                 {cat.subs.length > 0 && (
-                  <div className="absolute left-0 top-full hidden group-hover:block bg-white border border-gray-200 rounded-md shadow-lg py-2 min-w-[200px] z-50">
-                    {cat.subs.map((sub) => (
+                  <div className="absolute left-0 top-full hidden group-hover:block bg-white border border-gray-100 shadow-lg rounded-b min-w-[180px] py-1 z-50">
+                    {cat.subs.map(sub => (
                       <Link
                         key={sub.name}
                         to={sub.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-600 transition-colors"
+                        className="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-orange-50 transition-colors"
                       >
                         {sub.name}
                       </Link>
@@ -382,83 +209,34 @@ export function Header() {
             ))}
           </ul>
 
-          {/* Mobile nav toggle */}
-          <div className="lg:hidden py-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="w-full justify-between"
-            >
-              <span>Menu</span>
-              {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-            </Button>
-          </div>
+          {/* Nav Row 2 */}
+          {navRow2.length > 0 && (
+            <ul className="flex items-center justify-center gap-0">
+              {navRow2.map((cat) => (
+                <li key={cat.name} className="relative group">
+                  <Link
+                    to={cat.href}
+                    className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+                  >
+                    {cat.name}
+                    {cat.subs.length > 0 && (
+                      <ChevronDown className="h-3 w-3 text-gray-400 group-hover:text-primary transition-colors" />
+                    )}
+                  </Link>
 
-
-          {/* Mobile nav with expandable submenus */}
-          {isMenuOpen && (
-            <ul className="lg:hidden pb-4 space-y-1 animate-fade-in max-h-[60vh] overflow-y-auto">
-              {categoriesWithSubs.map((cat, index) => (
-                <li key={cat.name}>
-                  {cat.subs.length > 0 ? (
-                    <div>
-                      <button
-                        onClick={() =>
-                          setExpandedMobile(expandedMobile === cat.name ? null : cat.name)
-                        }
-                        className={cn(
-                          "w-full flex items-center justify-between px-4 py-2 rounded-lg transition-colors text-sm",
-                          index === 0
-                            ? "bg-orange-50 text-orange-600 font-medium"
-                            : "hover:bg-gray-50 text-gray-700"
-                        )}
-                      >
+                  {/* Dropdown */}
+                  {cat.subs.length > 0 && (
+                    <div className="absolute left-0 top-full hidden group-hover:block bg-white border border-gray-100 shadow-lg rounded-b min-w-[180px] py-1 z-50">
+                      {cat.subs.map(sub => (
                         <Link
-                          to={cat.href}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIsMenuOpen(false);
-                          }}
+                          key={sub.name}
+                          to={sub.href}
+                          className="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-orange-50 transition-colors"
                         >
-                          {cat.name}
+                          {sub.name}
                         </Link>
-                        <ChevronDown
-                          className={cn(
-                            "h-4 w-4 transition-transform",
-                            expandedMobile === cat.name && "rotate-180"
-                          )}
-                        />
-                      </button>
-                      {expandedMobile === cat.name && (
-                        <ul className="ml-4 mt-1 space-y-1 border-l-2 border-orange-200 pl-4 animate-fade-in">
-                          {cat.subs.map((sub) => (
-                            <li key={sub.name}>
-                              <Link
-                                to={sub.href}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="block px-2 py-1.5 text-sm text-gray-600 hover:text-orange-600 transition-colors"
-                              >
-                                {sub.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      ))}
                     </div>
-                  ) : (
-                    <Link
-                      to={cat.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={cn(
-                        "block px-4 py-2 rounded-lg transition-colors text-sm",
-                        index === 0
-                          ? "bg-orange-50 text-orange-600 font-medium"
-                          : "hover:bg-gray-50 text-gray-700"
-                      )}
-                    >
-                      {cat.name}
-                    </Link>
                   )}
                 </li>
               ))}
@@ -466,6 +244,67 @@ export function Header() {
           )}
         </div>
       </nav>
+
+      {/* Row 4: Hot News Ticker (Orange Bar) - Hidden when collapsed */}
+      <div className={cn(
+        "bg-primary text-white overflow-hidden transition-all duration-300",
+        isCollapsed ? "max-h-0 opacity-0" : "max-h-12 opacity-100"
+      )}>
+        <div className="container mx-auto px-4 py-1.5 flex items-center text-sm">
+          <span className="bg-red-700 px-2 py-0.5 rounded text-xs font-bold mr-4 shrink-0 uppercase">
+            Tin Nóng
+          </span>
+          <div className="overflow-hidden relative flex-1">
+            <div className="animate-marquee whitespace-nowrap flex items-center gap-4">
+              <span>Cầu thủ Lào gặp chấn thương nặng</span>
+              <span className="text-white/60">•</span>
+              <span>Học sinh Huế hào hứng trải nghiệm 'Hạo khí Cần vương'</span>
+              <span className="text-white/60">•</span>
+              <span>Khởi nghĩa Hòn Khoai, mốc son lịch sử của tỉnh Cà Mau</span>
+              <span className="text-white/60">•</span>
+              <span>Đường phố</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)} />
+          <div className="fixed inset-y-0 left-0 w-[280px] bg-white shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-300">
+            <div className="p-4 border-b flex items-center justify-between">
+              <span className="font-bold text-lg text-primary">MENU</span>
+              <button onClick={() => setIsMenuOpen(false)} className="p-1">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="py-2">
+              {categoriesWithSubs.map((cat) => (
+                <div key={cat.name}>
+                  <Link
+                    to={cat.href}
+                    className="block px-4 py-3 font-medium text-gray-700 hover:text-primary hover:bg-orange-50 border-b border-gray-50"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {cat.name}
+                  </Link>
+                  {cat.subs && cat.subs.map(sub => (
+                    <Link
+                      key={sub.name}
+                      to={sub.href}
+                      className="block px-6 py-2 text-sm text-gray-500 hover:text-primary"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      • {sub.name}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

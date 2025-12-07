@@ -1,24 +1,29 @@
 import { createBrowserRouter } from "react-router-dom";
-import HealthPage from "../components/Health/HealthPage";
 import App from "../App";
+import HomePage from "../pages/HomePage";
+import HealthPage from "../components/Health/HealthPage";
 import LoginPage from "../components/Login/LoginPage";
 
 const routes = createBrowserRouter([
     {
         path: "/",
-        element: <App/>,
+        element: <App />,
         children: [
             {
-                path: "/trang-chu",
-                element: <HealthPage/>,
+                index: true,
+                element: <HomePage />,
             },
             {
-                path: "/suc-khoe",
-                element: <HealthPage/>,
+                path: "trang-chu",
+                element: <HomePage />,
             },
             {
-                path: "/dang-nhap",
-                element: <LoginPage/>,
+                path: "danh-muc/suc-khoe",
+                element: <HealthPage />,
+            },
+            {
+                path: "dang-nhap",
+                element: <LoginPage />,
             },
         ],
     },
