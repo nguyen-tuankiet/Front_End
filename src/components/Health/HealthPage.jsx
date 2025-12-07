@@ -8,6 +8,10 @@ const HealthPage = () => {
     const [selectedArticle, setSelectedArticle] = useState(null);
 
     useEffect(() => {
+        document.title = 'Sức Khoẻ';
+    }, []);
+
+    useEffect(() => {
         fetch('/newsData/health_news.csv')
             .then((response) => response.text())
             .then((csvText) => {
