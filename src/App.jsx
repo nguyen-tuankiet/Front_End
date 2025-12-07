@@ -9,10 +9,10 @@ function App() {
   return (
     <div className="app-root">
       <Header />
-        <div className="app-content" style={{padding: '20px'}}>
-            <Outlet/>
-        </div>
-        <Footer />
+      <div className="app-content" >
+        <Outlet />
+      </div>
+      <Footer />
     </div>
   )
 }

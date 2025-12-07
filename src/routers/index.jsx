@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-import HealthPage from "../components/Health/HealthPage";
 import App from "../App";
+import HomePage from "../pages/HomePage";
+import HealthPage from "../components/Health/HealthPage";
 import LoginPage from "../components/Login/LoginPage";
 import MainLayout from "../layout/MainLayout";
 import { BaggageClaim } from "lucide-react";
