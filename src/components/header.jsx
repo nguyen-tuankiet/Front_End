@@ -29,6 +29,7 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState(null);
 
   const navigate = useNavigate();
 
@@ -101,30 +102,39 @@ export function Header() {
           "container mx-auto px-4 flex items-center justify-between transition-all duration-300",
           isCollapsed ? "py-1.5" : "py-3"
         )}>
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 -ml-2 text-gray-700"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Left side: Menu Button + Logo */}
+          <div className="flex items-center gap-2">
+            {/* Menu Button - Shows on mobile always, shows on desktop only when collapsed */}
+            <button
+              className={cn(
+                "p-2 -ml-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-300",
+                isCollapsed ? "block" : "lg:hidden"
+              )}
+              onClick={() => {
+                setIsMenuOpen(!isMenuOpen);
+                setExpandedCategory(null); // Reset expanded category when opening menu
+              }}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
 
-          {/* Logo */}
-          <Link to="/" className="flex flex-col items-start group">
-            <h1 className={cn(
-              "font-extrabold tracking-tight leading-none transition-all duration-300",
-              isCollapsed ? "text-xl md:text-2xl" : "text-2xl md:text-3xl"
-            )}>
-              <span className="text-primary">TIN</span>
-              <span className="text-secondary"> TỨC</span>
-            </h1>
-            <span className={cn(
-              "text-gray-400 tracking-[0.15em] uppercase transition-all duration-300",
-              isCollapsed ? "text-[7px]" : "text-[9px]"
-            )}>
-              Báo điện tử Việt Nam
-            </span>
-          </Link>
+            {/* Logo */}
+            <Link to="/" className="flex flex-col items-start group">
+              <h1 className={cn(
+                "font-extrabold tracking-tight leading-none transition-all duration-300",
+                isCollapsed ? "text-xl md:text-2xl" : "text-2xl md:text-3xl"
+              )}>
+                <span className="text-primary">TIN</span>
+                <span className="text-secondary"> TỨC</span>
+              </h1>
+              <span className={cn(
+                "text-gray-400 tracking-[0.15em] uppercase transition-all duration-300",
+                isCollapsed ? "text-[7px]" : "text-[9px]"
+              )}>
+                Báo điện tử Việt Nam
+              </span>
+            </Link>
+          </div>
 
           {/* Right side icons (visible when collapsed) + Search */}
           <div className="flex items-center gap-2">
@@ -171,8 +181,11 @@ export function Header() {
         </div>
       </div>
 
-      {/* Row 3: Navigation (Desktop - 2 rows) */}
-      <nav className="hidden lg:block border-b border-gray-100">
+      {/* Row 3: Navigation (Desktop - 2 rows) - Hidden when collapsed */}
+      <nav className={cn(
+        "hidden lg:block border-b border-gray-100 overflow-hidden transition-all duration-300",
+        isCollapsed ? "max-h-0 opacity-0" : "max-h-32 opacity-100"
+      )}>
         <div className="container mx-auto px-4">
           {/* Nav Row 1 */}
           <ul className="flex items-center justify-center gap-0 border-b border-gray-50">
@@ -268,37 +281,57 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Sidebar Menu - Works on both mobile and desktop when collapsed */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50">
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)} />
           <div className="fixed inset-y-0 left-0 w-[280px] bg-white shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-300">
             <div className="p-4 border-b flex items-center justify-between">
               <span className="font-bold text-lg text-primary">MENU</span>
-              <button onClick={() => setIsMenuOpen(false)} className="p-1">
+              <button onClick={() => setIsMenuOpen(false)} className="p-1 hover:bg-gray-100 rounded">
                 <X className="h-5 w-5" />
               </button>
             </div>
             <div className="py-2">
               {categoriesWithSubs.map((cat) => (
                 <div key={cat.name}>
-                  <Link
-                    to={cat.href}
-                    className="block px-4 py-3 font-medium text-gray-700 hover:text-primary hover:bg-orange-50 border-b border-gray-50"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {cat.name}
-                  </Link>
-                  {cat.subs && cat.subs.map(sub => (
+                  {/* Main category row */}
+                  <div className="flex items-center border-b border-gray-50">
                     <Link
-                      key={sub.name}
-                      to={sub.href}
-                      className="block px-6 py-2 text-sm text-gray-500 hover:text-primary"
+                      to={cat.href}
+                      className="flex-1 px-4 py-3 font-medium text-gray-700 hover:text-primary hover:bg-orange-50"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      • {sub.name}
+                      {cat.name}
                     </Link>
-                  ))}
+                    {/* Expand button for categories with subs */}
+                    {cat.subs && cat.subs.length > 0 && (
+                      <button
+                        className="p-3 text-gray-400 hover:text-primary hover:bg-orange-50 transition-colors"
+                        onClick={() => setExpandedCategory(expandedCategory === cat.name ? null : cat.name)}
+                      >
+                        <ChevronDown className={cn(
+                          "h-4 w-4 transition-transform duration-200",
+                          expandedCategory === cat.name && "rotate-180"
+                        )} />
+                      </button>
+                    )}
+                  </div>
+                  {/* Sub-categories - only show when expanded */}
+                  {cat.subs && expandedCategory === cat.name && (
+                    <div className="bg-gray-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                      {cat.subs.map(sub => (
+                        <Link
+                          key={sub.name}
+                          to={sub.href}
+                          className="block px-6 py-2.5 text-sm text-gray-500 hover:text-primary hover:bg-orange-50 transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          • {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
