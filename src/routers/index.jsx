@@ -10,17 +10,21 @@ import BlankLayout from "../layout/BlankLayout";
 const routes = createBrowserRouter([
     {
         path: "/",
-        element: <MainLayout/>,
+        element: <MainLayout />,
         children: [
-            { path: "/trang-chu", element: <HealthPage/>},
-            { path: "/suc-khoe", element: <HealthPage/>},
+            { index: true, element: <HomePage /> },
+            { path: "trang-chu", element: <HomePage /> },
+            { path: "danh-muc/suc-khoe", element: <HealthPage /> },
+            { path: "danh-muc/:category", element: <HealthPage /> },
+            { path: "danh-muc/:category/:subcategory", element: <HealthPage /> },
+            { path: "tim-kiem", element: <HealthPage /> },
         ],
     },
     {
         path: "/dang-nhap",
-        element: <BlankLayout/>,
+        element: <BlankLayout />,
         children: [
-            { path: "/dang-nhap", element: <LoginPage/>},
+            { index: true, element: <LoginPage /> },
         ],
     },
 ]);
