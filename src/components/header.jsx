@@ -4,24 +4,7 @@ import { Search, Menu, X, ChevronDown, Sun, Moon, Bell, User } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { categories } from "@/data/categories";
-
-// Build categoriesWithSubs from RSS data
-const categoriesWithSubs = [
-  { name: "Trang chủ", href: "/", subs: [] },
-  ...categories.map(cat => ({
-    name: cat.name,
-    href: `/danh-muc/${cat.slug}`,
-    subs: cat.subs ? cat.subs.map(sub => ({
-      name: sub.name,
-      href: `/danh-muc/${cat.slug}/${sub.slug}`,
-    })) : [],
-  })),
-];
-
-// Split categories for two-row nav
-const navRow1 = categoriesWithSubs.slice(0, 13);
-const navRow2 = categoriesWithSubs.slice(13);
+import { apiService } from "@/services/api";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,8 +13,41 @@ export function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [categoriesWithSubs, setCategoriesWithSubs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true);
+        const data = await apiService.getCategories();
+        
+        // Transform API data to match component format
+        const transformedCategories = data.map(cat => ({
+          name: cat.name,
+          slug: cat.slug,
+          href: cat.slug === "home" ? "/" : `/danh-muc/${cat.slug}`,
+          subs: cat.subCategories ? cat.subCategories.map(sub => ({
+            name: sub.name,
+            slug: sub.slug,
+            href: `/danh-muc/${cat.slug}/${sub.slug}`,
+          })) : [],
+        }));
+        
+        setCategoriesWithSubs(transformedCategories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategoriesWithSubs([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Scroll detection for collapsing header
   useEffect(() => {
@@ -181,16 +197,25 @@ export function Header() {
         </div>
       </div>
 
-      {/* Row 3: Navigation (Desktop - 2 rows) - Hidden when collapsed */}
+      {/* Row 3: Navigation (Desktop) - Hidden when collapsed */}
       <nav className={cn(
-        "hidden lg:block border-b border-gray-100 overflow-hidden transition-all duration-300",
-        isCollapsed ? "max-h-0 opacity-0" : "max-h-32 opacity-100"
+        "hidden lg:block border-b border-gray-100 transition-all duration-300",
+        isCollapsed ? "max-h-0 opacity-0 overflow-hidden" : "opacity-100"
       )}>
         <div className="container mx-auto px-4">
-          {/* Nav Row 1 */}
-          <ul className="flex items-center justify-center gap-0 border-b border-gray-50">
-            {navRow1.map((cat, index) => (
-              <li key={cat.name} className="relative group">
+          {/* Loading skeleton */}
+          {isLoading ? (
+            <div className="flex items-center justify-center gap-2 py-2">
+              {[...Array(7)].map((_, i) => (
+                <div key={i} className="h-6 w-20 bg-gray-200 rounded animate-pulse"></div>
+              ))}
+            </div>
+          ) : (
+          <>
+          {/* All categories in one flex-wrap container */}
+          <ul className="flex items-center justify-center flex-wrap gap-0">
+            {categoriesWithSubs.map((cat, index) => (
+              <li key={cat.slug} className="relative group/nav">
                 <Link
                   to={cat.href}
                   className={cn(
@@ -200,60 +225,55 @@ export function Header() {
                 >
                   {cat.name}
                   {cat.subs.length > 0 && (
-                    <ChevronDown className="h-3 w-3 text-gray-400 group-hover:text-primary transition-colors" />
+                    <ChevronDown className="h-3 w-3 text-gray-400 group-hover/nav:text-primary transition-colors" />
                   )}
                 </Link>
 
-                {/* Dropdown */}
+                {/* Dropdown - Mega Menu below hovered item */}
                 {cat.subs.length > 0 && (
-                  <div className="absolute left-0 top-full hidden group-hover:block bg-white border border-gray-100 shadow-lg rounded-b min-w-[180px] py-1 z-50">
-                    {cat.subs.map(sub => (
-                      <Link
-                        key={sub.name}
-                        to={sub.href}
-                        className="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-orange-50 transition-colors"
-                      >
-                        {sub.name}
-                      </Link>
-                    ))}
-                  </div>
+                  <>
+                    {/* Invisible bridge to connect menu item to dropdown */}
+                    <div className="absolute left-0 right-0 h-2 top-full hidden group-hover/nav:block"></div>
+                    <div 
+                      className="absolute top-full hidden group-hover/nav:block bg-white border border-gray-100 shadow-xl z-50 w-[400px]"
+                      style={{
+                        left: '50%',
+                        transform: 'translateX(max(-50%, calc(-100vw + 100% + 400px + 16px))) translateX(min(0px, calc(50vw - 50% - 200px - 8px)))',
+                      }}
+                    >
+                      <div className="p-6">
+                        {/* Category Title with orange bar */}
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="w-1 h-6 bg-primary rounded"></div>
+                          <h3 className="text-lg font-bold text-gray-800">{cat.name}</h3>
+                        </div>
+                        {/* Subcategories Grid - 2 columns */}
+                        <div className="grid grid-cols-2 gap-x-12 gap-y-3 mb-4">
+                          {cat.subs.map(sub => (
+                            <Link
+                              key={sub.slug}
+                              to={sub.href}
+                              className="text-sm text-gray-600 hover:text-primary transition-colors py-1"
+                            >
+                              {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                        {/* View all link */}
+                        <Link 
+                          to={cat.href}
+                          className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium mt-2"
+                        >
+                          Xem tất cả {cat.name} →
+                        </Link>
+                      </div>
+                    </div>
+                  </>
                 )}
               </li>
             ))}
           </ul>
-
-          {/* Nav Row 2 */}
-          {navRow2.length > 0 && (
-            <ul className="flex items-center justify-center gap-0">
-              {navRow2.map((cat) => (
-                <li key={cat.name} className="relative group">
-                  <Link
-                    to={cat.href}
-                    className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
-                  >
-                    {cat.name}
-                    {cat.subs.length > 0 && (
-                      <ChevronDown className="h-3 w-3 text-gray-400 group-hover:text-primary transition-colors" />
-                    )}
-                  </Link>
-
-                  {/* Dropdown */}
-                  {cat.subs.length > 0 && (
-                    <div className="absolute left-0 top-full hidden group-hover:block bg-white border border-gray-100 shadow-lg rounded-b min-w-[180px] py-1 z-50">
-                      {cat.subs.map(sub => (
-                        <Link
-                          key={sub.name}
-                          to={sub.href}
-                          className="block px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-orange-50 transition-colors"
-                        >
-                          {sub.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </li>
-              ))}
-            </ul>
+          </>
           )}
         </div>
       </nav>
@@ -294,7 +314,7 @@ export function Header() {
             </div>
             <div className="py-2">
               {categoriesWithSubs.map((cat) => (
-                <div key={cat.name}>
+                <div key={cat.slug}>
                   {/* Main category row */}
                   <div className="flex items-center border-b border-gray-50">
                     <Link
@@ -308,21 +328,21 @@ export function Header() {
                     {cat.subs && cat.subs.length > 0 && (
                       <button
                         className="p-3 text-gray-400 hover:text-primary hover:bg-orange-50 transition-colors"
-                        onClick={() => setExpandedCategory(expandedCategory === cat.name ? null : cat.name)}
+                        onClick={() => setExpandedCategory(expandedCategory === cat.slug ? null : cat.slug)}
                       >
                         <ChevronDown className={cn(
                           "h-4 w-4 transition-transform duration-200",
-                          expandedCategory === cat.name && "rotate-180"
+                          expandedCategory === cat.slug && "rotate-180"
                         )} />
                       </button>
                     )}
                   </div>
                   {/* Sub-categories - only show when expanded */}
-                  {cat.subs && expandedCategory === cat.name && (
+                  {cat.subs && expandedCategory === cat.slug && (
                     <div className="bg-gray-50 animate-in fade-in slide-in-from-top-2 duration-200">
                       {cat.subs.map(sub => (
                         <Link
-                          key={sub.name}
+                          key={sub.slug}
                           to={sub.href}
                           className="block px-6 py-2.5 text-sm text-gray-500 hover:text-primary hover:bg-orange-50 transition-colors"
                           onClick={() => setIsMenuOpen(false)}
