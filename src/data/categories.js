@@ -72,6 +72,8 @@ export const categories = [
       { name: "Làm đẹp", slug: "lam-dep", rssUrl: "https://thanhnien.vn/rss/suc-khoe/lam-dep.rss" },
       { name: "Giới tính", slug: "gioi-tinh", rssUrl: "https://thanhnien.vn/rss/suc-khoe/gioi-tinh.rss" },
       { name: "Y tế thông minh", slug: "y-te-thong-minh", rssUrl: "https://thanhnien.vn/rss/suc-khoe/y-te-thong-minh.rss" },
+      { name: "Thẩm mỹ an toàn", slug: "tham-my-an-toan", rssUrl: "https://thanhnien.vn/rss/suc-khoe/tham-my-an-toan.rss" },
+      { name: "Tin hay y tế", slug: "tin-hay-y-te", rssUrl: "https://thanhnien.vn/rss/suc-khoe/tin-hay-y-te.rss" },
     ]
   },
   {

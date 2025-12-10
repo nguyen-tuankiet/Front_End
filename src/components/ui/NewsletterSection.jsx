@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "./button";
 
 /**
  * Newsletter subscription section
@@ -34,12 +35,14 @@ export function NewsletterSection({ className }) {
                             className="flex-1 md:w-64 px-4 py-2 rounded text-sm border-0 focus:ring-2 focus:ring-white/50 outline-none"
                             required
                         />
-                        <button
+                        <Button
                             type="submit"
-                            className="px-6 py-2 bg-white text-primary font-semibold rounded text-sm hover:bg-gray-100 transition-colors"
+                            variant="outline"
+                            size="sm"
+                            className="bg-card text-primary hover:bg-muted"
                         >
                             {submitted ? "Đã đăng ký!" : "Đăng ký"}
-                        </button>
+                        </Button>
                     </form>
                 </div>
             </div>
