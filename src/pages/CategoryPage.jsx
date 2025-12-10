@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Papa from 'papaparse';
-import { CategoryPageLayout } from '@/components/Category/CategoryPageLayout';
+import { CategoryPageLayout } from '@/layout/CategoryPageLayout';
 import { ArticleList } from '@/components/Category/ArticleList';
 import { CategorySidebar } from '@/components/Category/CategorySidebar';
 import { getCategoryBySlug } from '@/data/categories';

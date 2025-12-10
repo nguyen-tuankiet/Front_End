@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Papa from 'papaparse';
-import { ArticleDetailView } from '@/components/Category/ArticleDetailView';
+import { ArticleDetailView } from '@/components/ui/ArticleDetailView';
 import { getCategoryBySlug } from '@/data/categories';
 import { getCommentsByArticleId, createComment } from '@/data/mockComments';
 
