@@ -3,7 +3,6 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import './App.css'
 import { Header } from './components/header'
 import Footer from './components/Footer/Footer';
-import HealthPage from './components/Health/HealthPage';
 
 function App() {
   return (

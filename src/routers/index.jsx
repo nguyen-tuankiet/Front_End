@@ -1,26 +1,29 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "../App";
 import HomePage from "../pages/HomePage";
-import HealthPage from "../components/Health/HealthPage";
+import CategoryPage from "../pages/CategoryPage";
+import ArticleDetailPage from "../pages/ArticleDetailPage";
 import LoginPage from "../components/Login/LoginPage";
 import MainLayout from "../layout/MainLayout";
-import { BaggageClaim } from "lucide-react";
 import BlankLayout from "../layout/BlankLayout";
 
 const routes = createBrowserRouter([
     {
         path: "/",
-        element: <MainLayout/>,
+        element: <MainLayout />,
         children: [
-            { path: "/trang-chu", element: <HealthPage/>},
-            { path: "/suc-khoe", element: <HealthPage/>},
+            { index: true, element: <HomePage /> },
+            { path: "trang-chu", element: <HomePage /> },
+            { path: "danh-muc/:category", element: <CategoryPage /> },
+            { path: "danh-muc/:category/:subcategory", element: <CategoryPage /> },
+            { path: "danh-muc/:category/bai-viet/:articleId", element: <ArticleDetailPage /> },
+            { path: "tim-kiem", element: <CategoryPage /> },
         ],
     },
     {
         path: "/dang-nhap",
-        element: <BlankLayout/>,
+        element: <BlankLayout />,
         children: [
-            { path: "/dang-nhap", element: <LoginPage/>},
+            { index: true, element: <LoginPage /> },
         ],
     },
 ]);

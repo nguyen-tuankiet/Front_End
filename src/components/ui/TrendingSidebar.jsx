@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export function TrendingSidebar({ title = "Tin nổi bật", articles, className }) {
     return (
         <div className={cn("bg-gray-50 rounded-lg p-4", className)}>
-            <h3 className="text-sm font-bold text-gray-800 mb-3 pb-2 border-b border-gray-200 flex items-center gap-2">
+            <h3 className="text-sm font-bold text-foreground mb-3 pb-2 border-b border-border flex items-center gap-2">
                 <span className="w-1 h-4 bg-primary rounded-full"></span>
                 {title}
             </h3>
@@ -26,11 +26,11 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
                                 "shrink-0 w-6 h-6 rounded flex items-center justify-center text-xs font-bold",
                                 index < 3
                                     ? "bg-primary text-white"
-                                    : "bg-gray-200 text-gray-600"
+                                    : "bg-muted text-muted-foreground"
                             )}>
                                 {index + 1}
                             </span>
-                            <span className="text-sm text-gray-700 leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                            <span className="text-sm text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                                 {article.title}
                             </span>
                         </Link>
