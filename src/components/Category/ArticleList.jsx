@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 /**
  * Component hiển thị danh sách bài báo dạng grid
@@ -19,12 +20,12 @@ export function ArticleList({
             <div className="space-y-6">
                 {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="flex gap-4 animate-pulse">
-                        <div className="w-64 h-40 bg-gray-200 rounded-lg shrink-0" />
+                        <div className="w-64 h-40 bg-muted rounded-lg shrink-0" />
                         <div className="flex-1 space-y-3">
-                            <div className="h-3 bg-gray-200 rounded w-24" />
-                            <div className="h-5 bg-gray-200 rounded w-full" />
-                            <div className="h-4 bg-gray-200 rounded w-3/4" />
-                            <div className="h-8 bg-gray-200 rounded w-20 mt-4" />
+                            <div className="h-3 bg-muted rounded w-24" />
+                            <div className="h-5 bg-muted rounded w-full" />
+                            <div className="h-4 bg-muted rounded w-3/4" />
+                            <div className="h-8 bg-muted rounded w-20 mt-4" />
                         </div>
                     </div>
                 ))}
@@ -34,7 +35,7 @@ export function ArticleList({
 
     if (articles.length === 0) {
         return (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-muted-foreground">
                 Không có bài viết nào trong danh mục này.
             </div>
         );
@@ -45,7 +46,7 @@ export function ArticleList({
             {articles.map((article, index) => (
                 <article
                     key={article.id || index}
-                    className="flex flex-col sm:flex-row gap-4 bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 group"
+                    className="flex flex-col sm:flex-row gap-4 bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 group"
                 >
                     {/* Thumbnail */}
                     {article['Thumbnail'] && (
@@ -66,30 +67,32 @@ export function ArticleList({
                     {/* Content */}
                     <div className="flex-1 p-4 sm:py-3 sm:pr-4 sm:pl-0 flex flex-col">
                         {/* Category badge */}
-                        <span className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+                        <span className="text-xs text-muted-foreground uppercase tracking-wide mb-2">
                             {article['Chuyên mục lớn']} / {article['Chuyên mục con']}
                         </span>
 
                         {/* Title */}
                         <h3
-                            className="text-lg font-bold text-gray-800 leading-snug mb-2 line-clamp-2 cursor-pointer hover:text-primary transition-colors"
+                            className="text-lg font-bold text-foreground leading-snug mb-2 line-clamp-2 cursor-pointer hover:text-primary transition-colors"
                             onClick={() => onArticleClick?.(article, index)}
                         >
                             {article['Tiêu đề']}
                         </h3>
 
                         {/* Excerpt */}
-                        <p className="text-sm text-gray-500 line-clamp-2 mb-auto">
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-auto">
                             {article['Tóm tắt'] ? article['Tóm tắt'].substring(0, 150) + '...' : ''}
                         </p>
 
                         {/* Read more button */}
-                        <button
-                            className="self-start mt-3 px-4 py-2 bg-primary/10 text-primary text-sm font-semibold rounded-lg hover:bg-primary hover:text-white transition-colors"
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="self-start mt-3"
                             onClick={() => onArticleClick?.(article, index)}
                         >
                             Đọc tiếp
-                        </button>
+                        </Button>
                     </div>
                 </article>
             ))}

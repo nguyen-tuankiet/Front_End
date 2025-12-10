@@ -72,15 +72,15 @@ export function ArticleCard({ article, variant = "featured", className }) {
                         {category}
                     </Link>
                 </div>
-                <h3 className="font-semibold text-gray-800 leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                <h3 className="font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                     {title}
                 </h3>
                 {excerpt && (
-                    <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+                    <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
                         {excerpt}
                     </p>
                 )}
-                <span className="text-gray-400 text-xs mt-2 block">{date}</span>
+                <span className="text-muted-foreground text-xs mt-2 block">{date}</span>
             </Link>
         );
     }
@@ -103,10 +103,10 @@ export function ArticleCard({ article, variant = "featured", className }) {
                     />
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-800 text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                    <h4 className="font-medium text-foreground text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                         {title}
                     </h4>
-                    <span className="text-gray-400 text-xs mt-1 block">{date}</span>
+                    <span className="text-muted-foreground text-xs mt-1 block">{date}</span>
                 </div>
             </Link>
         );

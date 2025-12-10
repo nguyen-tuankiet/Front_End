@@ -19,7 +19,7 @@ export function SectionHeader({ title, href, className, variant = "primary" }) {
         )}>
             <h2 className={cn(
                 "text-lg font-bold",
-                variant === "primary" ? "text-primary" : "text-gray-800"
+                variant === "primary" ? "text-primary" : "text-foreground"
             )}>
                 {title}
             </h2>
