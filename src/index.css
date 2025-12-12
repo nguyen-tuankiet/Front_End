@@ -8,73 +8,76 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 97%;
-    --foreground: 222 47% 11%;
+    :root {
+        --background: 0 0% 97%;                   /* Nền chính rất sáng (gần trắng) */
+        --foreground: 222 47% 11%;                /* Màu chữ chính (xanh đen đậm) */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+        --card: 0 0% 100%;                        /* Nền card trắng */
+        --card-foreground: 222 47% 11%;           /* Chữ trong card (xanh đen) */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+        --popover: 0 0% 100%;                     /* Nền popover trắng */
+        --popover-foreground: 222 47% 11%;        /* Chữ trong popover */
 
-    --primary: 12 89% 52%;
-    --primary-foreground: 0 0% 100%;
+        --primary: 12 89% 52%;                    /* Màu cam chủ đạo */
+        --primary-foreground: 0 0% 100%;          /* Chữ trên nút primary (trắng) */
 
-    --secondary: 217 91% 25%;
-    --secondary-foreground: 0 0% 100%;
+        --secondary: 217 91% 25%;                 /* Xanh navy đậm (secondary) */
+        --secondary-foreground: 0 0% 100%;        /* Chữ trong secondary */
 
-    --muted: 210 20% 94%;
-    --muted-foreground: 215 16% 47%;
+        --muted: 210 20% 94%;                     /* Nền muted (xám nhạt) */
+        --muted-foreground: 215 16% 47%;          /* Chữ muted (xám vừa) */
 
-    --accent: 45 100% 51%;
-    --accent-foreground: 222 47% 11%;
+        --accent: 45 100% 51%;                    /* Màu vàng/đậm cho accent */
+        --accent-foreground: 222 47% 11%;         /* Chữ trên accent */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+        --destructive: 0 84% 60%;                 /* Đỏ cảnh báo */
+        --destructive-foreground: 0 0% 100%;      /* Chữ trên màu destructive (trắng) */
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 12 89% 52%;
+        --border: 214 32% 91%;                    /* Màu border xám rất nhạt */
+        --input: 214 32% 91%;                     /* Border input cùng màu */
+        --ring: 12 89% 52%;                       /* Màu focus ring (cam chủ đạo) */
 
-    --radius: 0.75rem;
+        --radius: 0.75rem;                        /* Bo góc mặc định */
 
-    /* Custom tokens */
-    --news-gradient: linear-gradient(135deg, hsl(12, 89%, 52%) 0%, hsl(25, 95%, 53%) 100%);
-    --card-shadow: 0 4px 20px -4px hsl(222 47% 11% / 0.08);
-    --card-shadow-hover: 0 12px 32px -8px hsl(222 47% 11% / 0.15);
-    --header-blur: saturate(180%) blur(20px);
-  }
+        /* Custom tokens */
+        --news-gradient: linear-gradient(135deg,
+        hsl(12, 89%, 52%) 0%,       /* Cam bắt đầu */
+        hsl(25, 95%, 53%) 100%      /* Cam sáng hơn */
+        );
+        --card-shadow: 0 4px 20px -4px hsl(222 47% 11% / 0.08);       /* Đổ bóng nhẹ */
+        --card-shadow-hover: 0 12px 32px -8px hsl(222 47% 11% / 0.15);/* Hover shadow mạnh hơn */
+        --header-blur: saturate(180%) blur(20px);                     /* Blur header */
+    }
 
-  .dark {
-    --background: 222 47% 8%;
-    --foreground: 210 40% 98%;
+    .dark {
+        --background: 222 47% 8%;                  /* Nền dark rất tối */
+        --foreground: 210 40% 98%;                 /* Chữ gần trắng */
 
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+        --card: 222 47% 11%;                       /* Card tối */
+        --card-foreground: 210 40% 98%;            /* Chữ sáng trong card */
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+        --popover: 222 47% 11%;
+        --popover-foreground: 210 40% 98%;
 
-    --primary: 12 89% 55%;
-    --primary-foreground: 0 0% 100%;
+        --primary: 12 89% 55%;                     /* Cam primary sáng hơn trong dark mode */
+        --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 0 0% 100%;
+        --secondary: 217 91% 60%;                  /* Xanh secondary sáng hơn */
+        --secondary-foreground: 0 0% 100%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+        --muted: 217 33% 17%;                      /* Nền muted dark (xám xanh đậm) */
+        --muted-foreground: 215 20% 65%;           /* Chữ muted sáng hơn */
 
-    --accent: 45 100% 51%;
-    --accent-foreground: 222 47% 11%;
+        --accent: 45 100% 51%;                     /* Vàng accent giữ nguyên */
+        --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+        --destructive: 0 63% 31%;                  /* Đỏ tối hơn phù hợp dark mode */
+        --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 12 89% 55%;
-  }
+        --border: 217 33% 17%;                     /* Đường viền tối */
+        --input: 217 33% 17%;                      /* Border input dark */
+        --ring: 12 89% 55%;                        /* Focus ring cam sáng hơn */
+    }
 }
 
 @layer base {
