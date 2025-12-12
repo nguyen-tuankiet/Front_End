@@ -1,7 +1,6 @@
-import { ArticleCard } from "@/components/ui/ArticleCard";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { TrendingSidebar } from "@/components/ui/TrendingSidebar";
-import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { cn, decodeHtmlEntities } from "@/lib/utils";
 
 /**
  * @param {Object} props
@@ -9,63 +8,97 @@ import { cn } from "@/lib/utils";
  * @param {string} props.href - Link for "Xem thêm"
  * @param {Object} props.featuredArticle - Main featured article
  * @param {Array} props.articles - List of articles
- * @param {Array} props.trendingArticles - Optional trending articles for sidebar
- * @param {string} props.sidebarTitle - Title for trending sidebar
- * @param {string} props.variant - Section variant: 'default' | 'dark'
+ * @param {string} props.className - Additional CSS classes
  */
 export function CategorySection({
     title,
     href,
     featuredArticle,
     articles,
-    trendingArticles,
-    sidebarTitle = "Được quan tâm",
-    variant = "default",
     className
 }) {
-    const isDark = variant === "dark";
+    const FALLBACK_IMAGE = "https://placehold.co/600x400?text=News";
+
+    const handleImageError = (e) => {
+        e.target.src = FALLBACK_IMAGE;
+        e.target.onerror = null;
+    };
+
+    if (!featuredArticle) return null;
 
     return (
-        <section className={cn(
-            "py-6",
-            isDark ? "bg-gray-800" : "bg-white",
-            className
-        )}>
-            <div className="container mx-auto px-4">
-                <SectionHeader
-                    title={title}
-                    href={href}
-                    variant={isDark ? "dark" : "primary"}
-                />
+        <section className={cn("py-6", className)}>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <span className="w-1 h-6 bg-primary rounded-full"></span>
+                    {title}
+                </h2>
+                <Link to={href}>
+                    <button className="text-primary text-sm font-medium flex items-center gap-1 hover:underline">
+                        Xem thêm
+                        <ArrowRight className="h-4 w-4" />
+                    </button>
+                </Link>
+            </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                    <div className="lg:col-span-4">
-                        <ArticleCard
-                            article={featuredArticle}
-                            variant="featured"
+            <div className="grid md:grid-cols-2 gap-6">
+                {/* Main article */}
+                <Link
+                    to={`/bai-viet/${featuredArticle.id}`}
+                    className="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-shadow hover:shadow-lg"
+                    style={{ boxShadow: '0 4px 20px -4px hsl(222 47% 11% / .08)' }}
+                >
+                    <div className="relative overflow-hidden">
+                        <img
+                            src={featuredArticle.imageUrl || FALLBACK_IMAGE}
+                            alt={featuredArticle.title}
+                            onError={handleImageError}
+                            className="w-full h-52 object-cover transition-transform duration-300 group-hover:scale-105"
                         />
-                    </div>
-
-                    <div className="lg:col-span-5">
-                        <div className="space-y-4">
-                            {articles.slice(0, 4).map(article => (
-                                <ArticleCard
-                                    key={article.id}
-                                    article={article}
-                                    variant="horizontal"
-                                />
-                            ))}
+                        <div className="absolute top-3 left-3">
+                            <span className="px-3 py-1 bg-primary text-white text-xs font-bold rounded shadow">
+                                {featuredArticle.category || title}
+                            </span>
                         </div>
                     </div>
+                    <div className="p-5">
+                        <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                            {decodeHtmlEntities(featuredArticle.title)}
+                        </h3>
+                        {(featuredArticle.excerpt || featuredArticle.description) && (
+                            <p className="text-gray-500 text-sm line-clamp-2 mb-3">
+                                {decodeHtmlEntities(featuredArticle.excerpt || featuredArticle.description)}
+                            </p>
+                        )}
+                        <span className="text-xs text-gray-400">{featuredArticle.date}</span>
+                    </div>
+                </Link>
 
-                    {trendingArticles && (
-                        <div className="lg:col-span-3">
-                            <TrendingSidebar
-                                title={sidebarTitle}
-                                articles={trendingArticles}
+                {/* Side articles */}
+                <div className="space-y-4">
+                    {articles.slice(0, 4).map((article, index) => (
+                        <Link
+                            key={article.id || index}
+                            to={`/bai-viet/${article.id}`}
+                            className="flex gap-4 group"
+                        >
+                            <img
+                                src={article.imageUrl || FALLBACK_IMAGE}
+                                alt={article.title}
+                                onError={handleImageError}
+                                className="w-28 h-20 object-cover rounded-lg shrink-0 group-hover:brightness-110 transition-all"
                             />
-                        </div>
-                    )}
+                            <div className="flex-1 min-w-0">
+                                <h4 className="font-medium text-sm line-clamp-2 group-hover:text-primary transition-colors">
+                                    {decodeHtmlEntities(article.title)}
+                                </h4>
+                                <span className="text-xs text-gray-400 mt-1 block">
+                                    {article.date}
+                                </span>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </section>
