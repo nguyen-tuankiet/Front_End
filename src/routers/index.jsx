@@ -2,9 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import CategoryPage from "../pages/CategoryPage";
 import ArticleDetailPage from "../pages/ArticleDetailPage";
-import LoginPage from "../components/Login/LoginPage";
+import LoginPage from "../components/LoginAndRegister/LoginPage";
 import MainLayout from "../layout/MainLayout";
 import BlankLayout from "../layout/BlankLayout";
+import RegisterPage from "@/components/LoginAndRegister/RegisterPage.jsx";
 
 const routes = createBrowserRouter([
     {
@@ -20,10 +21,11 @@ const routes = createBrowserRouter([
         ],
     },
     {
-        path: "/dang-nhap",
+        path: "/",
         element: <BlankLayout />,
         children: [
-            { index: true, element: <LoginPage /> },
+            { path: "dang-nhap", element: <LoginPage /> },
+            { path: "dang-ky", element: <RegisterPage /> },
         ],
     },
 ]);
