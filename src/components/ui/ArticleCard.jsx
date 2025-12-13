@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn, decodeHtmlEntities } from "@/lib/utils";
 
 /**
  * @param {Object} props
@@ -8,124 +8,264 @@ import { cn } from "@/lib/utils";
  * @param {string} props.className - Additional CSS classes
  */
 export function ArticleCard({ article, variant = "featured", className }) {
-    const { id, title, excerpt, image, category, categorySlug, date } = article;
+    const { id, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
+    
+    // Decode HTML entities cho title và excerpt
+    const decodedTitle = decodeHtmlEntities(title);
+    const articleExcerpt = decodeHtmlEntities(excerpt || description);
 
-    // Hero variant - Large card with overlay text
+    const FALLBACK_IMAGE = "https://placehold.co/600x400?text=News";
+
+    const handleImageError = (e) => {
+        e.target.src = FALLBACK_IMAGE;
+        e.target.onerror = null; 
+    };
+
+    if (variant === "card-lg") {
+        return (
+            <Link
+                to={`/bai-viet/${id}`}
+                className={cn("block group h-full", className)}
+            >
+                <div className="relative rounded-xl overflow-hidden mb-4 shadow-sm aspect-[16/9]">
+                    <img
+                        src={imageUrl || FALLBACK_IMAGE}
+                        alt={decodedTitle}
+                        onError={handleImageError}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded shadow-sm">
+                        {category || "Tin nóng"}
+                    </span>
+                </div>
+                <div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-3 group-hover:text-primary transition-colors">
+                        {decodedTitle}
+                    </h2>
+                    {articleExcerpt && (
+                        <p className="text-gray-600 text-base leading-relaxed line-clamp-3 mb-3">
+                            {articleExcerpt}
+                        </p>
+                    )}
+                    <span className="text-gray-400 text-xs font-medium">{date}</span>
+                </div>
+            </Link>
+        );
+    }
+
+    if (variant === "card-md") {
+        return (
+            <Link
+                to={`/bai-viet/${id}`}
+                className={cn("block group h-full", className)}
+            >
+                <div className="relative rounded-lg overflow-hidden mb-3 aspect-[3/2]">
+                    <img
+                        src={imageUrl || FALLBACK_IMAGE}
+                        alt={decodedTitle}
+                        onError={handleImageError}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {category && (
+                        <span className="absolute top-2 left-2 px-2 py-0.5 bg-primary text-white text-[10px] font-bold uppercase rounded">
+                            {category}
+                        </span>
+                    )}
+                </div>
+                <div>
+                    <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+                        {decodedTitle}
+                    </h3>
+                    <span className="text-gray-400 text-xs font-medium block">{date}</span>
+                </div>
+            </Link>
+        );
+    }
+
+    if (variant === "card-sm") {
+        return (
+            <Link
+                to={`/bai-viet/${id}`}
+                className={cn("block group", className)}
+            >
+                <div className="relative rounded-lg overflow-hidden mb-2 aspect-[16/10]">
+                    <img
+                        src={imageUrl || FALLBACK_IMAGE}
+                        alt={decodedTitle}
+                        onError={handleImageError}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {category && (
+                        <span className="absolute top-2 left-2 px-2 py-0.5 bg-primary text-white text-[10px] font-bold uppercase rounded">
+                            {category}
+                        </span>
+                    )}
+                </div>
+                <div>
+                    <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2 mb-1 group-hover:text-primary transition-colors">
+                        {decodedTitle}
+                    </h3>
+                    <span className="text-gray-400 text-[11px] font-medium block">{date}</span>
+                </div>
+            </Link>
+        );
+    }
+
+    if (variant === "hero-overlay") {
+        return (
+            <Link
+                to={`/bai-viet/${id}`}
+                className={cn(
+                    "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
+                    className
+                )}
+            >
+                <img
+                    src={imageUrl || FALLBACK_IMAGE}
+                    alt={decodedTitle}
+                    onError={handleImageError}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                    <Link
+                        to={`/danh-muc/${categorySlug}`}
+                        className="inline-block px-3 py-1 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-md mb-3 hover:bg-primary/90 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {category || "Tin tức"}
+                    </Link>
+                    <h2 className="text-white text-2xl md:text-4xl font-bold leading-tight line-clamp-3 mb-3 group-hover:text-primary-foreground transition-colors">
+                        {decodedTitle}
+                    </h2>
+                    {articleExcerpt && (
+                        <p className="text-gray-200 text-sm md:text-base line-clamp-2 md:line-clamp-3 mb-3 opacity-90">
+                            {articleExcerpt}
+                        </p>
+                    )}
+                    <span className="text-gray-400 text-xs font-medium">{date}</span>
+                </div>
+            </Link>
+        );
+    }
+
     if (variant === "hero") {
         return (
             <Link
                 to={`/bai-viet/${id}`}
                 className={cn(
-                    "block relative rounded-lg overflow-hidden group h-full min-h-[300px] md:min-h-[400px]",
+                    "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
                     className
                 )}
             >
                 <img
-                    src={image}
-                    alt={title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    src={imageUrl || FALLBACK_IMAGE}
+                    alt={decodedTitle}
+                    onError={handleImageError}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                    <Link
-                        to={`/danh-muc/${categorySlug}`}
-                        className="inline-block px-2 py-1 bg-primary text-white text-xs font-semibold rounded mb-2 hover:bg-primary/90"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {category}
-                    </Link>
-                    <h2 className="text-white text-lg md:text-2xl font-bold leading-tight line-clamp-3 group-hover:text-primary-foreground transition-colors">
-                        {title}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                    <span className="inline-block px-3 py-1 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-md mb-3">
+                        {category || "Tin tức"}
+                    </span>
+                    <h2 className="text-white text-2xl md:text-4xl font-bold leading-tight line-clamp-3 mb-3 group-hover:text-primary-foreground transition-colors">
+                        {decodedTitle}
                     </h2>
-                    {excerpt && (
-                        <p className="text-white/80 text-sm mt-2 line-clamp-2 hidden md:block">
-                            {excerpt}
+                    {articleExcerpt && (
+                        <p className="text-gray-200 text-sm md:text-base line-clamp-2 md:line-clamp-3 mb-3 opacity-90">
+                            {articleExcerpt}
                         </p>
                     )}
-                    <span className="text-white/60 text-xs mt-2 block">{date}</span>
+                    <span className="text-gray-400 text-xs font-medium">{date}</span>
                 </div>
             </Link>
         );
     }
 
-    // Featured variant - Medium card with image on top
     if (variant === "featured") {
         return (
             <Link
                 to={`/bai-viet/${id}`}
                 className={cn(
-                    "block group",
+                    "block group h-full flex flex-col",
                     className
                 )}
             >
-                <div className="relative rounded-lg overflow-hidden mb-3">
+                <div className="relative rounded-xl overflow-hidden mb-4 aspect-[16/10] shadow-sm">
                     <img
-                        src={image}
-                        alt={title}
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                        src={imageUrl || FALLBACK_IMAGE}
+                        alt={decodedTitle}
+                        onError={handleImageError}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <Link
-                        to={`/danh-muc/${categorySlug}`}
-                        className="absolute top-2 left-2 px-2 py-1 bg-primary text-white text-xs font-semibold rounded hover:bg-primary/90"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {category}
-                    </Link>
+                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-bold rounded shadow-sm">
+                        {category || "Tin tức"}
+                    </span>
                 </div>
-                <h3 className="font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                    {title}
-                </h3>
-                {excerpt && (
-                    <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
-                        {excerpt}
-                    </p>
-                )}
-                <span className="text-muted-foreground text-xs mt-2 block">{date}</span>
+                <div className="flex-1 flex flex-col">
+                    <h3 className="text-lg font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+                        {decodedTitle}
+                    </h3>
+                    {articleExcerpt && (
+                        <p className="text-gray-500 text-sm line-clamp-2 mb-3 flex-1">
+                            {articleExcerpt}
+                        </p>
+                    )}
+                    <span className="text-gray-400 text-xs font-medium mt-auto">{date}</span>
+                </div>
             </Link>
         );
     }
 
-    // Horizontal variant - Image left, text right
     if (variant === "horizontal") {
         return (
             <Link
                 to={`/bai-viet/${id}`}
                 className={cn(
-                    "flex gap-3 group",
+                    "flex gap-3 group items-start",
                     className
                 )}
             >
-                <div className="relative rounded overflow-hidden shrink-0 w-24 h-24 md:w-32 md:h-24">
+                <div className="relative rounded-lg overflow-hidden shrink-0 w-28 h-20 bg-gray-100">
                     <img
-                        src={image}
-                        alt={title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        src={imageUrl || FALLBACK_IMAGE}
+                        alt={decodedTitle}
+                        onError={handleImageError}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                    {category && (
+                        <span className="absolute top-1 left-1 px-1.5 py-0.5 bg-primary text-white text-[9px] font-bold uppercase rounded">
+                            {category}
+                        </span>
+                    )}
                 </div>
-                <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-foreground text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                        {title}
+                <div className="flex-1 min-w-0 py-0.5">
+                    <h4 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors mb-1">
+                        {decodedTitle}
                     </h4>
-                    <span className="text-muted-foreground text-xs mt-1 block">{date}</span>
+                    <span className="text-gray-400 text-[11px] font-medium">{date}</span>
                 </div>
             </Link>
         );
     }
 
-    // Compact variant - Text only with number
     if (variant === "compact") {
         return (
             <Link
                 to={`/bai-viet/${id}`}
                 className={cn(
-                    "block group py-2 border-b border-gray-100 last:border-0",
+                    "block group py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 px-2 -mx-2 rounded transition-colors",
                     className
                 )}
             >
-                <h4 className="font-medium text-gray-700 text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                    {title}
+                <h4 className="font-medium text-gray-800 text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors mb-1">
+                    {decodedTitle}
                 </h4>
-                <span className="text-gray-400 text-xs mt-1 block">{date}</span>
+                <div className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                    <span className="text-gray-400 text-xs">{date}</span>
+                </div>
             </Link>
         );
     }
