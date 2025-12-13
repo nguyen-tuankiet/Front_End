@@ -16,6 +16,7 @@ const routes = createBrowserRouter([
             { path: "danh-muc/:category", element: <CategoryPage /> },
             { path: "danh-muc/:category/:subcategory", element: <CategoryPage /> },
             { path: "danh-muc/:category/bai-viet/:articleId", element: <ArticleDetailPage /> },
+            { path: "bai-viet/:articleId", element: <ArticleDetailPage /> },
             { path: "tim-kiem", element: <CategoryPage /> },
         ],
     },

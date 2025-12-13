@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Papa from 'papaparse';
 import { CategoryPageLayout } from '@/layout/CategoryPageLayout';
 import { ArticleList } from '@/components/Category/ArticleList';
 import { CategorySidebar } from '@/components/Category/CategorySidebar';
-import { getCategoryBySlug } from '@/data/categories';
+import { apiService } from '@/services/api';
+import { decodeHtmlEntities } from '@/lib/utils';
 
-// Map category slug to CSV file (sẽ thay bằng API sau)
-const categoryCSVMap = {
-    'suc-khoe': '/newsData/health_news.csv',
-    // Thêm category khác ở đây khi có data
-
+const decodeArticle = (article, categoryData) => {
+    return {
+        ...article,
+        title: decodeHtmlEntities(article.title || ''),
+        description: decodeHtmlEntities(article.description || article.excerpt || ''),
+        category: categoryData?.name || article.category || '',
+        subCategory: article.subCategory || '',
+    };
 };
 
-/**
- * Component trang danh mục - có thể reuse cho tất cả categories
- */
 export function CategoryPage() {
     const { category, subcategory } = useParams();
     const navigate = useNavigate();
@@ -24,89 +24,83 @@ export function CategoryPage() {
     const [loading, setLoading] = useState(true);
     const [categoryData, setCategoryData] = useState(null);
 
-    // Lấy thông tin category từ categories.js
-    useEffect(() => {
-        if (category) {
-            const cat = getCategoryBySlug(category);
-            setCategoryData(cat);
-            if (cat) {
-                document.title = cat.name;
-            }
-        }
-    }, [category]);
-
-    // Load articles từ CSV
     useEffect(() => {
         if (!category) return;
 
         setLoading(true);
-        const csvPath = categoryCSVMap[category];
 
-        if (!csvPath) {
-            console.warn(`Không tìm thấy CSV file cho category: ${category}`);
-            setLoading(false);
-            return;
-        }
+        const fetchData = async () => {
+            try {
+                // Lấy category từ API
+                const allCategories = await apiService.getCategories();
+                const cat = allCategories.find(c => c.slug === category);
+                
+                setCategoryData(cat);
+                if (cat) {
+                    document.title = cat.name;
+                }
 
-        fetch(csvPath)
-            .then((response) => response.text())
-            .then((csvText) => {
-                Papa.parse(csvText, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (results) => {
-                        setArticles(results.data);
-                        setLoading(false);
-                    },
-                    error: (error) => {
-                        console.error('Lỗi đọc CSV:', error);
-                        setLoading(false);
-                    }
-                });
-            })
-            .catch((err) => {
-                console.error("Không tìm thấy file CSV:", err);
+                let response;
+                
+                if (subcategory) {
+                    response = await apiService.getSubcategoryArticles(category, subcategory);
+                } else {
+                    response = await apiService.getCategoryArticles(category);
+                }
+
+                if (response && response.articles) {
+                    const decodedArticles = response.articles.map(article => 
+                        decodeArticle(article, cat)
+                    );
+                    setArticles(decodedArticles);
+                } else {
+                    console.warn(`Không có dữ liệu cho category ${category}`);
+                    setArticles([]);
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy articles từ API', error);
+                setArticles([]);
+            } finally {
                 setLoading(false);
-            });
-    }, [category]);
+            }
+        };
 
-    // Filter articles theo subcategory nếu có
+        fetchData();
+    }, [category, subcategory]);
+
     useEffect(() => {
         if (!subcategory) {
-            // Nếu không có subcategory, hiển thị tất cả articles của category
             setFilteredArticles(articles);
         } else {
-            // Filter theo subcategory name
-            const filtered = articles.filter(article => {
-                const articleSubcategory = article['Chuyên mục con'];
-                // Tìm subcategory trong categoryData để so sánh name
-                if (categoryData?.subs) {
-                    const subcategoryData = categoryData.subs.find(sub => sub.slug === subcategory);
-                    if (subcategoryData) {
-                        return articleSubcategory === subcategoryData.name;
-                    }
-                }
-                // Fallback: so sánh trực tiếp với slug nếu không tìm thấy
-                return articleSubcategory?.toLowerCase().includes(subcategory.toLowerCase());
-            });
-            setFilteredArticles(filtered);
+            setFilteredArticles(articles);
         }
-    }, [articles, subcategory, categoryData]);
+    }, [articles, subcategory]);
 
     const handleArticleClick = (article, index) => {
-        // Tìm index thực tế của article trong danh sách gốc
-        const actualIndex = articles.findIndex(a => a === article);
-        navigate(`/danh-muc/${category}/bai-viet/${actualIndex >= 0 ? actualIndex : index}`);
+        const articleUrl = article.link;
+        if (articleUrl) {
+            // Encode URL để truyền qua route
+            const encodedUrl = encodeURIComponent(articleUrl);
+            navigate(`/danh-muc/${category}/bai-viet/${encodedUrl}`);
+        } else {
+            console.error('Không tìm thấy URL của article');
+        }
     };
 
-    // Tạo subcategories với active state
-    const subCategoriesWithActive = categoryData?.subs?.map(sub => ({
-        name: sub.name,
-        slug: sub.slug,
-        active: subcategory === sub.slug
-    })) || [];
+    const subCategoriesList = categoryData?.subCategories || categoryData?.subs || [];
+    const subCategoriesWithActive = [
+        {
+            name: "Tất cả",
+            slug: "",
+            active: !subcategory
+        },
+        ...subCategoriesList.map(sub => ({
+            name: sub.name,
+            slug: sub.slug,
+            active: subcategory === sub.slug
+        }))
+    ];
 
-    // Title: dùng category name từ categories.js hoặc fallback
     const pageTitle = categoryData?.name || category || 'Danh mục';
 
     return (

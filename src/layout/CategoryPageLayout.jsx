@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 /**
- * Layout chung cho trang danh mục tin tức
+ * Layout chung cho trang danh mục
  * @param {Object} props
  * @param {string} props.title - Tiêu đề category chính
  * @param {Array} props.subCategories - Danh sách subcategory
  * @param {string} props.categorySlug - Slug của category hiện tại
  * @param {number} props.totalArticles - Tổng số bài viết
- * @param {number} props.currentPage - Trang hiện tại (0-indexed)
+ * @param {number} props.currentPage - Trang hiện tại
  * @param {number} props.pageSize - Số bài mỗi trang
  * @param {React.ReactNode} props.children - Nội dung chính
  * @param {React.ReactNode} props.sidebar - Sidebar
@@ -31,9 +31,7 @@ export function CategoryPageLayout({
 
     return (
         <div className={cn("max-w-7xl mx-auto py-6 px-4", className)}>
-            {/* Header */}
             <header className="mb-6">
-                {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm mb-3">
                     <Link
                         to="/"
@@ -46,35 +44,41 @@ export function CategoryPageLayout({
                     <span className="text-muted-foreground">{title}</span>
                 </div>
 
-                {/* Title */}
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-3xl font-bold text-foreground">
                         {title}
                     </h1>
                 </div>
 
-                {/* Sub-categories */}
                 {subCategories.length > 0 && (
-                    <div className="flex flex-wrap gap-3 pt-4 border-t border-border">
-                        {subCategories.map((sub, idx) => (
-                            <Link
-                                key={idx}
-                                to={`/danh-muc/${categorySlug}/${sub.slug}`}
-                                className={cn(
-                                    "px-4 py-2 rounded-full text-sm font-medium transition-colors border",
-                                    sub.active
-                                        ? "bg-primary text-primary-foreground border-primary"
-                                        : "bg-card text-foreground border-border hover:border-primary hover:text-primary"
-                                )}
-                            >
-                                {sub.name}
-                            </Link>
-                        ))}
+                    <div className="pt-4 border-t border-border">
+                        <div className="flex flex-wrap gap-2 sm:gap-3">
+                            {subCategories.map((sub, idx) => {
+                                // Xử lý link nếu slug rỗng thì link đến category chính
+                                const subLink = sub.slug 
+                                    ? `/danh-muc/${categorySlug}/${sub.slug}`
+                                    : `/danh-muc/${categorySlug}`;
+                                
+                                return (
+                                    <Link
+                                        key={sub.slug || 'all'}
+                                        to={subLink}
+                                        className={cn(
+                                            "px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors border whitespace-nowrap",
+                                            sub.active
+                                                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                                                : "bg-card text-foreground border-border hover:border-primary hover:text-primary hover:bg-primary/5"
+                                        )}
+                                    >
+                                        {sub.name}
+                                    </Link>
+                                );
+                            })}
+                        </div>
                     </div>
                 )}
             </header>
 
-            {/* Main Content + Sidebar */}
             <div className="flex flex-col lg:flex-row gap-8">
                 {/* Main Content */}
                 <main className="flex-1 min-w-0">

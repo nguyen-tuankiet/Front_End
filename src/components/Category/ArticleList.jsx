@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, decodeHtmlEntities } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
  * @param {Array} props.articles - Danh sách bài báo
  * @param {Function} props.onArticleClick - Callback khi click vào bài báo
  * @param {boolean} props.loading - Trạng thái loading
- * @param {string} props.className - CSS classes bổ sung
+ * @param {string} props.className - CSS class bổ sung
  */
 export function ArticleList({
     articles = [],
@@ -55,51 +55,45 @@ export function ArticleList({
                     key={article.id || index}
                     className="flex flex-col sm:flex-row gap-5 group items-start pb-6 border-b border-gray-100 last:border-0 last:pb-0"
                 >
-                    {/* Thumbnail */}
                     <div
                         className="w-full sm:w-64 aspect-[16/10] sm:aspect-[4/3] max-h-48 sm:max-h-full bg-gray-100 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all shrink-0"
                         onClick={() => onArticleClick?.(article, index)}
                     >
                         <img
-                            src={article['Thumbnail'] || FALLBACK_IMAGE}
-                            alt={article['Tiêu đề']}
+                            src={article.imageUrl || FALLBACK_IMAGE}
+                            alt={article.title}
                             loading="lazy"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onError={handleImageError}
                         />
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1 flex flex-col h-full min-w-0">
-                        {/* Category badge */}
                         <div className="flex items-center gap-2 mb-2">
                             <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/5 text-primary">
-                                {article['Chuyên mục lớn']}
+                                {article.category}
                             </span>
-                            {article['Chuyên mục con'] && (
+                            {article.subCategory && (
                                 <>
                                     <span className="text-gray-300 text-[10px]">•</span>
                                     <span className="text-[10px] font-medium text-gray-500 uppercase">
-                                        {article['Chuyên mục con']}
+                                        {article.subCategory}
                                     </span>
                                 </>
                             )}
                         </div>
 
-                        {/* Title */}
                         <h3
                             className="text-lg md:text-xl font-bold text-gray-900 leading-snug mb-2 line-clamp-2 cursor-pointer group-hover:text-primary transition-colors"
                             onClick={() => onArticleClick?.(article, index)}
                         >
-                            {article['Tiêu đề']}
+                            {article.title}
                         </h3>
 
-                        {/* Excerpt */}
                         <p className="text-sm text-gray-500 line-clamp-2 mb-3 leading-relaxed">
-                            {article['Tóm tắt'] ? article['Tóm tắt'].substring(0, 160) + '...' : ''}
+                            {article.description ? article.description.substring(0, 160) + '...' : ''}
                         </p>
 
-                        {/* Footer/Action */}
                         <div className="mt-auto pt-2">
                             <Button
                                 variant="outline"

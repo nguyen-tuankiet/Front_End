@@ -3,14 +3,19 @@ import { cn, decodeHtmlEntities } from "@/lib/utils";
 
 /**
  * @param {Object} props
- * @param {Object} props.article - Article data (title, excerpt, image, category, categorySlug, date)
- * @param {string} props.variant - Card variant: 'hero' | 'featured' | 'horizontal' | 'compact'
- * @param {string} props.className - Additional CSS classes
+ * @param {Object} props.article - dữ liệu article (title, excerpt, image, category, categorySlug, date)
+ * @param {string} props.variant - variant (hero, featured, horizontal, compact)
+ * @param {string} props.className - CSS class bổ sung
  */
 export function ArticleCard({ article, variant = "featured", className }) {
-    const { id, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
+    const { id, link, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
     
-    // Decode HTML entities cho title và excerpt
+    const articleIdentifier = link;
+    const articleRoute = categorySlug && articleIdentifier
+        ? `/danh-muc/${categorySlug}/bai-viet/${encodeURIComponent(articleIdentifier)}`
+        : `/bai-viet/${articleIdentifier ? encodeURIComponent(articleIdentifier) : id}`;
+    
+    // Decode HTML entities
     const decodedTitle = decodeHtmlEntities(title);
     const articleExcerpt = decodeHtmlEntities(excerpt || description);
 
@@ -24,7 +29,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "card-lg") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-xl overflow-hidden mb-4 shadow-sm aspect-[16/9]">
@@ -56,7 +61,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "card-md") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-3 aspect-[3/2]">
@@ -85,7 +90,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "card-sm") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn("block group", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-2 aspect-[16/10]">
@@ -114,7 +119,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "hero-overlay") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
                     className
@@ -152,7 +157,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "hero") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
                     className
@@ -186,7 +191,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "featured") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block group h-full flex flex-col",
                     className
@@ -221,7 +226,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "horizontal") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "flex gap-3 group items-start",
                     className
@@ -253,7 +258,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "compact") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block group py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 px-2 -mx-2 rounded transition-colors",
                     className

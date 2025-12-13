@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, decodeHtmlEntities } from "@/lib/utils";
 
 /**
  * Sidebar cho trang danh mục - hiển thị bài mới nhất
@@ -23,13 +23,11 @@ export function CategorySidebar({
             "bg-card rounded-xl shadow-sm p-5",
             className
         )}>
-            {/* Title */}
             <h2 className="text-base font-bold text-foreground mb-4 pb-3 border-b-2 border-border flex items-center gap-2">
                 <span className="w-1 h-5 bg-primary rounded-full" />
                 {title}
             </h2>
 
-            {/* Danh sách bài viết */}
             <ul className="space-y-4">
                 {displayedArticles.map((article, index) => (
                     <li
@@ -40,7 +38,6 @@ export function CategorySidebar({
                             onClick={() => onArticleClick?.(article, index)}
                             className="w-full text-left flex gap-3 items-start"
                         >
-                            {/* Số th */}
                             <span className={cn(
                                 "shrink-0 w-6 h-6 rounded flex items-center justify-center text-xs font-bold",
                                 index < 3
@@ -50,9 +47,8 @@ export function CategorySidebar({
                                 {index + 1}
                             </span>
 
-                            {/* Title */}
                             <span className="text-sm text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                                {article['Tiêu đề']}
+                                {article.title}
                             </span>
                         </button>
                     </li>
