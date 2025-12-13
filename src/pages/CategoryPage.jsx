@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Papa from 'papaparse';
-import { CategoryPageLayout } from '@/components/Category/CategoryPageLayout';
+import { CategoryPageLayout } from '@/layout/CategoryPageLayout';
 import { ArticleList } from '@/components/Category/ArticleList';
 import { CategorySidebar } from '@/components/Category/CategorySidebar';
 import { getCategoryBySlug } from '@/data/categories';
@@ -9,10 +9,8 @@ import { getCategoryBySlug } from '@/data/categories';
 // Map category slug to CSV file (sẽ thay bằng API sau)
 const categoryCSVMap = {
     'suc-khoe': '/newsData/health_news.csv',
-    'thoi-su': '/newsData/thoi_su_news.csv',
-    // Thêm các category khác ở đây khi có data
-    // 'the-thao': '/newsData/sport_news.csv',
-    // 'kinh-te': '/newsData/economy_news.csv',
+    // Thêm category khác ở đây khi có data
+
 };
 
 /**

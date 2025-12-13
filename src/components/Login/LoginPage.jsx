@@ -15,7 +15,7 @@ const LoginPage = () => {
 
                 <form >
                     <div className="email">
-                    <Mail />    
+                        <Mail className="w-5 h-5" />    
                     </div>
                 </form>
 
