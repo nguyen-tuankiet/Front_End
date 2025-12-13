@@ -1,7 +1,8 @@
-import {Bell, Bookmark, Eye, EyeOff, LockKeyhole, Mail, Newspaper} from 'lucide-react';
+import {Bell, Bookmark, Eye, EyeOff, LockKeyhole, Mail, Newspaper, User} from 'lucide-react';
 import {useEffect, useState} from 'react';
 import {cn} from "@/lib/utils.js";
 import {Link, useNavigate} from "react-router-dom";
+import {help} from "tailwindcss/src/oxide/cli/help/index.ts";
 
 const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -13,8 +14,12 @@ const RegisterPage = () => {
     }, []);
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [hasAcceptedPolicy, setHasAcceptedPolicy] = useState(false);
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -22,16 +27,32 @@ const RegisterPage = () => {
         setShowPassword(!showPassword);
     }
 
+    const toggleConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    }
+
     const handleLogin = (e) => {
         e.preventDefault();
-        if (validate()){
+        if (validateForm()){
             setErrors({})
-            navigate("/trang-chu");
+
+            const user = {
+                email: email,
+                name: fullName,
+            }
+            localStorage.setItem("user", JSON.stringify(user));
+
+            setTimeout(()=> {
+                navigate("/trang-chu")
+                }, 300)
         }
     }
 
-    const validate = () =>{
+    const validateForm = () =>{
         let errors = {};
+        if(!fullName.trim()){
+            errors.fullName = 'Full name is required';
+        }
         if (!email) {
             errors.email = 'Email is required';
         } else if (!isValidEmail(email)) {
@@ -41,6 +62,19 @@ const RegisterPage = () => {
         if (!password) {
             errors.password = 'Password is required';
         }
+        if (!confirmPassword) {
+            errors.confirmPassword = 'Confirm password is required';
+        }
+
+        if (password && password !== confirmPassword) {
+            errors.confirmPassword = 'Password dos not match';
+        }
+
+        if (!hasAcceptedPolicy) {
+            alert("Vui lòng chấp nhận điều khoản")
+            errors.hasAcceptedPolicy = 'Must be accepted';
+        }
+
         setErrors(errors);
         return Object.keys(errors).length === 0;
     }
@@ -59,6 +93,27 @@ const RegisterPage = () => {
         }
     }
 
+    const handleFullNameChange =(e)=> {
+        setFullName(e.target.value);
+        if (errors.fullName){
+            setErrors(prevErrors => ({...prevErrors, fullName: undefined}));
+        }
+    }
+
+    const handleConfirmPasswordChange =(e)=> {
+        setConfirmPassword(e.target.value);
+        if (errors.confirmPassword) {
+            setErrors(prevErrors => ({...prevErrors, confirmPassword: undefined}));
+        }
+    }
+
+    const handlePolicyChange = () => {
+        setHasAcceptedPolicy(!hasAcceptedPolicy);
+        if (errors.policy) {
+            setErrors(prevErrors => ({...prevErrors, policy: undefined}));
+        }
+    }
+
     const getBorderClass = field => {
         if (errors[field]) {
             return "border-red-500";
@@ -67,8 +122,6 @@ const RegisterPage = () => {
             return "border-gray-600";
         }
     }
-
-
 
     return (
         <div className="login-page grid grid-cols-2 gap-4 h-screen">
@@ -119,10 +172,15 @@ const RegisterPage = () => {
 
                     <div className="flex flex-col justify-around mt-8 bg-white/20 rounded-xl border border-white/25 p-5
                                ">
-                        <div className={cn("italic")}>"Tin Tức giúp tôi cập nhật thông tin nhanh chóng và chính xác. Giao diện đẹp, dễ sử dụng!"</div>
-                        <div>
-                            <div className={cn("")}>
+                        <div className={cn("italic")}>" Tin Tức giúp tôi cập nhật thông tin nhanh chóng và chính xác. Giao diện đẹp, dễ sử dụng! "</div>
+                        <div className={cn("flex flex-row mt-5")}>
+                            <div className={cn("w-10 h-10 bg-white/35 rounded-full border border-white/30 flex justify-center items-center ")}>
                                 TK
+                            </div>
+
+                            <div className={cn("flex flex-col ml-3")}>
+                                <p className={cn("font-bold")}>Nguyễn Tuấn Kiệt</p>
+                                <p className={cn("text-xs text-white/60")}>Tham gia từ 12/2025</p>
                             </div>
                         </div>
                     </div>
@@ -142,22 +200,45 @@ const RegisterPage = () => {
                         Báo điện tử Việt Nam
                     </span>
                 </Link>
-                <div className="flex flex-col items-center pt-10 pb-10">
-                    <p className="title text-3xl font-semibold">Đăng nhập</p>
-                    <p className="sub-title text-gray-400 mt-3 ">Nhập thông tin tài khoản của bạn để tiếp tục</p>
+                <div className="flex flex-col items-center pt-5 pb-5">
+                    <p className="title text-3xl font-semibold">Tạo tài khoản mới</p>
+                    <p className="sub-title text-gray-400 mt-1 ">Nhập thông tin của bạn để đăng ký</p>
                 </div>
                 <form onSubmit={handleLogin}>
-                    {/*Email*/}
+
+                    {/*Full name*/}
                     <div>
                         <label htmlFor="email" className="font-medium ">
-                            Email
+                            Họ và tên
                         </label>
-                        <div className = {cn("email flex flex-row h-10 w-96 p-2 mt-2 border rounded-xl",  getBorderClass('email'))}>
-                            <Mail className="size-5 mr-3 text-gray-400"/>
+                        <div className = {cn("email flex flex-row h-10 w-full p-2 mt-2 border rounded-xl",  getBorderClass('fullName'))}>
+                            <User className="size-5 mr-3 text-gray-400"/>
                             <input
                                 id="email"
                                 type="text"
-                                placeholder="name@example.com"
+                                placeholder="Nguyễn Văn Kiệt"
+                                className="flex-grow border-none outline-none bg-background select-none"
+                                value={fullName}
+                                onChange={handleFullNameChange}
+                            />
+                        </div>
+                        {errors.fullName && (
+                            <p className={cn("text-xs text-red-500")}>{errors.fullName}</p>
+                        )}
+
+                    </div>
+
+                    {/*Email*/}
+                    <div className="mt-5">
+                        <label htmlFor="password" className="font-medium ">
+                            Email
+                        </label>
+                        <div className = {cn("email flex flex-row h-10 w-full p-2 mt-2 border rounded-xl", getBorderClass('email') )}>
+                            <Mail className="size-5 mr-3 text-gray-400"/>
+                            <input
+                                id="password"
+                                type= "text"
+                                placeholder="user@gmail.com"
                                 className="flex-grow border-none outline-none bg-background select-none"
                                 value={email}
                                 onChange={handleEmailChange}
@@ -166,7 +247,6 @@ const RegisterPage = () => {
                         {errors.email && (
                             <p className={cn("text-xs text-red-500")}>{errors.email}</p>
                         )}
-
                     </div>
 
                     {/*Password*/}
@@ -174,7 +254,7 @@ const RegisterPage = () => {
                         <label htmlFor="password" className="font-medium ">
                             Mật khẩu
                         </label>
-                        <div className = {cn("email flex flex-row h-10 w-96 p-2 mt-2 border rounded-xl", getBorderClass('password') )}>
+                        <div className = {cn("email flex flex-row h-10 w-full p-2 mt-2 border rounded-xl", getBorderClass('password') )}>
                             <LockKeyhole className="size-5 mr-3 text-gray-400"/>
                             <input
                                 id="password"
@@ -198,49 +278,61 @@ const RegisterPage = () => {
                         )}
                     </div>
 
-                    {/*Remember*/}
-                    <div className="flex flex-row justify-between mt-4">
+                    {/*Confirm password*/}
+                    <div className="mt-5">
+                        <label htmlFor="password" className="font-medium ">
+                            Xác nhận mật khẩu
+                        </label>
+                        <div className = {cn("email flex flex-row h-10 w-full p-2 mt-2 border rounded-xl", getBorderClass('confirmPassword') )}>
+                            <LockKeyhole className="size-5 mr-3 text-gray-400"/>
+                            <input
+                                id="password"
+                                type= {showConfirmPassword ? 'text' : 'password'}
+                                placeholder="••••••••"
+                                className="flex-grow border-none outline-none bg-background select-none"
+                                value={confirmPassword}
+                                onChange={handleConfirmPasswordChange}
+                            />
+
+                            <button className="bg-transparent border-none, cursor-pointer"
+                                    type="button"
+                                    onClick={toggleConfirmPassword}>
+                                {showConfirmPassword ?
+                                    (<EyeOff  className="size-5 mr-3 text-gray-400"></EyeOff>)
+                                    : (<Eye  className="size-5 mr-3 text-gray-400"></Eye>)}
+                            </button>
+                        </div>
+                        {errors.confirmPassword && (
+                            <p className={cn("text-xs text-red-500")}>{errors.confirmPassword}</p>
+                        )}
+                    </div>
+
+                    {/*Policy*/}
+                    <div className="flex flex-row justify-between mt-4 select-none text-sm">
                         <div className="">
                             <input type="checkbox" id="remember"
                                    className="bg-amber-50 mr-2"
+                                   defaultChecked={hasAcceptedPolicy}
+                                   onClick={handlePolicyChange}
                             ></input>
-                            <label htmlFor="remember" className="cursor-pointer">Ghi nhớ đăng nhập ?</label>
+                            <label htmlFor="remember" className="cursor-pointer">Tôi đồng ý với
+                                <a href="/dieu-khoan" className={cn("text-primary hover:underline")}> Điều khoản sử dụng </a>
+                                và
+                                <a href="/chinh-sach" className={cn("text-primary hover:underline")} > Chính sách bảo mật</a>
+                            </label>
                         </div>
-
-                        <a
-                            className="cursor-pointer hover:underline text-primary "
-                            href="#"
-                        >Quên mật khẩu ?</a>
                     </div>
 
-                    {/*LoginAndRegister button*/}
                     <button type={"submit"} className="bg-primary text-white w-full h-10 rounded-xl mt-5 flex justify-center items-center
                                      cursor-pointer select-none hover:bg-primary-500  active:scale-95 active:bg-primary-500/80
-                                        transition-all duration-150">
-                        Đăng nhập
+                                        transition-all duration-150"
+                    >
+                        Đăng ký
                     </button>
 
-                    <div className="flex justify-center text-xs w-full mt-5 relative ">
-                        <div className="absolute top-1/2 left-0 border-gray-400 border-b w-full"></div>
-                        <span className="bg-background z-10 pl-1 pr-1 text-gray-400">HOẶC ĐĂNG NHẬP VỚI</span>
-                    </div>
-
-                    <div className="flex row items-center h-10 mt-5">
-                        <div className="w-1/2 h-full flex justify-center items-center ml-2 mr-2 border border-gray-600 rounded-xl
-                                        cursor-pointer hover:bg-accent select-none active:scale-95 active:bg-accent/80
-                                        transition-all duration-150">
-                            Google
-                        </div>
-                        <div className="w-1/2 h-full flex justify-center items-center ml-2 mr-2 border border-gray-600 rounded-xl
-                                        cursor-pointer hover:bg-accent select-none active:scale-95 active:bg-accent/80
-                                        transition-all duration-150">
-                            Facebook
-                        </div>
-                    </div>
-
                     <div className="p-3 flex justify-center mt-5">
-                        <span>Chưa có tài khoản ?</span>
-                        <a href="/dang-ki" className="text-primary pl-2 hover:underline">Đăng kí ngay</a>
+                        <span>Đã có tài khoản?</span>
+                        <a href="/dang-nhap" className="text-primary pl-2 hover:underline">Đăng nhập</a>
                     </div>
 
 

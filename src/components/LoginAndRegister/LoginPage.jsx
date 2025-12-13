@@ -26,7 +26,16 @@ const LoginPage = () => {
         e.preventDefault();
         if (validate()){
             setErrors({})
-            navigate("/trang-chu");
+
+            const user = {
+                email: email,
+                name: "Hung Tran",
+            }
+            localStorage.setItem("user", JSON.stringify(user));
+
+            setTimeout(()=> {
+                navigate("/trang-chu");
+            }, 300)
         }
     }
 
@@ -81,13 +90,13 @@ const LoginPage = () => {
                         <span className="text-secondary"> TỨC</span>
                     </h1>
                     <span className={cn(
-                        "text-gray-400 tracking-[0.15em] uppercase transition-all duration-300 text-[9px]",)}>
+                        "text-gray-400 tracking-[0.15em] uppercase transition-all duration-300 text-[9px]")}>
                         Báo điện tử Việt Nam
                     </span>
                 </Link>
-                <div className="flex flex-col items-center pt-10 pb-10">
+                <div className="flex flex-col items-center pt-5 pb-5">
                     <p className="title text-3xl font-semibold">Đăng nhập</p>
-                    <p className="sub-title text-gray-400 mt-3 ">Nhập thông tin tài khoản của bạn để tiếp tục</p>
+                    <p className="sub-title text-gray-400 mt-1 ">Nhập thông tin tài khoản của bạn để tiếp tục</p>
                 </div>
                 <form onSubmit={handleLogin}>
                     {/*Email*/}
