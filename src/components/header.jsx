@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, Menu, X, ChevronDown, Sun, Moon, Bell, User } from "lucide-react";
+import { Search, Menu, X, Sun, Moon, Bell, User, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,9 @@ export function Header() {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [categoriesWithSubs, setCategoriesWithSubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const navRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -212,67 +215,96 @@ export function Header() {
             </div>
           ) : (
           <>
-          {/* All categories in one flex-wrap container */}
-          <ul className="flex items-center justify-center flex-wrap gap-0">
-            {categoriesWithSubs.map((cat, index) => (
-              <li key={cat.slug} className="relative group/nav">
+          {/* All categories in one single row - no wrap */}
+          <ul className="flex items-center justify-center gap-0 whitespace-nowrap overflow-x-auto scrollbar-hide" ref={navRef}>
+            {/* Home icon */}
+            <li className="relative shrink-0">
+              <Link
+                to="/"
+                className="flex items-center px-2 py-2 text-primary hover:text-primary/80 transition-colors"
+              >
+                <Home className="h-5 w-5" />
+              </Link>
+            </li>
+            {categoriesWithSubs.filter(cat => cat.slug !== "home").map((cat) => (
+              <li 
+                key={cat.slug} 
+                className="relative shrink-0"
+                onMouseEnter={(e) => {
+                  if (cat.subs.length > 0) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const dropdownWidth = 400;
+                    const margin = 20; // Khoảng cách với biên
+                    let left = rect.left;
+                    // Điều chỉnh nếu dropdown tràn ra ngoài viewport bên phải
+                    if (left + dropdownWidth > window.innerWidth - margin) {
+                      left = window.innerWidth - dropdownWidth - margin;
+                    }
+                    // Điều chỉnh nếu dropdown tràn ra ngoài viewport bên trái
+                    if (left < margin) {
+                      left = margin;
+                    }
+                    setDropdownPosition({
+                      top: rect.bottom,
+                      left: left
+                    });
+                    setHoveredCategory(cat.slug);
+                  }
+                }}
+                onMouseLeave={() => setHoveredCategory(null)}
+              >
                 <Link
                   to={cat.href}
-                  className={cn(
-                    "flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors",
-                    index === 0 && "text-primary"
-                  )}
+                  className="flex items-center gap-1 px-2 py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
                 >
                   {cat.name}
-                  {cat.subs.length > 0 && (
-                    <ChevronDown className="h-3 w-3 text-gray-400 group-hover/nav:text-primary transition-colors" />
-                  )}
                 </Link>
-
-                {/* Dropdown - Mega Menu below hovered item */}
-                {cat.subs.length > 0 && (
-                  <>
-                    {/* Invisible bridge to connect menu item to dropdown */}
-                    <div className="absolute left-0 right-0 h-2 top-full hidden group-hover/nav:block"></div>
-                    <div 
-                      className="absolute top-full hidden group-hover/nav:block bg-white border border-gray-100 shadow-xl z-50 w-[400px]"
-                      style={{
-                        left: '50%',
-                        transform: 'translateX(max(-50%, calc(-100vw + 100% + 400px + 16px))) translateX(min(0px, calc(50vw - 50% - 200px - 8px)))',
-                      }}
-                    >
-                      <div className="p-6">
-                        {/* Category Title with orange bar */}
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="w-1 h-6 bg-primary rounded"></div>
-                          <h3 className="text-lg font-bold text-gray-800">{cat.name}</h3>
-                        </div>
-                        {/* Subcategories Grid - 2 columns */}
-                        <div className="grid grid-cols-2 gap-x-12 gap-y-3 mb-4">
-                          {cat.subs.map(sub => (
-                            <Link
-                              key={sub.slug}
-                              to={sub.href}
-                              className="text-sm text-gray-600 hover:text-primary transition-colors py-1"
-                            >
-                              {sub.name}
-                            </Link>
-                          ))}
-                        </div>
-                        {/* View all link */}
-                        <Link 
-                          to={cat.href}
-                          className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium mt-2"
-                        >
-                          Xem tất cả {cat.name} →
-                        </Link>
-                      </div>
-                    </div>
-                  </>
-                )}
               </li>
             ))}
           </ul>
+          
+          {/* Fixed Dropdown - renders outside the scrollable container */}
+          {categoriesWithSubs.filter(cat => cat.slug !== "home" && cat.subs.length > 0).map((cat) => (
+            hoveredCategory === cat.slug && (
+              <div
+                key={`dropdown-${cat.slug}`}
+                className="fixed bg-white border border-gray-100 shadow-xl z-[60] w-[400px]"
+                style={{
+                  top: dropdownPosition.top,
+                  left: dropdownPosition.left,
+                }}
+                onMouseEnter={() => setHoveredCategory(cat.slug)}
+                onMouseLeave={() => setHoveredCategory(null)}
+              >
+                <div className="p-6">
+                  {/* Category Title with orange bar */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-1 h-6 bg-primary rounded"></div>
+                    <h3 className="text-lg font-bold text-gray-800">{cat.name}</h3>
+                  </div>
+                  {/* Subcategories Grid - 2 columns */}
+                  <div className="grid grid-cols-2 gap-x-12 gap-y-3 mb-4">
+                    {cat.subs.map(sub => (
+                      <Link
+                        key={sub.slug}
+                        to={sub.href}
+                        className="text-sm text-gray-600 hover:text-primary transition-colors py-1"
+                      >
+                        {sub.name}
+                      </Link>
+                    ))}
+                  </div>
+                  {/* View all link */}
+                  <Link 
+                    to={cat.href}
+                    className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium mt-2"
+                  >
+                    Xem tất cả {cat.name} →
+                  </Link>
+                </div>
+              </div>
+            )
+          ))}
           </>
           )}
         </div>
