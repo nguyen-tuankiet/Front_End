@@ -1,7 +1,11 @@
 import {Bell, Bookmark, Eye, EyeOff, LockKeyhole, Mail, Newspaper} from 'lucide-react';
 import {useEffect, useState} from 'react';
 import {cn} from "@/lib/utils.js";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+
+const isValidEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+};
 
 const LoginPage = () => {
     useEffect(() => {
@@ -9,9 +13,62 @@ const LoginPage = () => {
     }, []);
 
     const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
+
     const togglePassword = () => {
         setShowPassword(!showPassword);
     }
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        if (validate()){
+            setErrors({})
+            navigate("/trang-chu");
+        }
+    }
+
+    const validate = () =>{
+        let errors = {};
+        if (!email) {
+            errors.email = 'Email is required';
+        } else if (!isValidEmail(email)) {
+            errors.email = 'Email invalid';
+        }
+
+        if (!password) {
+            errors.password = 'Password is required';
+        }
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    }
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        if (errors.email) {
+            setErrors(prevErrors => ({...prevErrors, email: undefined}));
+        }
+    }
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        if (errors.password) {
+            setErrors(prevErrors => ({...prevErrors, password: undefined}));
+        }
+    }
+
+    const getBorderClass = field => {
+        if (errors[field]) {
+            return "border-red-500";
+        }
+        else {
+            return "border-gray-600";
+        }
+    }
+
+
 
     return (
         <div className="login-page grid grid-cols-2 gap-4 h-screen">
@@ -32,21 +89,27 @@ const LoginPage = () => {
                     <p className="title text-3xl font-semibold">Đăng nhập</p>
                     <p className="sub-title text-gray-400 mt-3 ">Nhập thông tin tài khoản của bạn để tiếp tục</p>
                 </div>
-                <form>
+                <form onSubmit={handleLogin}>
                     {/*Email*/}
                     <div>
                         <label htmlFor="email" className="font-medium ">
                             Email
                         </label>
-                        <div className="email flex flex-row h-10 w-96 p-2 mt-2 border border-gray-600 rounded-xl">
+                        <div className = {cn("email flex flex-row h-10 w-96 p-2 mt-2 border rounded-xl",  getBorderClass('email'))}>
                             <Mail className="size-5 mr-3 text-gray-400"/>
                             <input
                                 id="email"
-                                type="email"
+                                type="text"
                                 placeholder="name@example.com"
                                 className="flex-grow border-none outline-none bg-background select-none"
+                                value={email}
+                                onChange={handleEmailChange}
                             />
                         </div>
+                        {errors.email && (
+                            <p className={cn("text-xs text-red-500")}>{errors.email}</p>
+                        )}
+
                     </div>
 
                     {/*Password*/}
@@ -54,13 +117,15 @@ const LoginPage = () => {
                         <label htmlFor="password" className="font-medium ">
                             Mật khẩu
                         </label>
-                        <div className="email flex flex-row h-10 w-96 p-2 mt-2 border border-gray-600 rounded-xl">
+                        <div className = {cn("email flex flex-row h-10 w-96 p-2 mt-2 border rounded-xl", getBorderClass('password') )}>
                             <LockKeyhole className="size-5 mr-3 text-gray-400"/>
                             <input
                                 id="password"
                                 type= {showPassword ? 'text' : 'password'}
                                 placeholder="••••••••"
                                 className="flex-grow border-none outline-none bg-background select-none"
+                                value={password}
+                                onChange={handlePasswordChange}
                             />
 
                             <button className="bg-transparent border-none, cursor-pointer"
@@ -71,6 +136,9 @@ const LoginPage = () => {
                                         : (<Eye  className="size-5 mr-3 text-gray-400"></Eye>)}
                             </button>
                         </div>
+                        {errors.password && (
+                            <p className={cn("text-xs text-red-500")}>{errors.password}</p>
+                        )}
                     </div>
 
                     {/*Remember*/}
@@ -88,12 +156,12 @@ const LoginPage = () => {
                         >Quên mật khẩu ?</a>
                     </div>
 
-                    {/*Login button*/}
-                    <div className="bg-primary text-white h-10 rounded-xl mt-5 flex justify-center items-center
+                    {/*LoginAndRegister button*/}
+                    <button type={"submit"} className="bg-primary text-white w-full h-10 rounded-xl mt-5 flex justify-center items-center
                                      cursor-pointer select-none hover:bg-primary-500  active:scale-95 active:bg-primary-500/80
                                         transition-all duration-150">
                         Đăng nhập
-                    </div>
+                    </button>
 
                     <div className="flex justify-center text-xs w-full mt-5 relative ">
                         <div className="absolute top-1/2 left-0 border-gray-400 border-b w-full"></div>
@@ -115,7 +183,7 @@ const LoginPage = () => {
 
                     <div className="p-3 flex justify-center mt-5">
                         <span>Chưa có tài khoản ?</span>
-                        <a href="/dang-ki" className="text-primary pl-2 hover:underline">Đăng kí ngay</a>
+                        <a href="/dang-ky" className="text-primary pl-2 hover:underline">Đăng kí ngay</a>
                     </div>
 
 
