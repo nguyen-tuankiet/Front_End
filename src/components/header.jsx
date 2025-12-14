@@ -97,14 +97,14 @@ export function Header() {
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <button
               onClick={toggleDarkMode}
-              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-1.5 rounded-full transition-colors hover:bg-amber-300"
             >
               {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </button>
-            <button className="p-1.5 hover:bg-gray-100 rounded-full transition-colors">
+            <button className="p-1.5 hover:bg-amber-300 rounded-full transition-colors">
               <Bell className="h-4 w-4" />
             </button>
-            <Link to="/dang-nhap" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+            <Link to="/dang-nhap" className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
               <User className="h-4 w-4" />
               <span>Đăng nhập</span>
             </Link>
