@@ -1,8 +1,15 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+
+function decodeHTMLEntities(text) {
+    if (!text) return '';
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+
 /**
- * Component hiển thị danh sách bài báo dạng grid
  * @param {Object} props
  * @param {Array} props.articles - Danh sách bài báo
  * @param {Function} props.onArticleClick - Callback khi click vào bài báo
@@ -21,6 +28,14 @@ export function ArticleList({
         e.target.src = FALLBACK_IMAGE;
         e.target.onerror = null;
     };
+
+  
+    const getTitle = (article) => decodeHTMLEntities(article.title || article['Tiêu đề'] || '');
+    const getImage = (article) => article.imageUrl || article['Thumbnail'] || FALLBACK_IMAGE;
+    const getDescription = (article) => decodeHTMLEntities(article.description || article['Tóm tắt'] || '');
+    const getCategory = (article) => article.category || article['Chuyên mục lớn'] || '';
+    const getAuthor = (article) => article.author || '';
+    const getPubDate = (article) => article.pubDate || '';
 
     if (loading) {
         return (
@@ -52,7 +67,7 @@ export function ArticleList({
         <div className={cn("space-y-6", className)}>
             {articles.map((article, index) => (
                 <article
-                    key={article.id || index}
+                    key={article.link || article.id || index}
                     className="flex flex-col sm:flex-row gap-5 group items-start pb-6 border-b border-gray-100 last:border-0 last:pb-0"
                 >
                     {/* Thumbnail */}
@@ -61,8 +76,8 @@ export function ArticleList({
                         onClick={() => onArticleClick?.(article, index)}
                     >
                         <img
-                            src={article['Thumbnail'] || FALLBACK_IMAGE}
-                            alt={article['Tiêu đề']}
+                            src={getImage(article)}
+                            alt={getTitle(article)}
                             loading="lazy"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onError={handleImageError}
@@ -71,16 +86,26 @@ export function ArticleList({
 
                     {/* Content */}
                     <div className="flex-1 flex flex-col h-full min-w-0">
-                        {/* Category badge */}
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/5 text-primary">
-                                {article['Chuyên mục lớn']}
-                            </span>
-                            {article['Chuyên mục con'] && (
+                        {/* Category badge & Date */}
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            {getCategory(article) && (
+                                <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/5 text-primary">
+                                    {getCategory(article)}
+                                </span>
+                            )}
+                            {getPubDate(article) && (
                                 <>
                                     <span className="text-gray-300 text-[10px]">•</span>
-                                    <span className="text-[10px] font-medium text-gray-500 uppercase">
-                                        {article['Chuyên mục con']}
+                                    <span className="text-[10px] font-medium text-gray-500">
+                                        {getPubDate(article)}
+                                    </span>
+                                </>
+                            )}
+                            {getAuthor(article) && (
+                                <>
+                                    <span className="text-gray-300 text-[10px]">•</span>
+                                    <span className="text-[10px] font-medium text-gray-500">
+                                        {getAuthor(article)}
                                     </span>
                                 </>
                             )}
@@ -91,12 +116,14 @@ export function ArticleList({
                             className="text-lg md:text-xl font-bold text-gray-900 leading-snug mb-2 line-clamp-2 cursor-pointer group-hover:text-primary transition-colors"
                             onClick={() => onArticleClick?.(article, index)}
                         >
-                            {article['Tiêu đề']}
+                            {getTitle(article)}
                         </h3>
 
                         {/* Excerpt */}
                         <p className="text-sm text-gray-500 line-clamp-2 mb-3 leading-relaxed">
-                            {article['Tóm tắt'] ? article['Tóm tắt'].substring(0, 160) + '...' : ''}
+                            {getDescription(article).length > 160 
+                                ? getDescription(article).substring(0, 160) + '...' 
+                                : getDescription(article)}
                         </p>
 
                         {/* Footer/Action */}
