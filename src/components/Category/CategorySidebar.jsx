@@ -1,7 +1,14 @@
-import { cn, decodeHtmlEntities } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+
+
+function decodeHTMLEntities(text) {
+    if (!text) return '';
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+}
 
 /**
- * Sidebar cho trang danh mục - hiển thị bài mới nhất
  * @param {Object} props
  * @param {Array} props.articles - Danh sách bài báo
  * @param {string} props.title - Tiêu đề sidebar
@@ -18,26 +25,32 @@ export function CategorySidebar({
 }) {
     const displayedArticles = articles.slice(0, limit);
 
+    // Helper để lấy title (hỗ trợ cả API và CSV format)
+    const getTitle = (article) => decodeHTMLEntities(article.title || article['Tiêu đề'] || '');
+
     return (
         <div className={cn(
             "bg-card rounded-xl shadow-sm p-5",
             className
         )}>
+            {/* Title */}
             <h2 className="text-base font-bold text-foreground mb-4 pb-3 border-b-2 border-border flex items-center gap-2">
                 <span className="w-1 h-5 bg-primary rounded-full" />
                 {title}
             </h2>
 
+            {/* Danh sách bài viết */}
             <ul className="space-y-4">
                 {displayedArticles.map((article, index) => (
                     <li
-                        key={article.id || index}
+                        key={article.link || article.id || index}
                         className="group"
                     >
                         <button
                             onClick={() => onArticleClick?.(article, index)}
                             className="w-full text-left flex gap-3 items-start"
                         >
+                            {/* Số thứ tự */}
                             <span className={cn(
                                 "shrink-0 w-6 h-6 rounded flex items-center justify-center text-xs font-bold",
                                 index < 3
@@ -47,8 +60,9 @@ export function CategorySidebar({
                                 {index + 1}
                             </span>
 
+                            {/* Title */}
                             <span className="text-sm text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                                {article.title}
+                                {getTitle(article)}
                             </span>
                         </button>
                     </li>

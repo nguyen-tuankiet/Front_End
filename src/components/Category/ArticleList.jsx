@@ -1,13 +1,20 @@
-import { cn, decodeHtmlEntities } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+
+function decodeHTMLEntities(text) {
+    if (!text) return '';
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+
 /**
- * Component hiển thị danh sách bài báo dạng grid
  * @param {Object} props
  * @param {Array} props.articles - Danh sách bài báo
  * @param {Function} props.onArticleClick - Callback khi click vào bài báo
  * @param {boolean} props.loading - Trạng thái loading
- * @param {string} props.className - CSS class bổ sung
+ * @param {string} props.className - CSS classes bổ sung
  */
 export function ArticleList({
     articles = [],
@@ -21,6 +28,14 @@ export function ArticleList({
         e.target.src = FALLBACK_IMAGE;
         e.target.onerror = null;
     };
+
+  
+    const getTitle = (article) => decodeHTMLEntities(article.title || article['Tiêu đề'] || '');
+    const getImage = (article) => article.imageUrl || article['Thumbnail'] || FALLBACK_IMAGE;
+    const getDescription = (article) => decodeHTMLEntities(article.description || article['Tóm tắt'] || '');
+    const getCategory = (article) => article.category || article['Chuyên mục lớn'] || '';
+    const getAuthor = (article) => article.author || '';
+    const getPubDate = (article) => article.pubDate || '';
 
     if (loading) {
         return (
@@ -52,48 +67,66 @@ export function ArticleList({
         <div className={cn("space-y-6", className)}>
             {articles.map((article, index) => (
                 <article
-                    key={article.id || index}
+                    key={article.link || article.id || index}
                     className="flex flex-col sm:flex-row gap-5 group items-start pb-6 border-b border-gray-100 last:border-0 last:pb-0"
                 >
+                    {/* Thumbnail */}
                     <div
                         className="w-full sm:w-64 aspect-[16/10] sm:aspect-[4/3] max-h-48 sm:max-h-full bg-gray-100 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all shrink-0"
                         onClick={() => onArticleClick?.(article, index)}
                     >
                         <img
-                            src={article.imageUrl || FALLBACK_IMAGE}
-                            alt={article.title}
+                            src={getImage(article)}
+                            alt={getTitle(article)}
                             loading="lazy"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             onError={handleImageError}
                         />
                     </div>
 
+                    {/* Content */}
                     <div className="flex-1 flex flex-col h-full min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/5 text-primary">
-                                {article.category}
-                            </span>
-                            {article.subCategory && (
+                        {/* Category badge & Date */}
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            {getCategory(article) && (
+                                <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/5 text-primary">
+                                    {getCategory(article)}
+                                </span>
+                            )}
+                            {getPubDate(article) && (
                                 <>
                                     <span className="text-gray-300 text-[10px]">•</span>
-                                    <span className="text-[10px] font-medium text-gray-500 uppercase">
-                                        {article.subCategory}
+                                    <span className="text-[10px] font-medium text-gray-500">
+                                        {getPubDate(article)}
+                                    </span>
+                                </>
+                            )}
+                            {getAuthor(article) && (
+                                <>
+                                    <span className="text-gray-300 text-[10px]">•</span>
+                                    <span className="text-[10px] font-medium text-gray-500">
+                                        {getAuthor(article)}
                                     </span>
                                 </>
                             )}
                         </div>
 
+                        {/* Title */}
                         <h3
                             className="text-lg md:text-xl font-bold text-gray-900 leading-snug mb-2 line-clamp-2 cursor-pointer group-hover:text-primary transition-colors"
                             onClick={() => onArticleClick?.(article, index)}
                         >
-                            {article.title}
+                            {getTitle(article)}
                         </h3>
 
+                        {/* Excerpt */}
                         <p className="text-sm text-gray-500 line-clamp-2 mb-3 leading-relaxed">
-                            {article.description ? article.description.substring(0, 160) + '...' : ''}
+                            {getDescription(article).length > 160 
+                                ? getDescription(article).substring(0, 160) + '...' 
+                                : getDescription(article)}
                         </p>
 
+                        {/* Footer/Action */}
                         <div className="mt-auto pt-2">
                             <Button
                                 variant="outline"
