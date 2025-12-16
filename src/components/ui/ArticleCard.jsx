@@ -1,16 +1,22 @@
 import { Link } from "react-router-dom";
+import { Clock } from "lucide-react";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
 
 /**
  * @param {Object} props
- * @param {Object} props.article - Article data (title, excerpt, image, category, categorySlug, date)
- * @param {string} props.variant - Card variant: 'hero' | 'featured' | 'horizontal' | 'compact'
- * @param {string} props.className - Additional CSS classes
+ * @param {Object} props.article - dữ liệu article (title, excerpt, image, category, categorySlug, date)
+ * @param {string} props.variant - variant (hero, featured, horizontal, compact)
+ * @param {string} props.className - CSS class bổ sung
  */
 export function ArticleCard({ article, variant = "featured", className }) {
-    const { id, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
+    const { id, link, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
     
-    // Decode HTML entities cho title và excerpt
+    const articleIdentifier = link;
+    const articleRoute = categorySlug && articleIdentifier
+        ? `/danh-muc/${categorySlug}/bai-viet/${encodeURIComponent(articleIdentifier)}`
+        : `/bai-viet/${articleIdentifier ? encodeURIComponent(articleIdentifier) : id}`;
+    
+    // Decode HTML entities
     const decodedTitle = decodeHtmlEntities(title);
     const articleExcerpt = decodeHtmlEntities(excerpt || description);
 
@@ -24,7 +30,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "card-lg") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-xl overflow-hidden mb-4 shadow-sm aspect-[16/9]">
@@ -56,7 +62,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "card-md") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-3 aspect-[3/2]">
@@ -85,7 +91,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "card-sm") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn("block group", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-2 aspect-[16/10]">
@@ -114,7 +120,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "hero-overlay") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
                     className
@@ -152,7 +158,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "hero") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
                     className
@@ -186,7 +192,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "featured") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block group h-full flex flex-col",
                     className
@@ -221,7 +227,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "horizontal") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "flex gap-3 group items-start",
                     className
@@ -253,7 +259,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     if (variant === "compact") {
         return (
             <Link
-                to={`/bai-viet/${id}`}
+                to={articleRoute}
                 className={cn(
                     "block group py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 px-2 -mx-2 rounded transition-colors",
                     className
@@ -265,6 +271,47 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 <div className="flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                     <span className="text-gray-400 text-xs">{date}</span>
+                </div>
+            </Link>
+        );
+    }
+
+    // Search variant - similar to featured but with clock icon for time
+    if (variant === "search") {
+        return (
+            <Link
+                to={articleRoute}
+                className={cn(
+                    "block group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300",
+                    className
+                )}
+            >
+                <div className="relative aspect-[16/10] overflow-hidden">
+                    <img
+                        src={imageUrl || FALLBACK_IMAGE}
+                        alt={decodedTitle}
+                        onError={handleImageError}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {category && (
+                        <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-white text-xs font-bold uppercase rounded shadow-sm">
+                            {category}
+                        </span>
+                    )}
+                </div>
+                <div className="p-5">
+                    <h3 className="text-lg font-bold text-gray-900 leading-snug line-clamp-2 mb-3 group-hover:text-primary transition-colors">
+                        {decodedTitle}
+                    </h3>
+                    {articleExcerpt && (
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
+                            {articleExcerpt}
+                        </p>
+                    )}
+                    <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                        <Clock className="w-4 h-4" />
+                        <span>{date}</span>
+                    </div>
                 </div>
             </Link>
         );

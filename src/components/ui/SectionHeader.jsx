@@ -7,7 +7,7 @@ import { ChevronRight } from "lucide-react";
  * @param {Object} props
  * @param {string} props.title - Section title
  * @param {string} props.href - Link for "Xem thêm"
- * @param {string} props.className - Additional CSS classes
+ * @param {string} props.className -CSS classes bổ sung
  * @param {string} props.variant - Color variant: 'primary' | 'dark'
  */
 export function SectionHeader({ title, href, className, variant = "primary" }) {
