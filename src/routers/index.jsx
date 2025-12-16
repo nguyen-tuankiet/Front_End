@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import CategoryPage from "../pages/CategoryPage";
 import ArticleDetailPage from "../pages/ArticleDetailPage";
+import SearchPage from "../pages/SearchPage";
 import LoginPage from "../components/Login/LoginPage";
 import MainLayout from "../layout/MainLayout";
 import BlankLayout from "../layout/BlankLayout";
@@ -17,7 +18,7 @@ const routes = createBrowserRouter([
             { path: "danh-muc/:category/:subcategory", element: <CategoryPage /> },
             { path: "danh-muc/:category/bai-viet/:articleId", element: <ArticleDetailPage /> },
             { path: "bai-viet/:articleId", element: <ArticleDetailPage /> },
-            { path: "tim-kiem", element: <CategoryPage /> },
+            { path: "tim-kiem", element: <SearchPage /> },
         ],
     },
     {

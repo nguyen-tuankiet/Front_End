@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Clock } from "lucide-react";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
 
 /**
@@ -270,6 +271,47 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 <div className="flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                     <span className="text-gray-400 text-xs">{date}</span>
+                </div>
+            </Link>
+        );
+    }
+
+    // Search variant - similar to featured but with clock icon for time
+    if (variant === "search") {
+        return (
+            <Link
+                to={articleRoute}
+                className={cn(
+                    "block group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300",
+                    className
+                )}
+            >
+                <div className="relative aspect-[16/10] overflow-hidden">
+                    <img
+                        src={imageUrl || FALLBACK_IMAGE}
+                        alt={decodedTitle}
+                        onError={handleImageError}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {category && (
+                        <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-white text-xs font-bold uppercase rounded shadow-sm">
+                            {category}
+                        </span>
+                    )}
+                </div>
+                <div className="p-5">
+                    <h3 className="text-lg font-bold text-gray-900 leading-snug line-clamp-2 mb-3 group-hover:text-primary transition-colors">
+                        {decodedTitle}
+                    </h3>
+                    {articleExcerpt && (
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
+                            {articleExcerpt}
+                        </p>
+                    )}
+                    <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                        <Clock className="w-4 h-4" />
+                        <span>{date}</span>
+                    </div>
                 </div>
             </Link>
         );

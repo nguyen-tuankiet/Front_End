@@ -76,7 +76,7 @@ export function CategoryPage() {
         }
     }, [articles, subcategory]);
 
-    const handleArticleClick = (article, index) => {
+    const handleArticleClick = (article) => {
         const articleUrl = article.link;
         if (articleUrl) {
             // Encode URL để truyền qua route
