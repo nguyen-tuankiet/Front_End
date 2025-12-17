@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ArticleMeta } from "@/components/ui/ArticleMeta";
 import { ShareButtons } from "@/components/ui/ShareButtons";
@@ -7,7 +7,6 @@ import { SaveButton } from "@/components/ui/SaveButton";
 import { ArticleTags } from "@/components/ui/ArticleTags";
 import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
-import { getCategoryBySlug, getSubCategoryBySlug } from "@/data/categories";
 
 /**
  * Component hiển thị chi tiết bài báo
@@ -16,6 +15,7 @@ import { getCategoryBySlug, getSubCategoryBySlug } from "@/data/categories";
  * @param {Function} props.onBack - Callback khi click nút quay lại
  * @param {string} props.categorySlug - Slug của category
  * @param {string} props.subcategorySlug - Slug của subcategory
+ * @param {Object} props.categoryData - Dữ liệu category từ API
  * @param {Array} props.relatedArticles - Danh sách bài viết liên quan
  * @param {Array} props.comments - Danh sách comments
  * @param {Function} props.onCommentSubmit - Callback khi submit comment
@@ -26,6 +26,7 @@ export function ArticleDetailView({
     onBack,
     categorySlug,
     subcategorySlug,
+    categoryData = null,
     relatedArticles = [],
     comments = [],
     onCommentSubmit,
@@ -39,25 +40,18 @@ export function ArticleDetailView({
         );
     }
 
-    // Parse ảnh
-    const listImages = article['Danh sách ảnh']
-        ? article['Danh sách ảnh'].split('\n').filter(img => img.trim() !== '')
+    const listImages = article.images || [];
+    const tags = article.tags && article.tags.length > 0 
+        ? article.tags 
+        : article.category 
+        ? [article.category, article.subCategory].filter(Boolean)
         : [];
 
-    // Parse tags
-    const tags = article['Tags']
-        ? article['Tags'].split(',').map(t => t.trim()).filter(t => t)
-        : article['Chuyên mục lớn']
-        ? [article['Chuyên mục lớn'], article['Chuyên mục con']].filter(Boolean)
-        : [];
-
-    // Thời gian đăng và tác giả (đang hardcode)
-    const publishTime = "1 phút trước";
-    const author = "Trang Châu";
+    const publishTime = article.pubDate || "1 phút trước";
+    const author = article.author || "Trang Châu";
 
     return (
         <div className={cn("max-w-7xl mx-auto", className)}>
-            {/* Nút back */}
             <div className="mb-4">
                 <button
                     onClick={onBack}
@@ -68,12 +62,9 @@ export function ArticleDetailView({
                 </button>
             </div>
 
-            {/* Layout 2 cột */}
             <div className="flex flex-col lg:flex-row gap-8">
-                {/* Nội dung */}
                 <article className="flex-1 min-w-0 bg-white rounded-2xl shadow-lg overflow-hidden">
                     <div className="p-6 md:p-8">
-                        {/* Breadcrumb: Trang chủ > Category > Subcategory > Title */}
                         <nav className="mb-4 flex items-center gap-2 text-sm flex-wrap">
                             <Link
                                 to="/"
@@ -83,8 +74,7 @@ export function ArticleDetailView({
                             </Link>
                             
                             {categorySlug && (() => {
-                                const category = getCategoryBySlug(categorySlug);
-                                const categoryName = category?.name || article['Chuyên mục lớn'] || categorySlug;
+                                const categoryName = categoryData?.name || article.category || categorySlug;
                                 return (
                                     <>
                                         <span className="text-muted-foreground">/</span>
@@ -98,18 +88,18 @@ export function ArticleDetailView({
                                 );
                             })()}
                             
-                            {(subcategorySlug || article['Chuyên mục con']) && categorySlug && (() => {
-                                // Lấy từ subcategorySlug, nếu không có thì lấy từ data
+                            {(subcategorySlug || article.subCategory) && categorySlug && (() => {
                                 let subcategory = null;
                                 let subcategoryName = null;
                                 
-                                if (subcategorySlug) {
-                                    subcategory = getSubCategoryBySlug(categorySlug, subcategorySlug);
-                                    subcategoryName = subcategory?.name || article['Chuyên mục con'] || subcategorySlug;
-                                } else if (article['Chuyên mục con']) {
-                                    const category = getCategoryBySlug(categorySlug);
-                                    subcategory = category?.subs?.find(sub => sub.name === article['Chuyên mục con']);
-                                    subcategoryName = article['Chuyên mục con'];
+                                if (subcategorySlug && categoryData?.subCategories) {
+                                    subcategory = categoryData.subCategories.find(sub => sub.slug === subcategorySlug);
+                                    subcategoryName = subcategory?.name || article.subCategory || subcategorySlug;
+                                } else if (article.subCategory && categoryData?.subCategories) {
+                                    subcategory = categoryData.subCategories.find(sub => sub.name === article.subCategory);
+                                    subcategoryName = article.subCategory;
+                                } else if (article.subCategory) {
+                                    subcategoryName = article.subCategory;
                                 }
                                 
                                 if (subcategoryName) {
@@ -133,17 +123,11 @@ export function ArticleDetailView({
                                 }
                                 return null;
                             })()}
-                            
-                            {/* Title bài báo */}
-                            <span className="text-muted-foreground">/</span>
-                            <span className="text-foreground font-semibold line-clamp-1">
-                                {article['Tiêu đề']}
-                            </span>
                         </nav>
 
                         {/* Title */}
                         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-4">
-                            {article['Tiêu đề']}
+                            {article.title}
                         </h1>
 
                         {/* Meta & nút chức năng */}
@@ -151,83 +135,117 @@ export function ArticleDetailView({
                             <ArticleMeta author={author} publishTime={publishTime} />
                             <div className="flex items-center gap-3">
                                 <ShareButtons 
-                                    url={article['URL'] || window.location.href} 
-                                    title={article['Tiêu đề']} 
+                                    url={article.url || window.location.href} 
+                                    title={article.title} 
                                 />
-                                <SaveButton articleId={article.id || article['URL']} />
+                                <SaveButton articleId={article.id || article.url} />
                             </div>
                         </div>
 
                         {/* Tóm tắt bài báo */}
-                        {article['Tóm tắt'] && (
+                        {article.description && (
                             <div className="text-lg text-muted-foreground italic mb-6 pl-4 border-l-4 border-primary">
-                                {article['Tóm tắt']}
+                                {article.description}
                             </div>
                         )}
 
                         {/* Ảnh tiêu đề */}
-                        {article['Thumbnail'] && (
+                        {article.imageUrl && (
                             <div className="mb-8 rounded-xl overflow-hidden">
                                 <img
-                                    src={article['Thumbnail']}
-                                    alt={article['Tiêu đề']}
+                                    src={article.imageUrl}
+                                    alt={article.title}
                                     className="w-full h-auto"
                                     onError={(e) => e.target.style.display = 'none'}
                                 />
                             </div>
                         )}
 
-                        {/* Nội dung bài viết */}
+                        {/* Nội dung bài viết với hình ảnh xen kẽ */}
                         <div className="prose prose-lg max-w-none mb-8">
-                            {article['Nội dung'] && article['Nội dung'].split('\n\n').map((paragraph, index) => (
-                                <p key={index} className="text-foreground leading-relaxed mb-4 text-justify text-base">
-                                    {paragraph}
-                                </p>
-                            ))}
+                            {(() => {
+                                if (!article.content) return null;
+                                
+                                const paragraphs = article.content.split('\n\n');
+                                const contentImages = listImages.filter(img => img && img.trim() !== article.imageUrl?.trim());
+                                let imageIndex = 0;
+                                
+                                return paragraphs.map((paragraph, index) => {
+                                    const trimmedParagraph = paragraph.trim();
+                                    
+                                    // Kiểm tra nếu đây là caption ảnh (bắt đầu bằng "ẢNH:" hoặc chỉ chứa "ẢNH:")
+                                    const isCaptionOnly = /^ẢNH\s*:/i.test(trimmedParagraph);
+                                    const hasCaption = trimmedParagraph.includes('ẢNH:');
+                                    
+                                    if (isCaptionOnly) {
+                                        // Đây là dòng caption riêng, hiển thị ảnh với caption
+                                        const currentImage = contentImages[imageIndex];
+                                        imageIndex++;
+                                        
+                                        if (currentImage) {
+                                            return (
+                                                <figure key={index} className="my-6">
+                                                    <div className="rounded-xl overflow-hidden shadow-md">
+                                                        <img
+                                                            src={currentImage}
+                                                            alt={`Hình minh họa`}
+                                                            loading="lazy"
+                                                            className="w-full h-auto"
+                                                        />
+                                                    </div>
+                                                    <figcaption className="mt-2 text-center text-sm text-muted-foreground italic">
+                                                        {trimmedParagraph}
+                                                    </figcaption>
+                                                </figure>
+                                            );
+                                        }
+                                        return null;
+                                    }
+                                    
+                                    // Kiểm tra nếu paragraph có caption ở cuối (mô tả ảnh + caption)
+                                    if (hasCaption && !isCaptionOnly) {
+                                        const captionMatch = trimmedParagraph.match(/^(.+?)\s*(ẢNH\s*:.+)$/i);
+                                        if (captionMatch) {
+                                            const imageDescription = captionMatch[1].trim();
+                                            const captionText = captionMatch[2].trim();
+                                            const currentImage = contentImages[imageIndex];
+                                            imageIndex++;
+                                            
+                                            if (currentImage) {
+                                                return (
+                                                    <figure key={index} className="my-6">
+                                                        <div className="rounded-xl overflow-hidden shadow-md">
+                                                            <img
+                                                                src={currentImage}
+                                                                alt={imageDescription}
+                                                                loading="lazy"
+                                                                className="w-full h-auto"
+                                                            />
+                                                        </div>
+                                                        <figcaption className="mt-2 text-center text-sm text-muted-foreground italic">
+                                                            {imageDescription}
+                                                            <span className="block text-xs mt-1 text-muted-foreground/70">{captionText}</span>
+                                                        </figcaption>
+                                                    </figure>
+                                                );
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Paragraph thông thường
+                                    return (
+                                        <p key={index} className="text-foreground leading-relaxed mb-4 text-justify text-base">
+                                            {trimmedParagraph}
+                                        </p>
+                                    );
+                                });
+                            })()}
                         </div>
-
-                        {/* Ảnh */}
-                        {listImages.length > 0 && (
-                            <div className="mt-10 pt-6 border-t-2 border-border">
-                                <h3 className="text-lg font-bold text-foreground mb-4">
-                                    Hình ảnh trong bài viết
-                                </h3>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    {listImages.map((imgUrl, idx) => (
-                                        imgUrl.trim() !== article['Thumbnail']?.trim() && (
-                                            <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
-                                                <img
-                                                    src={imgUrl}
-                                                    alt={`Ảnh chi tiết ${idx + 1}`}
-                                                    loading="lazy"
-                                                    className="w-full h-auto"
-                                                />
-                                            </div>
-                                        )
-                                    ))}
-                                </div>
-                            </div>
-                        )}
 
                         {/* Tag */}
                         {tags.length > 0 && (
                             <div className="mt-8 pt-6 border-t border-border">
                                 <ArticleTags tags={tags} />
-                            </div>
-                        )}
-
-                        {/* Link trang gốc */}
-                        {article['URL'] && (
-                            <div className="mt-8 pt-6 border-t border-border text-right">
-                                <a
-                                    href={article['URL']}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
-                                >
-                                    Xem bài gốc trên Thanh Niên
-                                    <ExternalLink className="w-4 h-4" />
-                                </a>
                             </div>
                         )}
 

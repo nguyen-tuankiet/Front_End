@@ -1,7 +1,13 @@
 // Trong JavaScript, chúng ta không cần khai báo interface.
 // Tuy nhiên, cấu trúc dữ liệu vẫn giữ nguyên.
+// File này được tự động cập nhật từ API
 
 export const categories = [
+  {
+    name: "Trang chủ",
+    slug: "home",
+    rssUrl: "https://thanhnien.vn/rss/home.rss",
+  },
   {
     name: "Thời sự",
     slug: "thoi-su",
@@ -13,6 +19,8 @@ export const categories = [
       { name: "Quyền được biết", slug: "quyen-duoc-biet", rssUrl: "https://thanhnien.vn/rss/thoi-su/quyen-duoc-biet.rss" },
       { name: "Phóng sự / Điều tra", slug: "phong-su-dieu-tra", rssUrl: "https://thanhnien.vn/rss/thoi-su/phong-su--dieu-tra.rss" },
       { name: "Quốc phòng", slug: "quoc-phong", rssUrl: "https://thanhnien.vn/rss/thoi-su/quoc-phong.rss" },
+      { name: "Chống tin giả", slug: "chong-tin-gia", rssUrl: "https://thanhnien.vn/rss/thoi-su/chong-tin-gia.rss" },
+      { name: "Thành tựu y khoa", slug: "thanh-tuu-y-khoa", rssUrl: "https://thanhnien.vn/rss/thoi-su/thanh-tuu-y-khoa.rss" }
     ]
   },
   {
@@ -24,6 +32,8 @@ export const categories = [
       { name: "Vươn mình trong kỷ nguyên mới", slug: "vuon-minh-trong-ky-nguyen-moi", rssUrl: "https://thanhnien.vn/rss/chinh-tri/vuon-minh-trong-ky-nguyen-moi.rss" },
       { name: "Thời luận", slug: "thoi-luan", rssUrl: "https://thanhnien.vn/rss/chinh-tri/thoi-luan.rss" },
       { name: "Thi đua yêu nước", slug: "thi-dua-yeu-nuoc", rssUrl: "https://thanhnien.vn/rss/chinh-tri/thi-dua-yeu-nuoc.rss" },
+      { name: "Chung dòng máu Lạc Hồng", slug: "chung-dong-mau-lac-hong", rssUrl: "https://thanhnien.vn/rss/chinh-tri/chung-dong-mau-lac-hong.rss" },
+      { name: "Góp ý văn kiện đại hội Đảng", slug: "gop-y-van-kien-dai-hoi-dang", rssUrl: "https://thanhnien.vn/rss/chinh-tri/gop-y-van-kien-dai-hoi-dang.rss" }
     ]
   },
   {
@@ -36,7 +46,7 @@ export const categories = [
       { name: "Góc nhìn", slug: "goc-nhin", rssUrl: "https://thanhnien.vn/rss/the-gioi/goc-nhin.rss" },
       { name: "Hồ sơ", slug: "ho-so", rssUrl: "https://thanhnien.vn/rss/the-gioi/ho-so.rss" },
       { name: "Người Việt năm châu", slug: "nguoi-viet-nam-chau", rssUrl: "https://thanhnien.vn/rss/the-gioi/nguoi-viet-nam-chau.rss" },
-      { name: "Chuyện lạ", slug: "chuyen-la", rssUrl: "https://thanhnien.vn/rss/the-gioi/chuyen-la.rss" },
+      { name: "Chuyện lạ", slug: "chuyen-la", rssUrl: "https://thanhnien.vn/rss/the-gioi/chuyen-la.rss" }
     ]
   },
   {
@@ -49,7 +59,9 @@ export const categories = [
       { name: "Ngân hàng", slug: "ngan-hang", rssUrl: "https://thanhnien.vn/rss/kinh-te/ngan-hang.rss" },
       { name: "Chứng khoán", slug: "chung-khoan", rssUrl: "https://thanhnien.vn/rss/kinh-te/chung-khoan.rss" },
       { name: "Doanh nghiệp", slug: "doanh-nghiep", rssUrl: "https://thanhnien.vn/rss/kinh-te/doanh-nghiep.rss" },
-      { name: "Địa ốc", slug: "dia-oc", rssUrl: "https://thanhnien.vn/rss/kinh-te/dia-oc.rss" },
+      { name: "Khát vọng Việt Nam", slug: "doanh-nhan", rssUrl: "https://thanhnien.vn/rss/kinh-te/doanh-nhan.rss" },
+      { name: "Làm giàu", slug: "lam-giau", rssUrl: "https://thanhnien.vn/rss/kinh-te/lam-giau.rss" },
+      { name: "Địa ốc", slug: "dia-oc", rssUrl: "https://thanhnien.vn/rss/kinh-te/dia-oc.rss" }
     ]
   },
   {
@@ -57,10 +69,14 @@ export const categories = [
     slug: "doi-song",
     rssUrl: "https://thanhnien.vn/rss/doi-song.rss",
     subs: [
+      { name: "Thanh Niên và tôi", slug: "thanh-nien-va-toi", rssUrl: "https://thanhnien.vn/rss/doi-song/thanh-nien-va-toi.rss" },
+      { name: "Tết yêu thương", slug: "tet-yeu-thuong", rssUrl: "https://thanhnien.vn/rss/doi-song/tet-yeu-thuong.rss" },
       { name: "Người sống quanh ta", slug: "nguoi-song-quanh-ta", rssUrl: "https://thanhnien.vn/rss/doi-song/nguoi-song-quanh-ta.rss" },
       { name: "Gia đình", slug: "gia-dinh", rssUrl: "https://thanhnien.vn/rss/doi-song/gia-dinh.rss" },
       { name: "Ẩm thực", slug: "am-thuc", rssUrl: "https://thanhnien.vn/rss/doi-song/am-thuc.rss" },
       { name: "Cộng đồng", slug: "cong-dong", rssUrl: "https://thanhnien.vn/rss/doi-song/cong-dong.rss" },
+      { name: "Một nửa thế giới", slug: "mot-nua-the-gioi", rssUrl: "https://thanhnien.vn/rss/doi-song/mot-nua-the-gioi.rss" },
+      { name: "Khát vọng năm rồng", slug: "khat-vong-nam-rong", rssUrl: "https://thanhnien.vn/rss/doi-song/khat-vong-nam-rong.rss" }
     ]
   },
   {
@@ -73,7 +89,7 @@ export const categories = [
       { name: "Giới tính", slug: "gioi-tinh", rssUrl: "https://thanhnien.vn/rss/suc-khoe/gioi-tinh.rss" },
       { name: "Y tế thông minh", slug: "y-te-thong-minh", rssUrl: "https://thanhnien.vn/rss/suc-khoe/y-te-thong-minh.rss" },
       { name: "Thẩm mỹ an toàn", slug: "tham-my-an-toan", rssUrl: "https://thanhnien.vn/rss/suc-khoe/tham-my-an-toan.rss" },
-      { name: "Tin hay y tế", slug: "tin-hay-y-te", rssUrl: "https://thanhnien.vn/rss/suc-khoe/tin-hay-y-te.rss" },
+      { name: "Tin hay y tế", slug: "tin-hay-y-te", rssUrl: "https://thanhnien.vn/rss/suc-khoe/tin-hay-y-te.rss" }
     ]
   },
   {
@@ -82,10 +98,24 @@ export const categories = [
     rssUrl: "https://thanhnien.vn/rss/gioi-tre.rss",
     subs: [
       { name: "Sống - Yêu - Ăn - Chơi", slug: "song-yeu-an-choi", rssUrl: "https://thanhnien.vn/rss/gioi-tre/song-yeu-an-choi.rss" },
+      { name: "Tiếp sức gen Z mùa thi", slug: "tiep-suc-gen-z-mua-thi", rssUrl: "https://thanhnien.vn/rss/gioi-tre/tiep-suc-gen-z-mua-thi.rss" },
       { name: "Cơ hội nghề nghiệp", slug: "co-hoi-nghe-nghiep", rssUrl: "https://thanhnien.vn/rss/gioi-tre/co-hoi-nghe-nghiep.rss" },
       { name: "Đoàn - Hội", slug: "doan-hoi", rssUrl: "https://thanhnien.vn/rss/gioi-tre/doan-hoi.rss" },
       { name: "Kết nối", slug: "ket-noi", rssUrl: "https://thanhnien.vn/rss/gioi-tre/ket-noi.rss" },
       { name: "Khởi nghiệp", slug: "khoi-nghiep", rssUrl: "https://thanhnien.vn/rss/gioi-tre/khoi-nghiep.rss" },
+      { name: "Thế giới mạng", slug: "the-gioi-mang", rssUrl: "https://thanhnien.vn/rss/gioi-tre/the-gioi-mang.rss" },
+      { name: "Gương mặt trẻ", slug: "guong-mat-tre", rssUrl: "https://thanhnien.vn/rss/gioi-tre/guong-mat-tre.rss" }
+    ]
+  },
+  {
+    name: "Tiêu dùng",
+    slug: "tieu-dung-thong-minh",
+    rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh.rss",
+    subs: [
+      { name: "Mới- Mới- Mới", slug: "moi-moi-moi", rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh/moi-moi-moi.rss" },
+      { name: "Mua một chạm", slug: "mua-mot-cham", rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh/mua-mot-cham.rss" },
+      { name: "Ở đâu rẻ?", slug: "o-dau-re", rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh/o-dau-re.rss" },
+      { name: "Góc người tiêu dùng", slug: "goc-nguoi-tieu-dung", rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh/goc-nguoi-tieu-dung.rss" }
     ]
   },
   {
@@ -98,6 +128,8 @@ export const categories = [
       { name: "Du học", slug: "du-hoc", rssUrl: "https://thanhnien.vn/rss/giao-duc/du-hoc.rss" },
       { name: "Nhà trường", slug: "nha-truong", rssUrl: "https://thanhnien.vn/rss/giao-duc/nha-truong.rss" },
       { name: "Phụ huynh", slug: "phu-huynh", rssUrl: "https://thanhnien.vn/rss/giao-duc/phu-huynh.rss" },
+      { name: "Tra cứu điểm thi", slug: "tra-cuu-diem-thi", rssUrl: "https://thanhnien.vn/rss/giao-duc/tra-cuu-diem-thi.rss" },
+      { name: "Ôn thi tốt nghiệp", slug: "on-thi-tot-nghiep", rssUrl: "https://thanhnien.vn/rss/giao-duc/on-thi-tot-nghiep.rss" }
     ]
   },
   {
@@ -107,8 +139,9 @@ export const categories = [
     subs: [
       { name: "Tin tức - Sự kiện", slug: "tin-tuc-su-kien", rssUrl: "https://thanhnien.vn/rss/du-lich/tin-tuc-su-kien.rss" },
       { name: "Chơi gì, ăn đâu, đi thế nào?", slug: "choi-gi-an-dau-di-the-nao", rssUrl: "https://thanhnien.vn/rss/du-lich/choi-gi-an-dau-di-the-nao.rss" },
+      { name: "Bất động sản du lịch", slug: "bat-dong-san-du-lich", rssUrl: "https://thanhnien.vn/rss/du-lich/bat-dong-san-du-lich.rss" },
       { name: "Câu chuyện du lịch", slug: "cau-chuyen-du-lich", rssUrl: "https://thanhnien.vn/rss/du-lich/cau-chuyen-du-lich.rss" },
-      { name: "Khám phá", slug: "kham-pha", rssUrl: "https://thanhnien.vn/rss/du-lich/kham-pha.rss" },
+      { name: "Khám phá", slug: "kham-pha", rssUrl: "https://thanhnien.vn/rss/du-lich/kham-pha.rss" }
     ]
   },
   {
@@ -121,6 +154,9 @@ export const categories = [
       { name: "Khảo cứu", slug: "khao-cuu", rssUrl: "https://thanhnien.vn/rss/van-hoa/khao-cuu.rss" },
       { name: "Xem - Nghe", slug: "xem-nghe", rssUrl: "https://thanhnien.vn/rss/van-hoa/xem-nghe.rss" },
       { name: "Sách hay", slug: "sach-hay", rssUrl: "https://thanhnien.vn/rss/van-hoa/sach-hay.rss" },
+      { name: "Món ngon Hà Nội", slug: "mon-ngon-ha-noi", rssUrl: "https://thanhnien.vn/rss/van-hoa/mon-ngon-ha-noi.rss" },
+      { name: "Nghĩa tình miền Tây", slug: "nghia-tinh-mien-tay", rssUrl: "https://thanhnien.vn/rss/van-hoa/nghia-tinh-mien-tay.rss" },
+      { name: "Hào khí miền Đông", slug: "hao-khi-mien-dong", rssUrl: "https://thanhnien.vn/rss/van-hoa/hao-khi-mien-dong.rss" }
     ]
   },
   {
@@ -130,7 +166,7 @@ export const categories = [
     subs: [
       { name: "Phim", slug: "phim", rssUrl: "https://thanhnien.vn/rss/giai-tri/phim.rss" },
       { name: "Truyền hình", slug: "truyen-hinh", rssUrl: "https://thanhnien.vn/rss/giai-tri/truyen-hinh.rss" },
-      { name: "Đời nghệ sĩ", slug: "doi-nghe-si", rssUrl: "https://thanhnien.vn/rss/giai-tri/doi-nghe-si.rss" },
+      { name: "Đời nghệ sĩ", slug: "doi-nghe-si", rssUrl: "https://thanhnien.vn/rss/giai-tri/doi-nghe-si.rss" }
     ]
   },
   {
@@ -138,10 +174,12 @@ export const categories = [
     slug: "the-thao",
     rssUrl: "https://thanhnien.vn/rss/the-thao.rss",
     subs: [
+      { name: "SEA Games 33", slug: "sea-games-33", rssUrl: "https://thanhnien.vn/rss/the-thao/sea-games-33.rss" },
+      { name: "Bóng đá Thanh Niên Sinh viên", slug: "bong-da-thanh-nien-sinh-vien", rssUrl: "https://thanhnien.vn/rss/the-thao/bong-da-thanh-nien-sinh-vien.rss" },
       { name: "Bóng đá Việt Nam", slug: "bong-da-viet-nam", rssUrl: "https://thanhnien.vn/rss/the-thao/bong-da-viet-nam.rss" },
       { name: "Bóng đá Quốc tế", slug: "bong-da-quoc-te", rssUrl: "https://thanhnien.vn/rss/the-thao/bong-da-quoc-te.rss" },
       { name: "Thể thao & Cộng đồng", slug: "the-thao-cong-dong", rssUrl: "https://thanhnien.vn/rss/the-thao/the-thao-cong-dong.rss" },
-      { name: "Các môn khác", slug: "cac-mon-khac", rssUrl: "https://thanhnien.vn/rss/the-thao/cac-mon-khac.rss" },
+      { name: "Các môn khác", slug: "cac-mon-khac", rssUrl: "https://thanhnien.vn/rss/the-thao/cac-mon-khac.rss" }
     ]
   },
   {
@@ -154,7 +192,7 @@ export const categories = [
       { name: "Sản phẩm", slug: "san-pham", rssUrl: "https://thanhnien.vn/rss/cong-nghe/san-pham.rss" },
       { name: "Xu hướng - Chuyển đổi số", slug: "xu-huong-chuyen-doi-so", rssUrl: "https://thanhnien.vn/rss/cong-nghe/xu-huong-chuyen-doi-so.rss" },
       { name: "Thủ thuật", slug: "thu-thuat", rssUrl: "https://thanhnien.vn/rss/cong-nghe/thu-thuat.rss" },
-      { name: "Game", slug: "game", rssUrl: "https://thanhnien.vn/rss/cong-nghe/game.rss" },
+      { name: "Game", slug: "game", rssUrl: "https://thanhnien.vn/rss/cong-nghe/game.rss" }
     ]
   },
   {
@@ -166,16 +204,9 @@ export const categories = [
       { name: "Xe điện", slug: "xe-dien", rssUrl: "https://thanhnien.vn/rss/xe/xe-dien.rss" },
       { name: "Đánh giá xe", slug: "danh-gia-xe", rssUrl: "https://thanhnien.vn/rss/xe/danh-gia-xe.rss" },
       { name: "Tư vấn", slug: "tu-van", rssUrl: "https://thanhnien.vn/rss/xe/tu-van.rss" },
-    ]
-  },
-  {
-    name: "Tiêu dùng",
-    slug: "tieu-dung-thong-minh",
-    rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh.rss",
-    subs: [
-      { name: "Mới- Mới- Mới", slug: "moi-moi-moi", rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh/moi-moi-moi.rss" },
-      { name: "Mua một chạm", slug: "mua-mot-cham", rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh/mua-mot-cham.rss" },
-      { name: "Ở đâu rẻ?", slug: "o-dau-re", rssUrl: "https://thanhnien.vn/rss/tieu-dung-thong-minh/o-dau-re.rss" },
+      { name: "Video", slug: "video", rssUrl: "https://thanhnien.vn/rss/xe/video.rss" },
+      { name: "Xe - Giao thông", slug: "xe-giao-thong", rssUrl: "https://thanhnien.vn/rss/xe/xe-giao-thong.rss" },
+      { name: "Xe - Đời sống", slug: "xe-doi-song", rssUrl: "https://thanhnien.vn/rss/xe/xe-doi-song.rss" }
     ]
   },
   {
@@ -184,10 +215,32 @@ export const categories = [
     rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre.rss",
     subs: [
       { name: "Thời trang 24/7", slug: "thoi-trang-247", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/thoi-trang-247.rss" },
-      { name: "Làm đẹp", slug: "lam-dep", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/lam-dep.rss" },
-      { name: "Mua sắm", slug: "mua-sam", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/mua-sam.rss" },
+      { name: "Giữ dáng", slug: "giu-dang", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/giu-dang.rss" },
+      { name: "Thời trang nghề & nghiệp", slug: "thoi-trang-nghe-nghiep", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/thoi-trang-nghe-nghiep.rss" },
+      { name: "Tận hưởng", slug: "tan-huong", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/tan-huong.rss" },
+      { name: "Video", slug: "video-thoi-trang", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/video.rss" },
+      { name: "Thư viện thời trang", slug: "thu-vien-thoi-trang", rssUrl: "https://thanhnien.vn/rss/thoi-trang-tre/thu-vien-thoi-trang.rss" }
     ]
   },
+  {
+    name: "Video",
+    slug: "video",
+    rssUrl: "https://thanhnien.vn/rss/video.rss",
+    subs: [
+      { name: "Thời sự", slug: "thoi-su", rssUrl: "https://thanhnien.vn/rss/video/thoi-su.rss" },
+      { name: "Đời sống", slug: "doi-song", rssUrl: "https://thanhnien.vn/rss/video/doi-song.rss" },
+      { name: "Giải trí", slug: "giai-tri", rssUrl: "https://thanhnien.vn/rss/video/giai-tri.rss" },
+      { name: "Giáo dục", slug: "giao-duc", rssUrl: "https://thanhnien.vn/rss/video/giao-duc.rss" },
+      { name: "Sức khỏe", slug: "suc-khoe", rssUrl: "https://thanhnien.vn/rss/video/suc-khoe.rss" },
+      { name: "Thế giới", slug: "the-gioi", rssUrl: "https://thanhnien.vn/rss/video/the-gioi.rss" },
+      { name: "Trải nghiệm số", slug: "trai-nghiem-so", rssUrl: "https://thanhnien.vn/rss/video/trai-nghiem-so.rss" },
+      { name: "Thể thao", slug: "the-thao", rssUrl: "https://thanhnien.vn/rss/video/the-thao.rss" },
+      { name: "Trực tuyến", slug: "truc-tuyen", rssUrl: "https://thanhnien.vn/rss/video/truc-tuyen.rss" },
+      { name: "Bóng đá Thanh Niên Sinh viên", slug: "bong-da-thanh-nien-sinh-vien", rssUrl: "https://thanhnien.vn/rss/video/bong-da-thanh-nien-sinh-vien.rss" },
+      { name: "Bí quyết ôn thi tốt nghiệp THPT", slug: "bi-quyet-on-thi-tot-nghiep-thpt", rssUrl: "https://thanhnien.vn/rss/video/bi-quyet-on-thi-tot-nghiep-thpt.rss" },
+      { name: "Phim ngắn Vietnamese", slug: "phim-ngan-vietnamese", rssUrl: "https://thanhnien.vn/rss/video/phim-ngan-vietnamese.rss" }
+    ]
+  }
 ];
 
 export const getCategoryBySlug = (slug) => {

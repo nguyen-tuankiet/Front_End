@@ -7,8 +7,8 @@ import { Button } from "./button";
  * Component nút lưu bài viết
  * @param {Object} props
  * @param {string|number} props.articleId - ID bài viết
- * @param {string} props.className - CSS classes bổ sung
- * @param {Function} props.onSave - Callback khi lưu (optional)
+ * @param {string} props.className - CSS class bổ sung
+ * @param {Function} props.onSave - Callback khi lưu
  */
 export function SaveButton({ articleId, className, onSave }) {
     const [isSaved, setIsSaved] = useState(false);
@@ -18,7 +18,7 @@ export function SaveButton({ articleId, className, onSave }) {
         if (onSave) {
             onSave(articleId, !isSaved);
         }
-        // Có thể lưu vào localStorage hoặc gọi API ở đây
+        // Xử lý lưu
     };
 
     return (

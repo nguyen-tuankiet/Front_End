@@ -4,9 +4,9 @@ import { cn, decodeHtmlEntities } from "@/lib/utils";
 /**
 
  * @param {Object} props
- * @param {string} props.title - Sidebar title
- * @param {Array} props.articles - Array of article objects
- * @param {string} props.className - Additional CSS classes
+ * @param {string} props.title - Tiêu đề sidebar
+ * @param {Array} props.articles - Bài viết
+ * @param {string} props.className - CSS class bổ sung
  */
 export function TrendingSidebar({ title = "Tin nổi bật", articles, className }) {
     const FALLBACK_IMAGE = "https://placehold.co/100x70?text=News";
@@ -23,13 +23,18 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
                 {decodedTitle}
             </h3>
             <ul className="space-y-3">
-                {articles.slice(0, 5).map((article, index) => (
-                    <li key={article.id}>
+                {articles.slice(0, 5).map((article, index) => {
+                    const articleIdentifier = article.link || article.id;
+                    const articleRoute = articleIdentifier 
+                        ? `/bai-viet/${encodeURIComponent(articleIdentifier)}`
+                        : '#';
+                    
+                    return (
+                    <li key={article.id || index}>
                         <Link
-                            to={`/bai-viet/${article.id}`}
+                            to={articleRoute}
                             className="flex gap-3 group"
                         >
-                            {/* Thumbnail */}
                             <div className="relative shrink-0 w-16 h-12 rounded overflow-hidden">
                                 <img
                                     src={article.imageUrl || FALLBACK_IMAGE}
@@ -46,7 +51,6 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
                                     {index + 1}
                                 </span>
                             </div>
-                            {/* Content */}
                             <div className="flex-1 min-w-0">
                                 {article.category && (
                                     <span className="text-[10px] text-gray-400 font-medium block mb-0.5">
@@ -59,7 +63,8 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
                             </div>
                         </Link>
                     </li>
-                ))}
+                    );
+                })}
             </ul>
         </div>
     );

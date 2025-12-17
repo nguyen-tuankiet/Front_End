@@ -1,4 +1,5 @@
 import React from 'react';
+import { Facebook, Youtube, Mail } from 'lucide-react';
 import './Footer.css';
 
 const Footer = () => {
@@ -16,9 +17,15 @@ const Footer = () => {
               Báo điện tử uy tín hàng đầu Việt Nam, cập nhật tin tức nhanh chóng và chính xác 24/7.
             </p>
             <div className="footer-socials">
-              <button className="social-btn">f</button>
-              <button className="social-btn">▶</button>
-              <button className="social-btn">✉</button>
+              <button className="social-btn" aria-label="Facebook">
+                <Facebook className="w-5 h-5" />
+              </button>
+              <button className="social-btn" aria-label="Youtube">
+                <Youtube className="w-5 h-5" />
+              </button>
+              <button className="social-btn" aria-label="Email">
+                <Mail className="w-5 h-5" />
+              </button>
             </div>
           </div>
 

@@ -5,10 +5,10 @@ import { cn, decodeHtmlEntities } from "@/lib/utils";
 /**
  * @param {Object} props
  * @param {string} props.title - Section title
- * @param {string} props.href - Link for "Xem thêm"
- * @param {Object} props.featuredArticle - Main featured article
- * @param {Array} props.articles - List of articles
- * @param {string} props.className - Additional CSS classes
+ * @param {string} props.href - "Xem thêm"
+ * @param {Object} props.featuredArticle - Tin nóng
+ * @param {Array} props.articles - Bài viết
+ * @param {string} props.className - CSS class bổ sung
  */
 export function CategorySection({
     title,
@@ -28,7 +28,6 @@ export function CategorySection({
 
     return (
         <section className={cn("py-6", className)}>
-            {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                     <span className="w-1 h-6 bg-primary rounded-full"></span>
@@ -43,9 +42,10 @@ export function CategorySection({
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-                {/* Main article */}
                 <Link
-                    to={`/bai-viet/${featuredArticle.id}`}
+                    to={featuredArticle.link 
+                        ? `/bai-viet/${encodeURIComponent(featuredArticle.link)}`
+                        : `/bai-viet/${featuredArticle.id || ''}`}
                     className="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-shadow hover:shadow-lg"
                     style={{ boxShadow: '0 4px 20px -4px hsl(222 47% 11% / .08)' }}
                 >
@@ -75,12 +75,15 @@ export function CategorySection({
                     </div>
                 </Link>
 
-                {/* Side articles */}
                 <div className="space-y-4">
-                    {articles.slice(0, 4).map((article, index) => (
+                    {articles.slice(0, 4).map((article, index) => {
+                        const articleRoute = article.link 
+                            ? `/bai-viet/${encodeURIComponent(article.link)}`
+                            : `/bai-viet/${article.id || index}`;
+                        return (
                         <Link
                             key={article.id || index}
-                            to={`/bai-viet/${article.id}`}
+                            to={articleRoute}
                             className="flex gap-4 group"
                         >
                             <img
@@ -98,7 +101,8 @@ export function CategorySection({
                                 </span>
                             </div>
                         </Link>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </section>

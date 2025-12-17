@@ -1,6 +1,5 @@
 /**
- * Mock comments data cho development
- * Có thể thay thế bằng API call sau này
+ * Mock comments
  */
 
 export const mockComments = [
@@ -39,12 +38,12 @@ export const mockComments = [
 ];
 
 /**
- * Helper function để lấy comments cho một article
+ * Helper function để lấy comments cho bài viết
  * @param {string|number} articleId - ID của bài viết
  * @returns {Array} Danh sách comments
  */
 export const getCommentsByArticleId = (articleId) => {
-    // Hiện tại trả về mock data, sau này có thể filter theo articleId
+    // đang trả về mock data
     return mockComments;
 };
 
