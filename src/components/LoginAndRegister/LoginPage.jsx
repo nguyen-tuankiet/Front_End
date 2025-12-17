@@ -2,6 +2,7 @@ import {Bell, Bookmark, Eye, EyeOff, LockKeyhole, Mail, Newspaper} from 'lucide-
 import {useEffect, useState} from 'react';
 import {cn} from "@/lib/utils.js";
 import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "@/components/Context/AuthContext.jsx";
 
 const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -17,29 +18,28 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
-
+    const context = useAuth();
     const togglePassword = () => {
         setShowPassword(!showPassword);
     }
 
     const handleLogin = (e) => {
         e.preventDefault();
-        if (validate()){
+        if (validateForm()){
             setErrors({})
 
             const user = {
                 email: email,
                 name: "Hung Tran",
             }
-            localStorage.setItem("user", JSON.stringify(user));
-
+            context.login(user)
             setTimeout(()=> {
                 navigate("/trang-chu");
             }, 300)
         }
     }
 
-    const validate = () =>{
+    const validateForm = () =>{
         let errors = {};
         if (!email) {
             errors.email = 'Email is required';
