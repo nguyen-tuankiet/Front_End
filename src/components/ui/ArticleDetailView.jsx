@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ArticleMeta } from "@/components/ui/ArticleMeta";
 import { ShareButtons } from "@/components/ui/ShareButtons";
@@ -161,57 +161,91 @@ export function ArticleDetailView({
                             </div>
                         )}
 
-                        {/* Nội dung bài viết */}
+                        {/* Nội dung bài viết với hình ảnh xen kẽ */}
                         <div className="prose prose-lg max-w-none mb-8">
-                            {article.content && article.content.split('\n\n').map((paragraph, index) => (
-                                <p key={index} className="text-foreground leading-relaxed mb-4 text-justify text-base">
-                                    {paragraph}
-                                </p>
-                            ))}
+                            {(() => {
+                                if (!article.content) return null;
+                                
+                                const paragraphs = article.content.split('\n\n');
+                                const contentImages = listImages.filter(img => img && img.trim() !== article.imageUrl?.trim());
+                                let imageIndex = 0;
+                                
+                                return paragraphs.map((paragraph, index) => {
+                                    const trimmedParagraph = paragraph.trim();
+                                    
+                                    // Kiểm tra nếu đây là caption ảnh (bắt đầu bằng "ẢNH:" hoặc chỉ chứa "ẢNH:")
+                                    const isCaptionOnly = /^ẢNH\s*:/i.test(trimmedParagraph);
+                                    const hasCaption = trimmedParagraph.includes('ẢNH:');
+                                    
+                                    if (isCaptionOnly) {
+                                        // Đây là dòng caption riêng, hiển thị ảnh với caption
+                                        const currentImage = contentImages[imageIndex];
+                                        imageIndex++;
+                                        
+                                        if (currentImage) {
+                                            return (
+                                                <figure key={index} className="my-6">
+                                                    <div className="rounded-xl overflow-hidden shadow-md">
+                                                        <img
+                                                            src={currentImage}
+                                                            alt={`Hình minh họa`}
+                                                            loading="lazy"
+                                                            className="w-full h-auto"
+                                                        />
+                                                    </div>
+                                                    <figcaption className="mt-2 text-center text-sm text-muted-foreground italic">
+                                                        {trimmedParagraph}
+                                                    </figcaption>
+                                                </figure>
+                                            );
+                                        }
+                                        return null;
+                                    }
+                                    
+                                    // Kiểm tra nếu paragraph có caption ở cuối (mô tả ảnh + caption)
+                                    if (hasCaption && !isCaptionOnly) {
+                                        const captionMatch = trimmedParagraph.match(/^(.+?)\s*(ẢNH\s*:.+)$/i);
+                                        if (captionMatch) {
+                                            const imageDescription = captionMatch[1].trim();
+                                            const captionText = captionMatch[2].trim();
+                                            const currentImage = contentImages[imageIndex];
+                                            imageIndex++;
+                                            
+                                            if (currentImage) {
+                                                return (
+                                                    <figure key={index} className="my-6">
+                                                        <div className="rounded-xl overflow-hidden shadow-md">
+                                                            <img
+                                                                src={currentImage}
+                                                                alt={imageDescription}
+                                                                loading="lazy"
+                                                                className="w-full h-auto"
+                                                            />
+                                                        </div>
+                                                        <figcaption className="mt-2 text-center text-sm text-muted-foreground italic">
+                                                            {imageDescription}
+                                                            <span className="block text-xs mt-1 text-muted-foreground/70">{captionText}</span>
+                                                        </figcaption>
+                                                    </figure>
+                                                );
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Paragraph thông thường
+                                    return (
+                                        <p key={index} className="text-foreground leading-relaxed mb-4 text-justify text-base">
+                                            {trimmedParagraph}
+                                        </p>
+                                    );
+                                });
+                            })()}
                         </div>
-
-                        {/* Ảnh */}
-                        {listImages.length > 0 && (
-                            <div className="mt-10 pt-6 border-t-2 border-border">
-                                <h3 className="text-lg font-bold text-foreground mb-4">
-                                    Hình ảnh trong bài viết
-                                </h3>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    {listImages.map((imgUrl, idx) => (
-                                        imgUrl && imgUrl.trim() !== article.imageUrl?.trim() && (
-                                            <div key={idx} className="rounded-lg overflow-hidden shadow-sm">
-                                                <img
-                                                    src={imgUrl}
-                                                    alt={`Ảnh chi tiết ${idx + 1}`}
-                                                    loading="lazy"
-                                                    className="w-full h-auto"
-                                                />
-                                            </div>
-                                        )
-                                    ))}
-                                </div>
-                            </div>
-                        )}
 
                         {/* Tag */}
                         {tags.length > 0 && (
                             <div className="mt-8 pt-6 border-t border-border">
                                 <ArticleTags tags={tags} />
-                            </div>
-                        )}
-
-                        {/* Link trang gốc */}
-                        {article.url && (
-                            <div className="mt-8 pt-6 border-t border-border text-right">
-                                <a
-                                    href={article.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
-                                >
-                                    Xem bài gốc trên Thanh Niên
-                                    <ExternalLink className="w-4 h-4" />
-                                </a>
                             </div>
                         )}
 
