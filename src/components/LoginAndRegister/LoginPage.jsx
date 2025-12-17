@@ -115,9 +115,9 @@ const LoginPage = () => {
                                 onChange={handleEmailChange}
                             />
                         </div>
-                        {errors.email && (
-                            <p className={cn("text-xs text-red-500")}>{errors.email}</p>
-                        )}
+                            {errors.email && (
+                                <p className={cn("text-xs text-red-500")}>{errors.email}</p>
+                            )}
 
                     </div>
 

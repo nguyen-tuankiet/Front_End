@@ -21,13 +21,16 @@ export function Header() {
 
   const navigate = useNavigate();
 
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+
   // Fetch categories from API
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
         const data = await apiService.getCategories();
-        
+
         // Transform API data to match component format
         const transformedCategories = data.map(cat => ({
           name: cat.name,
@@ -39,7 +42,7 @@ export function Header() {
             href: `/danh-muc/${cat.slug}/${sub.slug}`,
           })) : [],
         }));
-        
+
         setCategoriesWithSubs(transformedCategories);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -107,10 +110,20 @@ export function Header() {
             <button className="p-1.5 hover:bg-amber-300 rounded-full transition-colors">
               <Bell className="h-4 w-4" />
             </button>
-            <Link to="/dang-nhap" className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
-              <User className="h-4 w-4" />
-              <span>Đăng nhập</span>
-            </Link>
+
+              {user ? <Link to="/ca-nhan"
+                            className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
+                      <span>{user.name}</span>
+                  </Link>
+                  :
+                  <Link to="/dang-nhap"
+                        className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
+                      <User className="h-4 w-4"/>
+                      <span>Đăng nhập</span>
+                  </Link>
+              }
+
+
           </div>
         </div>
       </div>
