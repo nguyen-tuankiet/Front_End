@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { apiService } from "@/services/api";
+import {useAuth} from "@/components/Context/AuthContext.jsx";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,9 +21,7 @@ export function Header() {
   const navRef = useRef(null);
 
   const navigate = useNavigate();
-
-  const storedUser = localStorage.getItem("user");
-  const user = storedUser ? JSON.parse(storedUser) : null;
+  const context = useAuth();
 
   // Fetch categories from API
   useEffect(() => {
@@ -86,7 +85,7 @@ export function Header() {
 
   return (
     <header className={cn(
-      "bg-white font-sans border-b border-gray-100 sticky top-0 z-50 transition-all duration-300",
+      "bg-white font-sans border-b border-gray-100 sticky top-0 z-20 transition-all duration-300",
       isCollapsed && "shadow-md"
     )}>
       {/* Row 1: Top Utility Bar - Hidden when collapsed */}
@@ -111,10 +110,19 @@ export function Header() {
               <Bell className="h-4 w-4" />
             </button>
 
-              {user ? <Link to="/ca-nhan"
-                            className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
-                      <span>{user.name}</span>
-                  </Link>
+              {context.isLoggedIn ?
+                  <div className={cn("relative cursor-pointer group ")}>
+                      <div
+                          className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors ">
+                          <span>{context.user.name}</span>
+                      </div>
+
+                      <div className={cn("absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 z-50 transition-all ")}>
+                          <Link to="/ca-nhan"   >Trang cá nhân</Link>
+                      </div>
+
+                  </div>
+
                   :
                   <Link to="/dang-nhap"
                         className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
