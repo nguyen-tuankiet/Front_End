@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { ArticleMeta } from "@/components/ui/ArticleMeta";
 import { ShareButtons } from "@/components/ui/ShareButtons";
 import { SaveButton } from "@/components/ui/SaveButton";
-import { ArticleTags } from "@/components/ui/ArticleTags";
 import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
 
@@ -15,6 +14,7 @@ import { RelatedArticles } from "@/components/ui/RelatedArticles";
  * @param {Function} props.onBack - Callback khi click nút quay lại
  * @param {string} props.categorySlug - Slug của category
  * @param {string} props.subcategorySlug - Slug của subcategory
+ * @param {string} props.subcategoryName - Tên của subcategory
  * @param {Object} props.categoryData - Dữ liệu category từ API
  * @param {Array} props.relatedArticles - Danh sách bài viết liên quan
  * @param {Array} props.comments - Danh sách comments
@@ -26,10 +26,12 @@ export function ArticleDetailView({
     onBack,
     categorySlug,
     subcategorySlug,
+    subcategoryName,
     categoryData = null,
     relatedArticles = [],
     comments = [],
     onCommentSubmit,
+    onRelatedArticleClick,
     className
 }) {
     if (!article) {
@@ -41,12 +43,6 @@ export function ArticleDetailView({
     }
 
     const listImages = article.images || [];
-    const tags = article.tags && article.tags.length > 0 
-        ? article.tags 
-        : article.category 
-        ? [article.category, article.subCategory].filter(Boolean)
-        : [];
-
     const publishTime = article.pubDate || "1 phút trước";
     const author = article.author || "Trang Châu";
 
@@ -88,34 +84,35 @@ export function ArticleDetailView({
                                 );
                             })()}
                             
-                            {(subcategorySlug || article.subCategory) && categorySlug && (() => {
+                            {(subcategorySlug || subcategoryName || article.subCategory) && categorySlug && (() => {
                                 let subcategory = null;
-                                let subcategoryName = null;
-                                
-                                if (subcategorySlug && categoryData?.subCategories) {
-                                    subcategory = categoryData.subCategories.find(sub => sub.slug === subcategorySlug);
-                                    subcategoryName = subcategory?.name || article.subCategory || subcategorySlug;
-                                } else if (article.subCategory && categoryData?.subCategories) {
-                                    subcategory = categoryData.subCategories.find(sub => sub.name === article.subCategory);
-                                    subcategoryName = article.subCategory;
-                                } else if (article.subCategory) {
-                                    subcategoryName = article.subCategory;
-                                }
+                                let displaySubcategoryName = null;
                                 
                                 if (subcategoryName) {
+                                    displaySubcategoryName = subcategoryName;
+                                    // Tìm subcategory object để lấy slug
+                                    if (subcategorySlug && categoryData?.subCategories) {
+                                        subcategory = categoryData.subCategories.find(sub => sub.slug === subcategorySlug);
+                                    } else if (categoryData?.subCategories) {
+                                        subcategory = categoryData.subCategories.find(sub => sub.name === subcategoryName);
+                                    }
+                                }
+                                
+                                if (displaySubcategoryName) {
+                                    const finalSlug = subcategory?.slug || subcategorySlug;
                                     return (
                                         <>
                                             <span className="text-muted-foreground">/</span>
-                                            {subcategory?.slug ? (
+                                            {finalSlug ? (
                                                 <Link
-                                                    to={`/danh-muc/${categorySlug}/${subcategory.slug}`}
+                                                    to={`/danh-muc/${categorySlug}/${finalSlug}`}
                                                     className="text-muted-foreground hover:text-primary transition-colors"
                                                 >
-                                                    {subcategoryName}
+                                                    {displaySubcategoryName}
                                                 </Link>
                                             ) : (
                                                 <span className="text-muted-foreground">
-                                                    {subcategoryName}
+                                                    {displaySubcategoryName}
                                                 </span>
                                             )}
                                         </>
@@ -242,13 +239,6 @@ export function ArticleDetailView({
                             })()}
                         </div>
 
-                        {/* Tag */}
-                        {tags.length > 0 && (
-                            <div className="mt-8 pt-6 border-t border-border">
-                                <ArticleTags tags={tags} />
-                            </div>
-                        )}
-
                         {/* Comment */}
                         <CommentsSection 
                             comments={comments} 
@@ -263,6 +253,7 @@ export function ArticleDetailView({
                         <RelatedArticles 
                             articles={relatedArticles}
                             title="Bài viết liên quan"
+                            onArticleClick={onRelatedArticleClick}
                         />
                     </aside>
                 )}

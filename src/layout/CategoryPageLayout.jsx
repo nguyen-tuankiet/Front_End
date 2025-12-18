@@ -5,29 +5,23 @@ import { ArrowLeft } from "lucide-react";
 /**
  * Layout chung cho trang danh mục
  * @param {Object} props
- * @param {string} props.title - Tiêu đề category chính
+ * @param {string} props.title - Tiêu đề trang
+ * @param {string} props.categoryName - Tên category cha
  * @param {Array} props.subCategories - Danh sách subcategory
  * @param {string} props.categorySlug - Slug của category hiện tại
- * @param {number} props.totalArticles - Tổng số bài viết
- * @param {number} props.currentPage - Trang hiện tại
- * @param {number} props.pageSize - Số bài mỗi trang
  * @param {React.ReactNode} props.children - Nội dung chính
  * @param {React.ReactNode} props.sidebar - Sidebar
  * @param {string} props.className - CSS class bổ sung
  */
 export function CategoryPageLayout({
     title,
+    categoryName = "",
     subCategories = [],
     categorySlug = "",
-    totalArticles = 0,
-    currentPage = 0,
-    pageSize = 9,
     children,
     sidebar,
     className
 }) {
-    const startArticle = currentPage * pageSize + 1;
-    const endArticle = Math.min((currentPage + 1) * pageSize, totalArticles);
 
     return (
         <div className={cn("max-w-7xl mx-auto py-6 px-4", className)}>
@@ -40,8 +34,17 @@ export function CategoryPageLayout({
                         <ArrowLeft className="w-4 h-4" />
                         Trang chủ
                     </Link>
-                    <span className="text-muted-foreground">/</span>
-                    <span className="text-muted-foreground">{title}</span>
+                    {categoryName && (
+                        <>
+                            <span className="text-muted-foreground">/</span>
+                            <Link
+                                to={`/danh-muc/${categorySlug}`}
+                                className="text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                {categoryName}
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 <div className="flex items-center justify-between mb-4">
@@ -51,10 +54,9 @@ export function CategoryPageLayout({
                 </div>
 
                 {subCategories.length > 0 && (
-                    <div className="pt-4 border-t border-border">
+                    <div className="mt-4">
                         <div className="flex flex-wrap gap-2 sm:gap-3">
-                            {subCategories.map((sub, idx) => {
-                                // Xử lý link nếu slug rỗng thì link đến category chính
+                            {subCategories.map((sub) => {
                                 const subLink = sub.slug 
                                     ? `/danh-muc/${categorySlug}/${sub.slug}`
                                     : `/danh-muc/${categorySlug}`;
