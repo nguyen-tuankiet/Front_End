@@ -9,12 +9,14 @@ import { cn, decodeHtmlEntities } from "@/lib/utils";
  * @param {string} props.className - CSS class bổ sung
  */
 export function ArticleCard({ article, variant = "featured", className }) {
-    const { id, link, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
+    const { id, link, url, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
     
-    const articleIdentifier = link;
-    const articleRoute = categorySlug && articleIdentifier
-        ? `/danh-muc/${categorySlug}/bai-viet/${encodeURIComponent(articleIdentifier)}`
-        : `/bai-viet/${articleIdentifier ? encodeURIComponent(articleIdentifier) : id}`;
+    const articleUrl = link || url;
+    const articleRoute = articleUrl 
+        ? `/bai-viet?url=${encodeURIComponent(articleUrl)}`
+        : id 
+            ? `/bai-viet/${id}` 
+            : '#';
     
     // Decode HTML entities
     const decodedTitle = decodeHtmlEntities(title);

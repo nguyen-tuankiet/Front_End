@@ -31,7 +31,8 @@ export function SearchFilterBar({
         const loadCategories = async () => {
             try {
                 const data = await apiService.getCategories();
-                setCategories(data || []);
+                const filtered = (data || []).filter(cat => cat.slug !== "home");
+                setCategories(filtered);
             } catch (error) {
                 console.error('Lỗi load categories:', error);
             }

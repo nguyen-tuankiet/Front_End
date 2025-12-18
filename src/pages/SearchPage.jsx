@@ -15,10 +15,13 @@ export function SearchPage() {
     const query = searchParams.get('q') || '';
     const category = searchParams.get('category') || 'all';
     const timeRange = searchParams.get('time') || 'all';
+    const currentPage = parseInt(searchParams.get('page') || '1', 10);
     
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [allArticles, setAllArticles] = useState([]);
+    
+    const ITEMS_PER_PAGE = 9;
 
     useEffect(() => {
         document.title = query ? `Tìm kiếm: ${query}` : 'Tìm kiếm';
@@ -29,8 +32,10 @@ export function SearchPage() {
                 setLoading(true);
                 const categories = await apiService.getCategories();
 
+                const filteredCategories = categories.filter(cat => cat.slug !== "home");
+
                 // Lấy toàn bộ bài báo từ toàn bộ danh mục (có thể giới hạn ít lại để tránh load lâu)
-                const categoryPromises = categories.slice(0, 10).map(async (cat) => {
+                const categoryPromises = filteredCategories.slice(0, 10).map(async (cat) => {
                     try {
                         const response = await apiService.getCategoryArticles(cat.slug);
                         if (response && response.articles) {
@@ -64,6 +69,14 @@ export function SearchPage() {
 
         loadAllArticles();
     }, []);
+
+    useEffect(() => {
+        if (query && searchParams.get('page') !== '1') {
+            const params = new URLSearchParams(searchParams);
+            params.set('page', '1');
+            setSearchParams(params, { replace: true });
+        }
+    }, [query, category, timeRange]);
 
     useEffect(() => {
         if (query && allArticles.length > 0) {
@@ -127,8 +140,24 @@ export function SearchPage() {
         if (newQuery) params.set('q', newQuery);
         if (newCategory !== 'all') params.set('category', newCategory);
         if (newTimeRange !== 'all') params.set('time', newTimeRange);
+        // Reset về trang 1 khi search mới
+        params.set('page', '1');
         
         setSearchParams(params);
+    };
+
+    // Phân trang
+    const totalPages = Math.ceil(articles.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const paginatedArticles = articles.slice(startIndex, endIndex);
+
+    const handlePageChange = (newPage) => {
+        const params = new URLSearchParams(searchParams);
+        params.set('page', newPage.toString());
+        setSearchParams(params);
+        // Scroll về đầu khi đổi trang
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     return (
@@ -145,10 +174,13 @@ export function SearchPage() {
 
                 {/* Kết quả */}
                 <SearchResults
-                    articles={articles}
+                    articles={paginatedArticles}
                     query={query}
                     totalResults={articles.length}
                     loading={loading}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
                 />
             </div>
 

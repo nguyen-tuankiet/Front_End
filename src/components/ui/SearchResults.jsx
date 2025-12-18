@@ -1,4 +1,5 @@
 import { ArticleCard } from "./ArticleCard";
+import { Pagination } from "./pagination";
 import { cn } from "@/lib/utils";
 
 /**
@@ -8,9 +9,21 @@ import { cn } from "@/lib/utils";
  * @param {string} props.query - Search query
  * @param {number} props.totalResults - Tổng số kết quả
  * @param {boolean} props.loading - Trạng thái load
+ * @param {number} props.currentPage - Trang hiện tại
+ * @param {number} props.totalPages - Tổng số trang
+ * @param {Function} props.onPageChange - Callback khi đổi trang
  * @param {string} props.className - CSS class bổ sung
  */
-export function SearchResults({ articles = [], query = '', totalResults, loading = false, className }) {
+export function SearchResults({ 
+    articles = [], 
+    query = '', 
+    totalResults, 
+    loading = false,
+    currentPage = 1,
+    totalPages = 1,
+    onPageChange,
+    className 
+}) {
     if (loading) {
         return (
             <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-6", className)}>
@@ -58,6 +71,14 @@ export function SearchResults({ articles = [], query = '', totalResults, loading
                     />
                 ))}
             </div>
+
+            {/* Phân trang */}
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={onPageChange}
+                className="mt-8"
+            />
         </div>
     );
 }
