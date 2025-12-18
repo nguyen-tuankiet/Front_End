@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Facebook, Youtube, Mail } from 'lucide-react';
 import './Footer.css';
 
@@ -44,7 +45,9 @@ const Footer = () => {
           <div className="footer-col">
             <h4 className="footer-title">Dịch vụ</h4>
             <ul className="footer-links">
-              <li>Quảng cáo</li>
+              <li>
+                <Link to="/quang-cao">Quảng cáo</Link>
+              </li>
               <li>Liên hệ</li>
               <li>Tuyển dụng</li>
               <li>RSS</li>

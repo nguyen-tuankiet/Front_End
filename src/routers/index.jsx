@@ -7,6 +7,7 @@ import LoginPage from "../components/LoginAndRegister/LoginPage";
 import MainLayout from "../layout/MainLayout";
 import BlankLayout from "../layout/BlankLayout";
 import RegisterPage from "@/components/LoginAndRegister/RegisterPage.jsx";
+import AdvertisingPage from "../pages/AdvertisingPage";
 
 const routes = createBrowserRouter([
     {
@@ -19,6 +20,7 @@ const routes = createBrowserRouter([
             { path: "danh-muc/:category/:subcategory", element: <CategoryPage /> },
             { path: "bai-viet", element: <ArticleDetailPage /> },
             { path: "tim-kiem", element: <SearchPage /> },
+            { path: "quang-cao", element: <AdvertisingPage /> },
         ],
     },
     {
