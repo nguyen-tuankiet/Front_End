@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, decodeHtmlEntities } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 
@@ -41,10 +41,9 @@ export function RelatedArticles({
 }
 
 function RelatedArticleItem({ article, onClick }) {
-    const articleUrl = article.link || article.originalUrl || article.id;
-    const routeUrl = article.category && articleUrl
-        ? `/danh-muc/${article.category}/bai-viet/${encodeURIComponent(articleUrl)}`
-        : article.url || "#";
+    const articleUrl = article.link || article.url || article.originalUrl;
+    const routeUrl = articleUrl ? `/bai-viet?url=${encodeURIComponent(articleUrl)}` : "#";
+    const decodedTitle = decodeHtmlEntities(article.title || "");
 
     return (
         <Link
@@ -56,7 +55,7 @@ function RelatedArticleItem({ article, onClick }) {
                 <div className="shrink-0 w-24 h-16 rounded overflow-hidden">
                     <img
                         src={article.imageUrl}
-                        alt={article.title || ""}
+                        alt={decodedTitle}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => e.target.style.display = 'none'}
                     />
@@ -69,7 +68,7 @@ function RelatedArticleItem({ article, onClick }) {
 
             <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-medium text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors mb-1">
-                    {article.title || ""}
+                    {decodedTitle}
                 </h3>
                 {article.pubDate || article.date ? (
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

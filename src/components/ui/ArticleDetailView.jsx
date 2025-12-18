@@ -30,6 +30,7 @@ export function ArticleDetailView({
     relatedArticles = [],
     comments = [],
     onCommentSubmit,
+    onRelatedArticleClick,
     className
 }) {
     if (!article) {
@@ -263,6 +264,7 @@ export function ArticleDetailView({
                         <RelatedArticles 
                             articles={relatedArticles}
                             title="Bài viết liên quan"
+                            onArticleClick={onRelatedArticleClick}
                         />
                     </aside>
                 )}

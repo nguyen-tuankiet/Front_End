@@ -16,9 +16,9 @@ export function ArticleDetailPage() {
     const navigate = useNavigate();
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
+    const [relatedArticles, setRelatedArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
 
     const articleUrl = searchParams.get('url');
 
@@ -64,6 +64,29 @@ export function ArticleDetailPage() {
             // Load mock comments
             setComments(getCommentsByArticleId(url));
 
+            // Fetch related articles từ cùng category
+            if (response.category) {
+                try {
+                    const categorySlug = response.category.toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '');
+                    
+                    const categoryResponse = await apiService.getCategoryArticles(categorySlug);
+                    const allArticles = categoryResponse.articles || [];
+                    
+                    // Lọc bỏ bài viết hiện tại và lấy 5 bài đầu tiên
+                    const filtered = allArticles
+                        .filter(a => a.link !== response.url && a.url !== url)
+                        .slice(0, 5);
+                    
+                    setRelatedArticles(filtered);
+                } catch (relatedErr) {
+                    console.error('Lỗi fetch related articles:', relatedErr);
+                    // Không set error, chỉ log để không ảnh hưởng đến việc hiển thị bài viết chính
+                }
+            }
+
         } catch (err) {
             console.error('Lỗi fetch article từ API:', err);
             setError(err.message);
@@ -85,7 +108,13 @@ export function ArticleDetailPage() {
         // Tạo comment mới bằng helper function
         const newComment = createComment(name, comment, articleUrl);
         setComments([newComment, ...comments]);
-       
+    };
+
+    const handleRelatedArticleClick = (relatedArticle) => {
+        const url = relatedArticle.link || relatedArticle.url;
+        if (url) {
+            navigate(`/bai-viet?url=${encodeURIComponent(url)}`);
+        }
     };
 
     if (loading) {
@@ -139,8 +168,10 @@ export function ArticleDetailPage() {
                 article={article}
                 onBack={handleBack}
                 categorySlug={categorySlug}
+                relatedArticles={relatedArticles}
                 comments={comments}
                 onCommentSubmit={handleCommentSubmit}
+                onRelatedArticleClick={handleRelatedArticleClick}
             />
         </div>
     );
