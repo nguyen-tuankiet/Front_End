@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CategoryPageLayout } from '@/layout/CategoryPageLayout';
 import { ArticleList } from '@/components/Category/ArticleList';
@@ -11,7 +11,9 @@ export function CategoryPage() {
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [categoryInfo, setCategoryInfo] = useState(null); 
+    const [subCategories, setSubCategories] = useState([]);
+    const [categoryName, setCategoryName] = useState('');
+    const [subcategoryName, setSubcategoryName] = useState(''); 
     useEffect(() => {
         if (!category) return;
 
@@ -20,6 +22,41 @@ export function CategoryPage() {
             setError(null);
 
             try {
+                // Fetch category để lấy thông tin category và subcategory
+                const categories = await apiService.getCategories();
+                const currentCategory = categories.find(cat => cat.slug === category);
+                
+                if (currentCategory) {
+                    // Lấy tên category cha
+                    setCategoryName(currentCategory.name);
+                    
+                    // Lấy subcategory
+                    if (currentCategory.subCategories) {
+                        // Map subcategory với active state
+                        const mappedSubs = currentCategory.subCategories.map(sub => ({
+                            name: sub.name,
+                            slug: sub.slug,
+                            active: sub.slug === subcategory
+                        }));
+                        setSubCategories(mappedSubs);
+                        
+                        // Lấy tên subcategory
+                        if (subcategory) {
+                            const currentSub = currentCategory.subCategories.find(sub => sub.slug === subcategory);
+                            setSubcategoryName(currentSub?.name || '');
+                        } else {
+                            setSubcategoryName('');
+                        }
+                    } else {
+                        setSubCategories([]);
+                        setSubcategoryName('');
+                    }
+                } else {
+                    setCategoryName(category);
+                    setSubCategories([]);
+                    setSubcategoryName('');
+                }
+
                 let response;
                 if (subcategory) {
                     response = await apiService.getSubcategoryArticles(category, subcategory);
@@ -27,17 +64,7 @@ export function CategoryPage() {
                     response = await apiService.getCategoryArticles(category);
                 }
 
-
-                setCategoryInfo({
-                    title: response.title,
-                    description: response.description,
-                    link: response.link,
-                    language: response.language
-                });
                 setArticles(response.articles || []);
-                if (response.title) {
-                    document.title = response.title;
-                }
             } catch (err) {
                 console.error('Lỗi fetch articles:', err);
                 setError(err.message);
@@ -50,21 +77,31 @@ export function CategoryPage() {
         fetchArticles();
     }, [category, subcategory]);
 
+    // Tạo tiêu đề
+    const pageTitle = useMemo(() => {
+        return subcategoryName 
+            ? `${categoryName} - ${subcategoryName}`
+            : categoryName || category || 'Danh mục';
+    }, [subcategoryName, categoryName, category]);
+
+    // Cập nhật document.title khi pageTitle thay đổi
+    useEffect(() => {
+        if (pageTitle) {
+            document.title = pageTitle;
+        }
+    }, [pageTitle]);
+
     const handleArticleClick = (article) => {
         const articleUrl = encodeURIComponent(article.link);
         navigate(`/bai-viet?url=${articleUrl}`);
     };
 
-    const pageTitle = categoryInfo?.title?.split('|')[0]?.trim() || category || 'Danh mục';
-
     return (
         <CategoryPageLayout
             title={pageTitle}
+            categoryName={categoryName}
             categorySlug={category}
-            totalArticles={articles.length}
-            currentPage={0}
-            pageSize={9}
-            error={error}
+            subCategories={subCategories}
             sidebar={
                 <CategorySidebar
                     articles={articles}

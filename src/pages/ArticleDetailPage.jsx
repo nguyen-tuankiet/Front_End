@@ -11,12 +11,73 @@ function decodeHTMLEntities(text) {
     return textarea.value;
 }
 
+/**
+ * Tìm category và subcategory từ category string
+ * @param {string} categoryString - Category string từ API
+ * @param {Array} categories - Danh sách category từ API
+ * @returns {{category: Object, subcategory: Object|null}} - Category và subcategory tìm được
+ */
+function findCategoryAndSubcategory(categoryString, categories) {
+    if (!categoryString || !categories) {
+        return { category: null, subcategory: null };
+    }
+
+    const sortedCategories = [...categories].sort((a, b) => b.name.length - a.name.length);
+
+    // 1. Tìm category cha trước
+    let category = sortedCategories.find(cat => 
+        cat.name === categoryString || 
+        cat.slug === categoryString.toLowerCase()
+            .replace(/\s+/g, '-')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+    );
+
+    if (category) {
+        return { category, subcategory: null };
+    }
+
+    // 2. Tìm trong subcategory
+    for (const cat of sortedCategories) {
+        if (!cat.subCategories) continue;
+
+        let subcategory = cat.subCategories.find(sub =>
+            sub.name === categoryString ||
+            sub.slug === categoryString.toLowerCase()
+                .replace(/\s+/g, '-')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+        );
+
+        if (subcategory) {
+            return { category: cat, subcategory };
+        }
+
+        // 3. Tách chuỗi "Category Subcategory"
+        const categoryNameWithSpace = cat.name + ' ';
+        if (categoryString === cat.name || categoryString.startsWith(categoryNameWithSpace)) {
+            const remainingPart = categoryString.substring(cat.name.length).trim();
+            if (remainingPart) {
+                // Tìm subcategory trong phần còn lại
+                subcategory = cat.subCategories.find(sub => sub.name === remainingPart);
+                if (subcategory) {
+                    return { category: cat, subcategory };
+                }
+            }
+        }
+    }
+
+    return { category: null, subcategory: null };
+}
+
 export function ArticleDetailPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
     const [relatedArticles, setRelatedArticles] = useState([]);
+    const [categoryData, setCategoryData] = useState(null);
+    const [subcategoryName, setSubcategoryName] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -33,7 +94,7 @@ export function ArticleDetailPage() {
         }
     }, [articleUrl]);
 
-    // Fetch article từ API mới (web scraping)
+    // Fetch article từ API
     const fetchArticleFromAPI = async (url) => {
         try {
             setLoading(true);
@@ -56,6 +117,8 @@ export function ArticleDetailPage() {
                 'URL': response.url || url,
                 'Ngày đăng': response.pubDate,
                 'Tác giả': response.author,
+                subCategory: response.subCategory || null,
+                category: response.category,
             };
 
             setArticle(formattedArticle);
@@ -64,26 +127,42 @@ export function ArticleDetailPage() {
             // Load mock comments
             setComments(getCommentsByArticleId(url));
 
-            // Fetch related articles từ cùng category
+            // Fetch category và bài báo từ cùng category
             if (response.category) {
                 try {
-                    const categorySlug = response.category.toLowerCase()
-                        .replace(/\s+/g, '-')
-                        .normalize('NFD')
-                        .replace(/[\u0300-\u036f]/g, '');
+                    const categories = await apiService.getCategories();
                     
-                    const categoryResponse = await apiService.getCategoryArticles(categorySlug);
-                    const allArticles = categoryResponse.articles || [];
+                    // Tìm category và subcategory từ response.category
+                    const { category: currentCategory, subcategory: foundSubcategory } = 
+                        findCategoryAndSubcategory(response.category, categories);
                     
-                    // Lọc bỏ bài viết hiện tại và lấy 5 bài đầu tiên
-                    const filtered = allArticles
-                        .filter(a => a.link !== response.url && a.url !== url)
-                        .slice(0, 5);
-                    
-                    setRelatedArticles(filtered);
+                    if (currentCategory) {
+                        setCategoryData({
+                            name: currentCategory.name,
+                            slug: currentCategory.slug,
+                            subCategories: currentCategory.subCategories || []
+                        });
+                        
+                        // Lưu subcategory name
+                        if (foundSubcategory) {
+                            setSubcategoryName(foundSubcategory.name);
+                        } else if (response.subCategory) {
+                            setSubcategoryName(response.subCategory);
+                        }
+                        
+                        // Fetch bài báo liên quan từ category chính
+                        const categoryResponse = await apiService.getCategoryArticles(currentCategory.slug);
+                        const allArticles = categoryResponse.articles || [];
+                        
+                        // Lọc bỏ bài viết hiện tại và lấy 5 bài
+                        const filtered = allArticles
+                            .filter(a => a.link !== response.url && a.url !== url)
+                            .slice(0, 5);
+                        
+                        setRelatedArticles(filtered);
+                    }
                 } catch (relatedErr) {
                     console.error('Lỗi fetch related articles:', relatedErr);
-                    // Không set error, chỉ log để không ảnh hưởng đến việc hiển thị bài viết chính
                 }
             }
 
@@ -96,7 +175,6 @@ export function ArticleDetailPage() {
     };
 
     const handleBack = () => {
-        // Nếu có history, go back. Nếu không, navigate về trang chủ
         if (window.history.length > 1) {
             navigate(-1);
         } else {
@@ -158,9 +236,10 @@ export function ArticleDetailPage() {
         );
     }
 
-    const categorySlug = article?.category ? 
+    // Lấy category slug từ categoryData
+    const categorySlug = categoryData?.slug || (article?.category ? 
         article.category.toLowerCase().replace(/\s+/g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, '') 
-        : null;
+        : null);
 
     return (
         <div className="py-8 px-4">
@@ -168,6 +247,8 @@ export function ArticleDetailPage() {
                 article={article}
                 onBack={handleBack}
                 categorySlug={categorySlug}
+                subcategoryName={subcategoryName}
+                categoryData={categoryData}
                 relatedArticles={relatedArticles}
                 comments={comments}
                 onCommentSubmit={handleCommentSubmit}
