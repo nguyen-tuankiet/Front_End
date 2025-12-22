@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Search, Menu, X, Sun, Moon, Bell, User, Home } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Search, Menu, X, Sun, Moon, Bell, User, Home, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -21,7 +21,19 @@ export function Header() {
   const navRef = useRef(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const context = useAuth();
+
+  // Xác định category hiện tại dựa trên URL
+  const getCurrentCategorySlug = () => {
+    const path = location.pathname;
+    if (path === '/' || path === '/trang-chu') return 'home';
+    // Match /danh-muc/category hoặc /danh-muc/category/subcategory
+    const match = path.match(/^\/danh-muc\/([^/]+)/);
+    return match ? match[1] : null;
+  };
+
+  const currentCategorySlug = getCurrentCategorySlug();
 
   // Fetch categories from API
   useEffect(() => {
@@ -242,7 +254,12 @@ export function Header() {
             <li className="relative shrink-0">
               <Link
                 to="/"
-                className="flex items-center px-2 py-2 text-primary hover:text-primary/80 transition-colors"
+                className={cn(
+                  "flex items-center px-2 py-2.5 transition-colors",
+                  (currentCategorySlug === 'home' || currentCategorySlug === null && location.pathname === '/')
+                    ? "text-primary border-b-2 border-primary -mb-[2px]" 
+                    : "text-gray-600 hover:text-primary"
+                )}
               >
                 <Home className="h-5 w-5" />
               </Link>
@@ -276,7 +293,12 @@ export function Header() {
               >
                 <Link
                   to={cat.href}
-                  className="flex items-center gap-1 px-2 py-2 text-sm font-medium text-gray-600 hover:text-primary transition-colors"
+                  className={cn(
+                    "flex items-center gap-1 px-2 py-2.5 text-sm font-medium transition-colors",
+                    currentCategorySlug === cat.slug
+                      ? "text-primary border-b-2 border-primary -mb-[2px]"
+                      : "text-gray-600 hover:text-primary"
+                  )}
                 >
                   {cat.name}
                 </Link>
@@ -372,7 +394,12 @@ export function Header() {
                   <div className="flex items-center border-b border-gray-50">
                     <Link
                       to={cat.href}
-                      className="flex-1 px-4 py-3 font-medium text-gray-700 hover:text-primary hover:bg-orange-50"
+                      className={cn(
+                        "flex-1 px-4 py-3 font-medium hover:text-primary hover:bg-orange-50",
+                        currentCategorySlug === cat.slug
+                          ? "text-primary bg-orange-50 border-l-4 border-primary"
+                          : "text-gray-700"
+                      )}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {cat.name}
