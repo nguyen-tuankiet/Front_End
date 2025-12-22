@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { ArticleDetailView } from '@/components/ui/ArticleDetailView';
 import { getCommentsByArticleId, createComment } from '@/data/mockComments';
 import { apiService } from '@/services/api';
@@ -72,6 +72,7 @@ function findCategoryAndSubcategory(categoryString, categories) {
 
 export function ArticleDetailPage() {
     const [searchParams] = useSearchParams();
+    const { articleId } = useParams();
     const navigate = useNavigate();
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
@@ -81,13 +82,14 @@ export function ArticleDetailPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const articleUrl = searchParams.get('url');
+    // Hỗ trợ cả 2 cách: query string (?url=...) và URL params (/bai-viet/:articleId)
+    const articleUrl = searchParams.get('url') || (articleId ? decodeURIComponent(articleId) : null);
 
     useEffect(() => {
         document.title = 'Loading...';
 
         if (articleUrl) {
-            fetchArticleFromAPI(decodeURIComponent(articleUrl));
+            fetchArticleFromAPI(articleUrl);
         } else {
             setLoading(false);
             setError('Không tìm thấy bài viết. Vui lòng cung cấp URL bài viết.');
