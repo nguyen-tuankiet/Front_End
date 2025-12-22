@@ -20,6 +20,7 @@ export function CategoryPageLayout({
     categorySlug = "",
     children,
     sidebar,
+    pagination,
     className
 }) {
 
@@ -94,6 +95,13 @@ export function CategoryPageLayout({
                     </aside>
                 )}
             </div>
+
+            {/* Pagination - nằm ngoài layout 2 cột, ở giữa trang */}
+            {pagination && (
+                <div className="mt-12 flex flex-col items-center justify-center">
+                    {pagination}
+                </div>
+            )}
         </div>
     );
 }

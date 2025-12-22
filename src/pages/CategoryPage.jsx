@@ -3,7 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CategoryPageLayout } from '@/layout/CategoryPageLayout';
 import { ArticleList } from '@/components/Category/ArticleList';
 import { CategorySidebar } from '@/components/Category/CategorySidebar';
+import { Pagination } from '@/components/ui/pagination';
 import { apiService } from '@/services/api';
+
+const ARTICLES_PER_PAGE = 10;
 
 export function CategoryPage() {
     const { category, subcategory } = useParams();
@@ -14,6 +17,7 @@ export function CategoryPage() {
     const [subCategories, setSubCategories] = useState([]);
     const [categoryName, setCategoryName] = useState('');
     const [subcategoryName, setSubcategoryName] = useState(''); 
+    const [currentPage, setCurrentPage] = useState(1); 
     useEffect(() => {
         if (!category) return;
 
@@ -65,6 +69,7 @@ export function CategoryPage() {
                 }
 
                 setArticles(response.articles || []);
+                setCurrentPage(1); // Reset về trang 1 khi đổi category/subcategory
             } catch (err) {
                 console.error('Lỗi fetch articles:', err);
                 setError(err.message);
@@ -76,6 +81,23 @@ export function CategoryPage() {
 
         fetchArticles();
     }, [category, subcategory]);
+
+    // Tính toán phân trang
+    const totalPages = useMemo(() => {
+        return Math.ceil(articles.length / ARTICLES_PER_PAGE);
+    }, [articles.length]);
+
+    const paginatedArticles = useMemo(() => {
+        const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+        const endIndex = startIndex + ARTICLES_PER_PAGE;
+        return articles.slice(startIndex, endIndex);
+    }, [articles, currentPage]);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        // Scroll lên đầu danh sách bài viết
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     // Tạo tiêu đề
     const pageTitle = useMemo(() => {
@@ -110,9 +132,23 @@ export function CategoryPage() {
                     limit={5}
                 />
             }
+            pagination={
+                !loading && articles.length > 0 && (
+                    <>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                        <p className="text-center text-sm text-gray-500 mt-3">
+                            Hiển thị {((currentPage - 1) * ARTICLES_PER_PAGE) + 1} - {Math.min(currentPage * ARTICLES_PER_PAGE, articles.length)} / {articles.length} bài viết
+                        </p>
+                    </>
+                )
+            }
         >
             <ArticleList
-                articles={articles}
+                articles={paginatedArticles}
                 onArticleClick={handleArticleClick}
                 loading={loading}
             />
