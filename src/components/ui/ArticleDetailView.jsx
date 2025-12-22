@@ -6,6 +6,7 @@ import { ShareButtons } from "@/components/ui/ShareButtons";
 import { SaveButton } from "@/components/ui/SaveButton";
 import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
+import ListenButton from "@/components/ui/ListenButton.jsx";
 
 /**
  * Component hiển thị chi tiết bài báo
@@ -46,6 +47,7 @@ export function ArticleDetailView({
     const publishTime = article.pubDate || "1 phút trước";
     const author = article.author || "Trang Châu";
 
+    console.log(article)
     return (
         <div className={cn("max-w-7xl mx-auto", className)}>
             <div className="mb-4">
@@ -128,7 +130,7 @@ export function ArticleDetailView({
                         </h1>
 
                         {/* Meta & nút chức năng */}
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4 border-b border-border">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4">
                             <ArticleMeta author={author} publishTime={publishTime} />
                             <div className="flex items-center gap-3">
                                 <ShareButtons 
@@ -137,6 +139,11 @@ export function ArticleDetailView({
                                 />
                                 <SaveButton articleId={article.id || article.url} />
                             </div>
+                        </div>
+
+                        {/* Chức năng nghe bài viết */}
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4 border-b border-border">
+                            < ListenButton article={article} />
                         </div>
 
                         {/* Tóm tắt bài báo */}
