@@ -109,7 +109,7 @@ const LoginPage = () => {
                             <input
                                 id="email"
                                 type="text"
-                                placeholder="name@example.com"
+                                placeholder="22130136@st.hcmuaf.edu"
                                 className="flex-grow border-none outline-none bg-background select-none"
                                 value={email}
                                 onChange={handleEmailChange}
@@ -209,7 +209,8 @@ const LoginPage = () => {
                     <p className="pt-8">Đăng nhập đẻ trải nghiêm đầy đủ các tính năng</p>
 
                     <div className="pt-8 pb-8">
-                        <div className="flex row-auto content-center items-center bg-white/20 p-3 rounded-2xl ">
+                        <div className="flex row-auto content-center items-center bg-white/20 p-3 rounded-2xl 
+                                        hover:bg-orange-500/40 hover:scale-[1.02] transition-all duration-200 cursor-pointer hover:border-orange-400 border border-transparent">
                             <div className="p-2 bg-white/35 rounded-xl">
                                 <Newspaper />
                             </div>
@@ -219,7 +220,8 @@ const LoginPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex row-auto content-center items-center bg-white/20 p-3 rounded-2xl mt-5">
+                        <div className="flex row-auto content-center items-center bg-white/20 p-3 rounded-2xl mt-5
+                                        hover:bg-orange-500/40 hover:scale-[1.02] transition-all duration-200 cursor-pointer hover:border-orange-400 border border-transparent">
                             <div className="p-2 bg-white/35 rounded-xl">
                                 <Bell />
                             </div>
@@ -229,7 +231,8 @@ const LoginPage = () => {
                             </div>
                         </div>
 
-                        <div className="flex row-auto content-center items-center bg-white/20 p-3 rounded-2xl mt-5">
+                        <div className="flex row-auto content-center items-center bg-white/20 p-3 rounded-2xl mt-5
+                                        hover:bg-orange-500/40 hover:scale-[1.02] transition-all duration-200 cursor-pointer hover:border-orange-400 border border-transparent">
                             <div className="p-2 bg-white/35 rounded-xl">
                                 <Bookmark />
                             </div>

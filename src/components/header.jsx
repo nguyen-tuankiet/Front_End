@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Search, Menu, X, Sun, Moon, Bell, User, Home, ChevronDown } from "lucide-react";
+import { Search, Menu, X, Sun, Moon, Bell, User, Home, ChevronDown, Bookmark, Headphones, Megaphone, Newspaper, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -18,7 +18,9 @@ export function Header() {
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navRef = useRef(null);
+  const userMenuRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -76,6 +78,18 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Click outside to close user menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleSearch = () => {
     if (searchQuery.trim()) {
       navigate(`/tim-kiem?q=${encodeURIComponent(searchQuery.trim())}`);
@@ -102,8 +116,8 @@ export function Header() {
     )}>
       {/* Row 1: Top Utility Bar - Hidden when collapsed */}
       <div className={cn(
-        "border-b border-gray-100 overflow-hidden transition-all duration-300",
-        isCollapsed ? "max-h-0 opacity-0" : "max-h-12 opacity-100"
+        "border-b border-gray-100 transition-all duration-300",
+        isCollapsed ? "max-h-0 opacity-0 overflow-hidden" : "max-h-12 opacity-100"
       )}>
         <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-gray-500">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -123,16 +137,72 @@ export function Header() {
             </button>
 
               {context.isLoggedIn ?
-                  <div className={cn("relative cursor-pointer group ")}>
-                      <div
-                          className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors ">
+                  <div ref={userMenuRef} className="relative">
+                      <button
+                          onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                          className="flex items-center gap-1.5 hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
+                          <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-xs font-semibold">
+                              {context.user.name?.charAt(0).toUpperCase() || 'A'}
+                          </div>
                           <span>{context.user.name}</span>
-                      </div>
+                      </button>
 
-                      <div className={cn("absolute left-0 top-full mt-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 z-50 transition-all ")}>
-                          <Link to="/ca-nhan"   >Trang cá nhân</Link>
-                      </div>
-
+                      {/* Dropdown Menu */}
+                      {isUserMenuOpen && (
+                          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-[100]">
+                              <Link 
+                                  to="/ho-so" 
+                                  onClick={() => setIsUserMenuOpen(false)}
+                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                              >
+                                  <User className="h-4 w-4 text-gray-500" />
+                                  <span className="text-sm">Hồ sơ cá nhân</span>
+                              </Link>
+                              <Link 
+                                  to="/bai-viet-da-luu" 
+                                  onClick={() => setIsUserMenuOpen(false)}
+                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                              >
+                                  <Bookmark className="h-4 w-4 text-gray-500" />
+                                  <span className="text-sm">Bài viết đã lưu</span>
+                              </Link>
+                              <Link 
+                                  to="/podcast" 
+                                  onClick={() => setIsUserMenuOpen(false)}
+                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                              >
+                                  <Headphones className="h-4 w-4 text-gray-500" />
+                                  <span className="text-sm">Podcast</span>
+                              </Link>
+                              <Link 
+                                  to="/quang-cao" 
+                                  onClick={() => setIsUserMenuOpen(false)}
+                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                              >
+                                  <Megaphone className="h-4 w-4 text-gray-500" />
+                                  <span className="text-sm">Quảng cáo</span>
+                              </Link>
+                              <Link 
+                                  to="/dat-bao" 
+                                  onClick={() => setIsUserMenuOpen(false)}
+                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                              >
+                                  <Newspaper className="h-4 w-4 text-gray-500" />
+                                  <span className="text-sm">Đặt báo</span>
+                              </Link>
+                              <div className="border-t border-gray-100 my-1"></div>
+                              <button 
+                                  onClick={() => {
+                                      context.logout();
+                                      setIsUserMenuOpen(false);
+                                  }}
+                                  className="flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors w-full"
+                              >
+                                  <LogOut className="h-4 w-4" />
+                                  <span className="text-sm">Đăng xuất</span>
+                              </button>
+                          </div>
+                      )}
                   </div>
 
                   :
