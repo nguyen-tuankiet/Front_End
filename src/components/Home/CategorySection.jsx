@@ -71,7 +71,7 @@ export function CategorySection({
                                 {decodeHtmlEntities(featuredArticle.excerpt || featuredArticle.description)}
                             </p>
                         )}
-                        <span className="text-xs text-gray-400">{featuredArticle.date}</span>
+                        <span className="text-xs text-gray-400">{featuredArticle.pubDate}</span>
                     </div>
                 </Link>
 
@@ -82,7 +82,7 @@ export function CategorySection({
                             : `/bai-viet/${article.id || index}`;
                         return (
                         <Link
-                            key={article.id || index}
+                            key={article.id || article.link || index}
                             to={articleRoute}
                             className="flex gap-4 group"
                         >
@@ -97,7 +97,7 @@ export function CategorySection({
                                     {decodeHtmlEntities(article.title)}
                                 </h4>
                                 <span className="text-xs text-gray-400 mt-1 block">
-                                    {article.date}
+                                    {article.pubDate}
                                 </span>
                             </div>
                         </Link>

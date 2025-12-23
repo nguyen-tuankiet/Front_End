@@ -9,7 +9,11 @@ import { cn, decodeHtmlEntities } from "@/lib/utils";
  * @param {string} props.className - CSS class bổ sung
  */
 export function ArticleCard({ article, variant = "featured", className }) {
-    const { id, link, url, title, excerpt, description, imageUrl, category, categorySlug, date } = article;
+    if (!article) {
+        return null;
+    }
+    
+    const { id, link, url, title, excerpt, description, imageUrl, category, categorySlug, date, pubDate } = article;
     
     const articleUrl = link || url;
     const articleRoute = articleUrl 
@@ -21,6 +25,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
     // Decode HTML entities
     const decodedTitle = decodeHtmlEntities(title);
     const articleExcerpt = decodeHtmlEntities(excerpt || description);
+    const articleDate = pubDate || date;
 
     const FALLBACK_IMAGE = "https://placehold.co/600x400?text=News";
 
@@ -55,7 +60,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                             {articleExcerpt}
                         </p>
                     )}
-                    <span className="text-gray-400 text-xs font-medium">{date}</span>
+                    <span className="text-gray-400 text-xs font-medium">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -84,7 +89,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                     <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">
                         {decodedTitle}
                     </h3>
-                    <span className="text-gray-400 text-xs font-medium block">{date}</span>
+                    <span className="text-gray-400 text-xs font-medium block">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -113,7 +118,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                     <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-2 mb-1 group-hover:text-primary transition-colors">
                         {decodedTitle}
                     </h3>
-                    <span className="text-gray-400 text-[11px] font-medium block">{date}</span>
+                    <span className="text-gray-400 text-[11px] font-medium block">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -151,7 +156,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                             {articleExcerpt}
                         </p>
                     )}
-                    <span className="text-gray-400 text-xs font-medium">{date}</span>
+                    <span className="text-gray-400 text-xs font-medium">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -185,7 +190,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                             {articleExcerpt}
                         </p>
                     )}
-                    <span className="text-gray-400 text-xs font-medium">{date}</span>
+                    <span className="text-gray-400 text-xs font-medium">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -220,7 +225,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                             {articleExcerpt}
                         </p>
                     )}
-                    <span className="text-gray-400 text-xs font-medium mt-auto">{date}</span>
+                    <span className="text-gray-400 text-xs font-medium mt-auto">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -252,7 +257,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                     <h4 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors mb-1">
                         {decodedTitle}
                     </h4>
-                    <span className="text-gray-400 text-[11px] font-medium">{date}</span>
+                    <span className="text-gray-400 text-[11px] font-medium">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -272,7 +277,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 </h4>
                 <div className="flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                    <span className="text-gray-400 text-xs">{date}</span>
+                    <span className="text-gray-400 text-xs">{articleDate}</span>
                 </div>
             </Link>
         );
@@ -312,7 +317,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
                     )}
                     <div className="flex items-center gap-1.5 text-gray-500 text-xs">
                         <Clock className="w-4 h-4" />
-                        <span>{date}</span>
+                        <span>{articleDate}</span>
                     </div>
                 </div>
             </Link>
