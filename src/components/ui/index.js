@@ -15,4 +15,5 @@ export { ShareButtons } from './ShareButtons';
 export { TrendingSidebar } from './TrendingSidebar';
 export { CommentsSection } from './CommentsSection';
 export { Pagination } from './pagination';
+export { ListenButton } from './ListenButton';
 
