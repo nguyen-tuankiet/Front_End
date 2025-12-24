@@ -35,11 +35,11 @@ export function HomePage() {
     };
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+        return <div className="min-h-screen flex items-center justify-center bg-background text-foreground">Loading...</div>;
     }
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: '#F7F7F7' }}>
+        <div className="min-h-screen bg-background">
             <HeroSection
                 mainArticle={heroArticle}
                 sideArticles={sideArticles}

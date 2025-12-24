@@ -57,7 +57,7 @@ export function ArticleList({
 
     if (articles.length === 0) {
         return (
-            <div className="text-center py-16 text-muted-foreground bg-gray-50 rounded-xl border border-dashed">
+            <div className="text-center py-16 text-muted-foreground bg-muted/50 rounded-xl border border-dashed border-border">
                 <p>Không có bài viết nào trong danh mục này.</p>
             </div>
         );
@@ -68,11 +68,11 @@ export function ArticleList({
             {articles.map((article, index) => (
                 <article
                     key={article.link || article.id || index}
-                    className="flex flex-col sm:flex-row gap-5 group items-start pb-6 border-b border-gray-100 last:border-0 last:pb-0"
+                    className="flex flex-col sm:flex-row gap-5 group items-start pb-6 border-b border-border last:border-0 last:pb-0"
                 >
                     {/* Thumbnail */}
                     <div
-                        className="w-full sm:w-64 aspect-[16/10] sm:aspect-[4/3] max-h-48 sm:max-h-full bg-gray-100 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all shrink-0"
+                        className="w-full sm:w-64 aspect-[16/10] sm:aspect-[4/3] max-h-48 sm:max-h-full bg-muted rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all shrink-0"
                         onClick={() => onArticleClick?.(article, index)}
                     >
                         <img
@@ -95,16 +95,16 @@ export function ArticleList({
                             )}
                             {getPubDate(article) && (
                                 <>
-                                    <span className="text-gray-300 text-[10px]">•</span>
-                                    <span className="text-[10px] font-medium text-gray-500">
+                                    <span className="text-muted-foreground/50 text-[10px]">•</span>
+                                    <span className="text-[10px] font-medium text-muted-foreground">
                                         {getPubDate(article)}
                                     </span>
                                 </>
                             )}
                             {getAuthor(article) && (
                                 <>
-                                    <span className="text-gray-300 text-[10px]">•</span>
-                                    <span className="text-[10px] font-medium text-gray-500">
+                                    <span className="text-muted-foreground/50 text-[10px]">•</span>
+                                    <span className="text-[10px] font-medium text-muted-foreground">
                                         {getAuthor(article)}
                                     </span>
                                 </>
@@ -113,14 +113,14 @@ export function ArticleList({
 
                         {/* Title */}
                         <h3
-                            className="text-lg md:text-xl font-bold text-gray-900 leading-snug mb-2 line-clamp-2 cursor-pointer group-hover:text-primary transition-colors"
+                            className="text-lg md:text-xl font-bold text-foreground leading-snug mb-2 line-clamp-2 cursor-pointer group-hover:text-primary transition-colors"
                             onClick={() => onArticleClick?.(article, index)}
                         >
                             {getTitle(article)}
                         </h3>
 
                         {/* Excerpt */}
-                        <p className="text-sm text-gray-500 line-clamp-2 mb-3 leading-relaxed">
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
                             {getDescription(article).length > 160 
                                 ? getDescription(article).substring(0, 160) + '...' 
                                 : getDescription(article)}

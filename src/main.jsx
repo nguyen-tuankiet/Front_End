@@ -3,9 +3,12 @@ import './index.css'
 import { RouterProvider } from "react-router-dom";
 import routes from './routers/index.jsx';
 import {AuthProvider} from "@/components/Context/AuthContext.jsx";
+import { ThemeProvider } from "@/components/ThemeToggle.jsx";
 
 createRoot(document.getElementById('root')).render(
-    <AuthProvider>
-        <RouterProvider router={routes} />
-    </AuthProvider>
-    )
+    <ThemeProvider>
+        <AuthProvider>
+            <RouterProvider router={routes} />
+        </AuthProvider>
+    </ThemeProvider>
+)

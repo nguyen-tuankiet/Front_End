@@ -29,10 +29,10 @@ export function SearchResults({
             <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-6", className)}>
                 {[1, 2, 3].map((i) => (
                     <div key={i} className="animate-pulse">
-                        <div className="bg-gray-200 rounded-lg h-48 w-full mb-4" />
-                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                        <div className="h-4 bg-gray-200 rounded w-full mb-2" />
-                        <div className="h-4 bg-gray-200 rounded w-2/3" />
+                        <div className="bg-muted rounded-lg h-48 w-full mb-4" />
+                        <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                        <div className="h-4 bg-muted rounded w-full mb-2" />
+                        <div className="h-4 bg-muted rounded w-2/3" />
                     </div>
                 ))}
             </div>
@@ -42,7 +42,7 @@ export function SearchResults({
     if (articles.length === 0) {
         return (
             <div className={cn("text-center py-12", className)}>
-                <p className="text-gray-500 text-lg">
+                <p className="text-muted-foreground text-lg">
                     {query ? `Không tìm thấy kết quả cho "${query}"` : 'Nhập từ khóa để tìm kiếm'}
                 </p>
             </div>
@@ -53,7 +53,7 @@ export function SearchResults({
         <div className={cn("space-y-6", className)}>
             {/* Số lượgn kết quả */}
             {query && (
-                <p className="text-gray-600 text-sm mb-4">
+                <p className="text-muted-foreground text-sm mb-4">
                     Tìm thấy {totalResults !== undefined ? totalResults : articles.length} kết quả cho "{query}"
                 </p>
             )}

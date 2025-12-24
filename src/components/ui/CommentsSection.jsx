@@ -143,7 +143,7 @@ function CommentItem({ comment }) {
 
                 {/* Replies */}
                 {comment.replies && comment.replies.length > 0 && (
-                    <div className="mt-4 ml-4 pl-4 border-l-2 border-gray-200 space-y-4">
+                    <div className="mt-4 ml-4 pl-4 border-l-2 border-border space-y-4">
                         {comment.replies.map((reply, idx) => (
                             <CommentItem key={idx} comment={reply} />
                         ))}

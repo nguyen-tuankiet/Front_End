@@ -29,7 +29,7 @@ export function CategorySection({
     return (
         <section className={cn("py-6", className)}>
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
                     <span className="w-1 h-6 bg-primary rounded-full"></span>
                     {title}
                 </h2>
@@ -46,8 +46,8 @@ export function CategorySection({
                     to={featuredArticle.link 
                         ? `/bai-viet/${encodeURIComponent(featuredArticle.link)}`
                         : `/bai-viet/${featuredArticle.id || ''}`}
-                    className="group bg-white rounded-xl overflow-hidden border border-gray-100 transition-shadow hover:shadow-lg"
-                    style={{ boxShadow: '0 4px 20px -4px hsl(222 47% 11% / .08)' }}
+                    className="group bg-card rounded-xl overflow-hidden border border-border transition-shadow hover:shadow-lg"
+                    style={{ boxShadow: 'var(--card-shadow)' }}
                 >
                     <div className="relative overflow-hidden">
                         <img
@@ -63,15 +63,15 @@ export function CategorySection({
                         </div>
                     </div>
                     <div className="p-5">
-                        <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                        <h3 className="font-bold text-lg mb-2 line-clamp-2 text-foreground group-hover:text-primary transition-colors">
                             {decodeHtmlEntities(featuredArticle.title)}
                         </h3>
                         {(featuredArticle.excerpt || featuredArticle.description) && (
-                            <p className="text-gray-500 text-sm line-clamp-2 mb-3">
+                            <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
                                 {decodeHtmlEntities(featuredArticle.excerpt || featuredArticle.description)}
                             </p>
                         )}
-                        <span className="text-xs text-gray-400">{featuredArticle.pubDate}</span>
+                        <span className="text-xs text-muted-foreground/70">{featuredArticle.pubDate}</span>
                     </div>
                 </Link>
 
@@ -93,10 +93,10 @@ export function CategorySection({
                                 className="w-28 h-20 object-cover rounded-lg shrink-0 group-hover:brightness-110 transition-all"
                             />
                             <div className="flex-1 min-w-0">
-                                <h4 className="font-medium text-sm line-clamp-2 group-hover:text-primary transition-colors">
+                                <h4 className="font-medium text-sm text-foreground line-clamp-2 group-hover:text-primary transition-colors">
                                     {decodeHtmlEntities(article.title)}
                                 </h4>
-                                <span className="text-xs text-gray-400 mt-1 block">
+                                <span className="text-xs text-muted-foreground/70 mt-1 block">
                                     {article.pubDate}
                                 </span>
                             </div>
