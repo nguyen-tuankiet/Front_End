@@ -73,7 +73,7 @@ const LoginPage = () => {
             return "border-red-500";
         }
         else {
-            return "border-gray-600";
+            return "border-border";
         }
     }
 
@@ -90,13 +90,13 @@ const LoginPage = () => {
                         <span className="text-secondary"> TỨC</span>
                     </h1>
                     <span className={cn(
-                        "text-gray-400 tracking-[0.15em] uppercase transition-all duration-300 text-[9px]")}>
+                        "text-muted-foreground tracking-[0.15em] uppercase transition-all duration-300 text-[9px]")}>
                         Báo điện tử Việt Nam
                     </span>
                 </Link>
                 <div className="flex flex-col items-center pt-5 pb-5">
-                    <p className="title text-3xl font-semibold">Đăng nhập</p>
-                    <p className="sub-title text-gray-400 mt-1 ">Nhập thông tin tài khoản của bạn để tiếp tục</p>
+                    <p className="title text-3xl font-semibold text-foreground">Đăng nhập</p>
+                    <p className="sub-title text-muted-foreground mt-1 ">Nhập thông tin tài khoản của bạn để tiếp tục</p>
                 </div>
                 <form onSubmit={handleLogin}>
                     {/*Email*/}
@@ -152,7 +152,7 @@ const LoginPage = () => {
 
                     {/*Remember*/}
                     <div className="flex flex-row justify-between mt-4">
-                        <div className="">
+                        <div className="text-foreground">
                             <input type="checkbox" id="remember"
                                     className="bg-amber-50 mr-2"
                             ></input>
@@ -173,24 +173,24 @@ const LoginPage = () => {
                     </button>
 
                     <div className="flex justify-center text-xs w-full mt-5 relative ">
-                        <div className="absolute top-1/2 left-0 border-gray-400 border-b w-full"></div>
-                        <span className="bg-background z-10 pl-1 pr-1 text-gray-400">HOẶC ĐĂNG NHẬP VỚI</span>
+                        <div className="absolute top-1/2 left-0 border-border border-b w-full"></div>
+                        <span className="bg-background z-10 pl-1 pr-1 text-muted-foreground">HOẶC ĐĂNG NHẬP VỚI</span>
                     </div>
 
                     <div className="flex row items-center h-10 mt-5">
-                        <div className="w-1/2 h-full flex justify-center items-center ml-2 mr-2 border border-gray-600 rounded-xl
+                        <div className="w-1/2 h-full flex justify-center items-center ml-2 mr-2 border border-border rounded-xl
                                         cursor-pointer hover:bg-accent select-none active:scale-95 active:bg-accent/80
-                                        transition-all duration-150">
+                                        transition-all duration-150 text-foreground">
                             Google
                         </div>
-                        <div className="w-1/2 h-full flex justify-center items-center ml-2 mr-2 border border-gray-600 rounded-xl
+                        <div className="w-1/2 h-full flex justify-center items-center ml-2 mr-2 border border-border rounded-xl
                                         cursor-pointer hover:bg-accent select-none active:scale-95 active:bg-accent/80
-                                        transition-all duration-150">
+                                        transition-all duration-150 text-foreground">
                             Facebook
                         </div>
                     </div>
 
-                    <div className="p-3 flex justify-center mt-5">
+                    <div className="p-3 flex justify-center mt-5 text-foreground">
                         <span>Chưa có tài khoản ?</span>
                         <a href="/dang-ky" className="text-primary pl-2 hover:underline">Đăng kí ngay</a>
                     </div>

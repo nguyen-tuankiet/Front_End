@@ -140,7 +140,7 @@ export function CategoryPage() {
                             totalPages={totalPages}
                             onPageChange={handlePageChange}
                         />
-                        <p className="text-center text-sm text-gray-500 mt-3">
+                        <p className="text-center text-sm text-muted-foreground mt-3">
                             Hiển thị {((currentPage - 1) * ARTICLES_PER_PAGE) + 1} - {Math.min(currentPage * ARTICLES_PER_PAGE, articles.length)} / {articles.length} bài viết
                         </p>
                     </>

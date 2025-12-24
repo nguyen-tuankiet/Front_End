@@ -61,7 +61,7 @@ export function ArticleDetailView({
             </div>
 
             <div className="flex flex-col lg:flex-row gap-8">
-                <article className="flex-1 min-w-0 bg-white rounded-2xl shadow-lg overflow-hidden">
+                <article className="flex-1 min-w-0 bg-card rounded-2xl shadow-lg overflow-hidden">
                     <div className="p-6 md:p-8">
                         <nav className="mb-4 flex items-center gap-2 text-sm flex-wrap">
                             <Link

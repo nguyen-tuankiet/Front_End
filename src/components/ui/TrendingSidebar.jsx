@@ -17,8 +17,8 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
     };
     const decodedTitle = decodeHtmlEntities(title);
     return (
-        <div className={cn("bg-white rounded-lg p-4", className)}>
-            <h3 className="text-sm font-bold text-foreground mb-3 pb-2 border-b border-gray-200 flex items-center gap-2">
+        <div className={cn("bg-card rounded-lg p-4", className)}>
+            <h3 className="text-sm font-bold text-foreground mb-3 pb-2 border-b border-border flex items-center gap-2">
                 <span className="w-1 h-4 bg-primary rounded-full"></span>
                 {decodedTitle}
             </h3>
@@ -46,14 +46,14 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
                                     "absolute top-0 left-0 w-5 h-5 flex items-center justify-center text-[10px] font-bold",
                                     index < 3
                                         ? "bg-primary text-white"
-                                        : "bg-gray-200 text-gray-600"
+                                        : "bg-muted text-muted-foreground"
                                 )}>
                                     {index + 1}
                                 </span>
                             </div>
                             <div className="flex-1 min-w-0">
                                 {article.category && (
-                                    <span className="text-[10px] text-gray-400 font-medium block mb-0.5">
+                                    <span className="text-[10px] text-muted-foreground font-medium block mb-0.5">
                                         {article.category}
                                     </span>
                                 )}

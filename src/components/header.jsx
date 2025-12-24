@@ -6,12 +6,13 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { apiService } from "@/services/api";
 import {useAuth} from "@/components/Context/AuthContext.jsx";
+import { useTheme } from "@/components/ThemeToggle.jsx";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleTheme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [categoriesWithSubs, setCategoriesWithSubs] = useState([]);
@@ -104,35 +105,30 @@ export function Header() {
     }
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-  };
-
   return (
     <header className={cn(
-      "bg-white font-sans border-b border-gray-100 sticky top-0 z-20 transition-all duration-300",
+      "bg-background font-sans border-b border-border sticky top-0 z-20 transition-all duration-300",
       isCollapsed && "shadow-md"
     )}>
       {/* Row 1: Top Utility Bar - Hidden when collapsed */}
       <div className={cn(
-        "border-b border-gray-100 transition-all duration-300",
+        "border-b border-border transition-all duration-300",
         isCollapsed ? "max-h-0 opacity-0 overflow-hidden" : "max-h-12 opacity-100"
       )}>
-        <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-gray-500">
+        <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>Thứ Hai, 01/12/2025</span>
-            <span className="text-gray-300">|</span>
+            <span className="text-muted-foreground/50">|</span>
             <span>TP. Hồ Chí Minh: 29°C</span>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <button
-              onClick={toggleDarkMode}
-              className="p-1.5 rounded-full transition-colors hover:bg-amber-300"
+              onClick={toggleTheme}
+              className="p-1.5 rounded-full transition-colors hover:bg-accent"
             >
-              {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              {isDarkMode ? <Moon className="h-4 w-4 text-blue-400" /> : <Sun className="h-4 w-4 text-amber-500" />}
             </button>
-            <button className="p-1.5 hover:bg-amber-300 rounded-full transition-colors">
+            <button className="p-1.5 hover:bg-accent rounded-full transition-colors">
               <Bell className="h-4 w-4" />
             </button>
 
@@ -140,8 +136,8 @@ export function Header() {
                   <div ref={userMenuRef} className="relative">
                       <button
                           onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                          className="flex items-center gap-1.5 hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
-                          <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-xs font-semibold">
+                          className="flex items-center gap-1.5 hover:bg-accent p-1.5 rounded-2xl transition-colors">
+                          <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 text-xs font-semibold">
                               {context.user.name?.charAt(0).toUpperCase() || 'A'}
                           </div>
                           <span>{context.user.name}</span>
@@ -149,54 +145,54 @@ export function Header() {
 
                       {/* Dropdown Menu */}
                       {isUserMenuOpen && (
-                          <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-[100]">
+                          <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border py-2 z-[100]">
                               <Link 
                                   to="/ho-so" 
                                   onClick={() => setIsUserMenuOpen(false)}
-                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
-                                  <User className="h-4 w-4 text-gray-500" />
+                                  <User className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Hồ sơ cá nhân</span>
                               </Link>
                               <Link 
                                   to="/bai-viet-da-luu" 
                                   onClick={() => setIsUserMenuOpen(false)}
-                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
-                                  <Bookmark className="h-4 w-4 text-gray-500" />
+                                  <Bookmark className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Bài viết đã lưu</span>
                               </Link>
                               <Link 
                                   to="/podcast" 
                                   onClick={() => setIsUserMenuOpen(false)}
-                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
-                                  <Headphones className="h-4 w-4 text-gray-500" />
+                                  <Headphones className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Podcast</span>
                               </Link>
                               <Link 
                                   to="/quang-cao" 
                                   onClick={() => setIsUserMenuOpen(false)}
-                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
-                                  <Megaphone className="h-4 w-4 text-gray-500" />
+                                  <Megaphone className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Quảng cáo</span>
                               </Link>
                               <Link 
                                   to="/dat-bao" 
                                   onClick={() => setIsUserMenuOpen(false)}
-                                  className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
-                                  <Newspaper className="h-4 w-4 text-gray-500" />
+                                  <Newspaper className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Đặt báo</span>
                               </Link>
-                              <div className="border-t border-gray-100 my-1"></div>
+                              <div className="border-t border-border my-1"></div>
                               <button 
                                   onClick={() => {
                                       context.logout();
                                       setIsUserMenuOpen(false);
                                   }}
-                                  className="flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors w-full"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full"
                               >
                                   <LogOut className="h-4 w-4" />
                                   <span className="text-sm">Đăng xuất</span>
@@ -207,7 +203,7 @@ export function Header() {
 
                   :
                   <Link to="/dang-nhap"
-                        className="flex items-center gap-1.5  hover:bg-amber-300 p-1.5 rounded-2xl transition-colors">
+                        className="flex items-center gap-1.5 hover:bg-accent p-1.5 rounded-2xl transition-colors">
                       <User className="h-4 w-4"/>
                       <span>Đăng nhập</span>
                   </Link>
@@ -219,7 +215,7 @@ export function Header() {
       </div>
 
       {/* Row 2: Logo & Search */}
-      <div className="border-b border-gray-100">
+      <div className="border-b border-border">
         <div className={cn(
           "container mx-auto px-4 flex items-center justify-between transition-all duration-300",
           isCollapsed ? "py-1.5" : "py-3"
@@ -229,7 +225,7 @@ export function Header() {
             {/* Menu Button - Shows on mobile always, shows on desktop only when collapsed */}
             <button
               className={cn(
-                "p-2 -ml-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-300",
+                "p-2 -ml-2 text-foreground hover:bg-muted rounded-lg transition-all duration-300",
                 isCollapsed ? "block" : "lg:hidden"
               )}
               onClick={() => {
@@ -250,7 +246,7 @@ export function Header() {
                 <span className="text-secondary"> TỨC</span>
               </h1>
               <span className={cn(
-                "text-gray-400 tracking-[0.15em] uppercase transition-all duration-300",
+                "text-muted-foreground tracking-[0.15em] uppercase transition-all duration-300",
                 isCollapsed ? "text-[7px]" : "text-[9px]"
               )}>
                 Báo điện tử Việt Nam
@@ -264,12 +260,12 @@ export function Header() {
             {isCollapsed && (
               <div className="hidden sm:flex items-center gap-2 mr-2">
                 <button
-                  onClick={toggleDarkMode}
-                  className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+                  onClick={toggleTheme}
+                  className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground"
                 >
-                  {isDarkMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                  {isDarkMode ? <Moon className="h-4 w-4 text-blue-400" /> : <Sun className="h-4 w-4 text-amber-500" />}
                 </button>
-                <button className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-500">
+                <button className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground">
                   <Bell className="h-4 w-4" />
                 </button>
               </div>
@@ -278,7 +274,7 @@ export function Header() {
             {isSearchOpen && (
               <div className="flex items-center mr-2 animate-in fade-in slide-in-from-right-3 duration-200">
                 <Input
-                  className="w-48 md:w-64 h-8 text-sm rounded border-gray-200 focus-visible:ring-primary"
+                  className="w-48 md:w-64 h-8 text-sm rounded border-border focus-visible:ring-primary"
                   placeholder="Tìm kiếm..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -288,7 +284,7 @@ export function Header() {
               </div>
             )}
             <button
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600"
+              className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground"
               onClick={() => {
                 if (isSearchOpen && searchQuery.trim()) {
                   handleSearch();
@@ -305,7 +301,7 @@ export function Header() {
 
       {/* Row 3: Navigation (Desktop) - Hidden when collapsed */}
       <nav className={cn(
-        "hidden lg:block border-b border-gray-100 transition-all duration-300",
+        "hidden lg:block border-b border-border transition-all duration-300",
         isCollapsed ? "max-h-0 opacity-0 overflow-hidden" : "opacity-100"
       )}>
         <div className="container mx-auto px-4">
@@ -313,7 +309,7 @@ export function Header() {
           {isLoading ? (
             <div className="flex items-center justify-center gap-2 py-2">
               {[...Array(7)].map((_, i) => (
-                <div key={i} className="h-6 w-20 bg-gray-200 rounded animate-pulse"></div>
+                <div key={i} className="h-6 w-20 bg-muted rounded animate-pulse"></div>
               ))}
             </div>
           ) : (
@@ -328,7 +324,7 @@ export function Header() {
                   "flex items-center px-2 py-2.5 transition-colors",
                   (currentCategorySlug === 'home' || currentCategorySlug === null && location.pathname === '/')
                     ? "text-primary border-b-2 border-primary -mb-[2px]" 
-                    : "text-gray-600 hover:text-primary"
+                    : "text-muted-foreground hover:text-primary"
                 )}
               >
                 <Home className="h-5 w-5" />
@@ -367,7 +363,7 @@ export function Header() {
                     "flex items-center gap-1 px-2 py-2.5 text-sm font-medium transition-colors",
                     currentCategorySlug === cat.slug
                       ? "text-primary border-b-2 border-primary -mb-[2px]"
-                      : "text-gray-600 hover:text-primary"
+                      : "text-muted-foreground hover:text-primary"
                   )}
                 >
                   {cat.name}
@@ -381,7 +377,7 @@ export function Header() {
             hoveredCategory === cat.slug && (
               <div
                 key={`dropdown-${cat.slug}`}
-                className="fixed bg-white border border-gray-100 shadow-xl z-[60] w-[400px]"
+                className="fixed bg-card border border-border shadow-xl z-[60] w-[400px]"
                 style={{
                   top: dropdownPosition.top,
                   left: dropdownPosition.left,
@@ -393,7 +389,7 @@ export function Header() {
                   {/* Category Title with orange bar */}
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-1 h-6 bg-primary rounded"></div>
-                    <h3 className="text-lg font-bold text-gray-800">{cat.name}</h3>
+                    <h3 className="text-lg font-bold text-foreground">{cat.name}</h3>
                   </div>
                   {/* Subcategories Grid - 2 columns */}
                   <div className="grid grid-cols-2 gap-x-12 gap-y-3 mb-4">
@@ -401,7 +397,7 @@ export function Header() {
                       <Link
                         key={sub.slug}
                         to={sub.href}
-                        className="text-sm text-gray-600 hover:text-primary transition-colors py-1"
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors py-1"
                       >
                         {sub.name}
                       </Link>
@@ -450,10 +446,10 @@ export function Header() {
       {isMenuOpen && (
         <div className="fixed inset-0 z-50">
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)} />
-          <div className="fixed inset-y-0 left-0 w-[280px] bg-white shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-300">
-            <div className="p-4 border-b flex items-center justify-between">
+          <div className="fixed inset-y-0 left-0 w-[280px] bg-card shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-300">
+            <div className="p-4 border-b border-border flex items-center justify-between">
               <span className="font-bold text-lg text-primary">MENU</span>
-              <button onClick={() => setIsMenuOpen(false)} className="p-1 hover:bg-gray-100 rounded">
+              <button onClick={() => setIsMenuOpen(false)} className="p-1 hover:bg-muted rounded">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -461,14 +457,14 @@ export function Header() {
               {categoriesWithSubs.map((cat) => (
                 <div key={cat.slug}>
                   {/* Main category row */}
-                  <div className="flex items-center border-b border-gray-50">
+                  <div className="flex items-center border-b border-border/50">
                     <Link
                       to={cat.href}
                       className={cn(
-                        "flex-1 px-4 py-3 font-medium hover:text-primary hover:bg-orange-50",
+                        "flex-1 px-4 py-3 font-medium hover:text-primary hover:bg-primary/10",
                         currentCategorySlug === cat.slug
-                          ? "text-primary bg-orange-50 border-l-4 border-primary"
-                          : "text-gray-700"
+                          ? "text-primary bg-primary/10 border-l-4 border-primary"
+                          : "text-foreground"
                       )}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -477,7 +473,7 @@ export function Header() {
                     {/* Expand button for categories with subs */}
                     {cat.subs && cat.subs.length > 0 && (
                       <button
-                        className="p-3 text-gray-400 hover:text-primary hover:bg-orange-50 transition-colors"
+                        className="p-3 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
                         onClick={() => setExpandedCategory(expandedCategory === cat.slug ? null : cat.slug)}
                       >
                         <ChevronDown className={cn(
@@ -489,12 +485,12 @@ export function Header() {
                   </div>
                   {/* Sub-categories - only show when expanded */}
                   {cat.subs && expandedCategory === cat.slug && (
-                    <div className="bg-gray-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="bg-muted/50 animate-in fade-in slide-in-from-top-2 duration-200">
                       {cat.subs.map(sub => (
                         <Link
                           key={sub.slug}
                           to={sub.href}
-                          className="block px-6 py-2.5 text-sm text-gray-500 hover:text-primary hover:bg-orange-50 transition-colors"
+                          className="block px-6 py-2.5 text-sm text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           • {sub.name}
