@@ -9,6 +9,7 @@ import BlankLayout from "../layout/BlankLayout";
 import RegisterPage from "@/components/LoginAndRegister/RegisterPage.jsx";
 import AdvertisingPage from "../pages/AdvertisingPage";
 import OrderPage from "../pages/OrderPage";
+import {Weather} from "@/components/extensions/Weather.jsx";
 
 const routes = createBrowserRouter([
     {
@@ -24,6 +25,7 @@ const routes = createBrowserRouter([
             { path: "tim-kiem", element: <SearchPage /> },
             { path: "quang-cao", element: <AdvertisingPage /> },
             { path: "dat-bao", element: <OrderPage /> },
+            { path: "tien-ich/thoi-tiet", element: <Weather /> },
         ],
     },
     {
