@@ -120,6 +120,8 @@ export function Header() {
             <span>Thứ Hai, 01/12/2025</span>
             <span className="text-muted-foreground/50">|</span>
             <span>TP. Hồ Chí Minh: 29°C</span>
+              <span className="text-muted-foreground/50">|</span>
+              <a href="/tien-ich/thoi-tiet">Tiện ích</a>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <button
@@ -146,40 +148,40 @@ export function Header() {
                       {/* Dropdown Menu */}
                       {isUserMenuOpen && (
                           <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border py-2 z-[100]">
-                              <Link 
-                                  to="/ho-so" 
+                              <Link
+                                  to="/ho-so"
                                   onClick={() => setIsUserMenuOpen(false)}
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <User className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Hồ sơ cá nhân</span>
                               </Link>
-                              <Link 
-                                  to="/bai-viet-da-luu" 
+                              <Link
+                                  to="/bai-viet-da-luu"
                                   onClick={() => setIsUserMenuOpen(false)}
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <Bookmark className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Bài viết đã lưu</span>
                               </Link>
-                              <Link 
-                                  to="/podcast" 
+                              <Link
+                                  to="/podcast"
                                   onClick={() => setIsUserMenuOpen(false)}
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <Headphones className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Podcast</span>
                               </Link>
-                              <Link 
-                                  to="/quang-cao" 
+                              <Link
+                                  to="/quang-cao"
                                   onClick={() => setIsUserMenuOpen(false)}
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <Megaphone className="h-4 w-4 text-muted-foreground" />
                                   <span className="text-sm">Quảng cáo</span>
                               </Link>
-                              <Link 
-                                  to="/dat-bao" 
+                              <Link
+                                  to="/dat-bao"
                                   onClick={() => setIsUserMenuOpen(false)}
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
@@ -187,7 +189,7 @@ export function Header() {
                                   <span className="text-sm">Đặt báo</span>
                               </Link>
                               <div className="border-t border-border my-1"></div>
-                              <button 
+                              <button
                                   onClick={() => {
                                       context.logout();
                                       setIsUserMenuOpen(false);
@@ -323,7 +325,7 @@ export function Header() {
                 className={cn(
                   "flex items-center px-2 py-2.5 transition-colors",
                   (currentCategorySlug === 'home' || currentCategorySlug === null && location.pathname === '/')
-                    ? "text-primary border-b-2 border-primary -mb-[2px]" 
+                    ? "text-primary border-b-2 border-primary -mb-[2px]"
                     : "text-muted-foreground hover:text-primary"
                 )}
               >
@@ -331,8 +333,8 @@ export function Header() {
               </Link>
             </li>
             {categoriesWithSubs.filter(cat => cat.slug !== "home").map((cat) => (
-              <li 
-                key={cat.slug} 
+              <li
+                key={cat.slug}
                 className="relative shrink-0"
                 onMouseEnter={(e) => {
                   if (cat.subs.length > 0) {
@@ -371,7 +373,7 @@ export function Header() {
               </li>
             ))}
           </ul>
-          
+
           {/* Fixed Dropdown - renders outside the scrollable container */}
           {categoriesWithSubs.filter(cat => cat.slug !== "home" && cat.subs.length > 0).map((cat) => (
             hoveredCategory === cat.slug && (
@@ -404,7 +406,7 @@ export function Header() {
                     ))}
                   </div>
                   {/* View all link */}
-                  <Link 
+                  <Link
                     to={cat.href}
                     className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium mt-2"
                   >
