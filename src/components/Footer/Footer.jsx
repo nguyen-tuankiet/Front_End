@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Youtube, Mail } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 import './Footer.css';
 
 const Footer = () => {
+  const { t } = useLanguage();
+  
   return (
     <footer className="footer">
       <div className="footer-inner">
@@ -15,7 +18,7 @@ const Footer = () => {
               <span className="logo-sub">TỨC</span>
             </div>
             <p className="footer-desc">
-              Báo điện tử uy tín hàng đầu Việt Nam, cập nhật tin tức nhanh chóng và chính xác 24/7.
+              {t('footer.brandDesc')}
             </p>
             <div className="footer-socials">
               <button className="social-btn" aria-label="Facebook">
@@ -32,52 +35,52 @@ const Footer = () => {
 
           {/* Columns */}
           <div className="footer-col">
-            <h4 className="footer-title">Chuyên mục</h4>
+            <h4 className="footer-title">{t('footer.categories')}</h4>
             <ul className="footer-links">
-              <li>Thời sự</li>
-              <li>Thế giới</li>
-              <li>Kinh tế</li>
-              <li>Giáo dục</li>
-              <li>Thể thao</li>
+              <li>{t('nav.news')}</li>
+              <li>{t('nav.world')}</li>
+              <li>{t('nav.business')}</li>
+              <li>{t('nav.education')}</li>
+              <li>{t('nav.sports')}</li>
             </ul>
           </div>
 
           <div className="footer-col">
-            <h4 className="footer-title">Dịch vụ</h4>
+            <h4 className="footer-title">{t('footer.services')}</h4>
             <ul className="footer-links">
               <li>
-                <Link to="/quang-cao">Quảng cáo</Link>
+                <Link to="/quang-cao">{t('header.advertising')}</Link>
               </li>
-              <li>Liên hệ</li>
-              <li>Tuyển dụng</li>
+              <li>{t('footer.contact')}</li>
+              <li>{t('footer.hiring')}</li>
               <li>RSS</li>
             </ul>
           </div>
 
           <div className="footer-col">
-            <h4 className="footer-title">Về chúng tôi</h4>
+            <h4 className="footer-title">{t('footer.aboutUs')}</h4>
             <ul className="footer-links">
-              <li>Giới thiệu</li>
-              <li>Điều khoản</li>
-              <li>Chính sách</li>
-              <li>Bản quyền</li>
+              <li>{t('footer.introduction')}</li>
+              <li>{t('footer.terms')}</li>
+              <li>{t('footer.policy')}</li>
+              <li>{t('footer.copyright')}</li>
             </ul>
           </div>
 
           {/* Subscribe */}
           <div className="footer-col footer-subscribe">
-            <h4 className="footer-title">Đăng ký nhận tin</h4>
+            <h4 className="footer-title">{t('footer.subscribeNews')}</h4>
             <p className="footer-subtext">
-              Nhận tin tức mới nhất qua email
+              {t('footer.receiveLatestNews')}
             </p>
             <form className="footer-form" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
-                placeholder="Email của bạn"
+                placeholder={t('footer.yourEmail')}
                 className="footer-input"
               />
               <button type="submit" className="footer-btn">
-                Đăng ký
+                {t('footer.subscribe')}
               </button>
             </form>
           </div>
@@ -87,10 +90,10 @@ const Footer = () => {
           <div className="footer-contact">
             <span>1900 xxxx</span>
             <span>contact@tintuc.vn</span>
-            <span>TP. Hồ Chí Minh</span>
+            <span>{t('header.cityWeather')}</span>
           </div>
           <p className="footer-copyright">
-            © 2025 TIN TỨC. Bản quyền thuộc về Báo TIN TỨC.
+            {t('footer.copyrightText')}
           </p>
         </div>
       </div>

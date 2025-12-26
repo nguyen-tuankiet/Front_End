@@ -4,10 +4,12 @@ import { CategorySection } from "@/components/Home/CategorySection";
 import { TrendingSidebar } from "@/components/ui/TrendingSidebar";
 import { NewsletterSection } from "@/components/ui/NewsletterSection";
 import { apiService } from "@/services/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function HomePage() {
     const [homeData, setHomeData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { t } = useLanguage();
 
     useEffect(() => {
         const fetchHomeData = async () => {
@@ -35,7 +37,7 @@ export function HomePage() {
     };
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center bg-background text-foreground">Loading...</div>;
+        return <div className="min-h-screen flex items-center justify-center bg-background text-foreground">{t('common.loading')}</div>;
     }
 
     return (
@@ -68,13 +70,13 @@ export function HomePage() {
                     <div className="lg:col-span-3">
                         <div className="sticky top-4">
                             <TrendingSidebar
-                                title="Tin nổi bật"
+                                title={t('home.featuredNews')}
                                 articles={trendingArticles || []}
                             />
 
                             <div className="mt-8">
                                 <TrendingSidebar
-                                    title="Đọc nhiều"
+                                    title={t('home.mostRead')}
                                     articles={mostReadArticles || []}
                                 />
                             </div>
