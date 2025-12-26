@@ -5,6 +5,7 @@ export { ArticleMeta } from './ArticleMeta';
 export { ArticleTags } from './ArticleTags';
 export { Button } from './button';
 export { Input } from './input';
+export { LanguageSwitcher } from './LanguageSwitcher';
 export { NewsletterSection } from './NewsletterSection';
 export { RelatedArticles } from './RelatedArticles';
 export { SaveButton } from './SaveButton';

@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import { apiService } from "@/services/api";
 import {useAuth} from "@/components/Context/AuthContext.jsx";
 import { useTheme } from "@/components/ThemeToggle.jsx";
+import { useLanguage } from "@/contexts/LanguageContext.jsx";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher.jsx";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,6 +28,7 @@ export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const context = useAuth();
+  const { t } = useLanguage();
 
   // Xác định category hiện tại dựa trên URL
   const getCurrentCategorySlug = () => {
@@ -119,11 +122,12 @@ export function Header() {
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>Thứ Hai, 01/12/2025</span>
             <span className="text-muted-foreground/50">|</span>
-            <span>TP. Hồ Chí Minh: 29°C</span>
+            <span>{t('header.cityWeather')}: 29°C</span>
               <span className="text-muted-foreground/50">|</span>
-              <a href="/tien-ich/thoi-tiet">Tiện ích</a>
+              <a href="/tien-ich/thoi-tiet">{t('header.utilities')}</a>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <LanguageSwitcher variant="minimal" />
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-full transition-colors hover:bg-accent"
@@ -154,7 +158,7 @@ export function Header() {
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <User className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">Hồ sơ cá nhân</span>
+                                  <span className="text-sm">{t('header.profile')}</span>
                               </Link>
                               <Link
                                   to="/bai-viet-da-luu"
@@ -162,7 +166,7 @@ export function Header() {
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <Bookmark className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">Bài viết đã lưu</span>
+                                  <span className="text-sm">{t('header.savedArticles')}</span>
                               </Link>
                               <Link
                                   to="/podcast"
@@ -170,7 +174,7 @@ export function Header() {
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <Headphones className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">Podcast</span>
+                                  <span className="text-sm">{t('header.podcast')}</span>
                               </Link>
                               <Link
                                   to="/quang-cao"
@@ -178,7 +182,7 @@ export function Header() {
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <Megaphone className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">Quảng cáo</span>
+                                  <span className="text-sm">{t('header.advertising')}</span>
                               </Link>
                               <Link
                                   to="/dat-bao"
@@ -186,7 +190,7 @@ export function Header() {
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
                                   <Newspaper className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">Đặt báo</span>
+                                  <span className="text-sm">{t('header.orderNewspaper')}</span>
                               </Link>
                               <div className="border-t border-border my-1"></div>
                               <button
@@ -197,7 +201,7 @@ export function Header() {
                                   className="flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full"
                               >
                                   <LogOut className="h-4 w-4" />
-                                  <span className="text-sm">Đăng xuất</span>
+                                  <span className="text-sm">{t('header.logout')}</span>
                               </button>
                           </div>
                       )}
@@ -207,7 +211,7 @@ export function Header() {
                   <Link to="/dang-nhap"
                         className="flex items-center gap-1.5 hover:bg-accent p-1.5 rounded-2xl transition-colors">
                       <User className="h-4 w-4"/>
-                      <span>Đăng nhập</span>
+                      <span>{t('header.login')}</span>
                   </Link>
               }
 
@@ -251,7 +255,7 @@ export function Header() {
                 "text-muted-foreground tracking-[0.15em] uppercase transition-all duration-300",
                 isCollapsed ? "text-[7px]" : "text-[9px]"
               )}>
-                Báo điện tử Việt Nam
+                {t('footer.vietnamNewspaper')}
               </span>
             </Link>
           </div>
@@ -277,7 +281,7 @@ export function Header() {
               <div className="flex items-center mr-2 animate-in fade-in slide-in-from-right-3 duration-200">
                 <Input
                   className="w-48 md:w-64 h-8 text-sm rounded border-border focus-visible:ring-primary"
-                  placeholder="Tìm kiếm..."
+                  placeholder={t('header.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}

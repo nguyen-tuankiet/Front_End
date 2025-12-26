@@ -3,15 +3,18 @@ import {useEffect, useState} from 'react';
 import {cn} from "@/lib/utils.js";
 import {Link, useNavigate} from "react-router-dom";
 import {useAuth} from "@/components/Context/AuthContext.jsx";
+import {useLanguage} from "@/contexts/LanguageContext";
 
 const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
 };
 
 const LoginPage = () => {
+    const { t } = useLanguage();
+    
     useEffect(() => {
-        document.title = 'Đăng nhập';
-    }, []);
+        document.title = t('login.title');
+    }, [t]);
 
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
@@ -42,13 +45,13 @@ const LoginPage = () => {
     const validateForm = () =>{
         let errors = {};
         if (!email) {
-            errors.email = 'Email is required';
+            errors.email = t('login.errors.emailRequired');
         } else if (!isValidEmail(email)) {
-            errors.email = 'Email invalid';
+            errors.email = t('login.errors.emailInvalid');
         }
 
         if (!password) {
-            errors.password = 'Password is required';
+            errors.password = t('login.errors.passwordRequired');
         }
         setErrors(errors);
         return Object.keys(errors).length === 0;
@@ -95,8 +98,8 @@ const LoginPage = () => {
                     </span>
                 </Link>
                 <div className="flex flex-col items-center pt-5 pb-5">
-                    <p className="title text-3xl font-semibold text-foreground">Đăng nhập</p>
-                    <p className="sub-title text-muted-foreground mt-1 ">Nhập thông tin tài khoản của bạn để tiếp tục</p>
+                    <p className="title text-3xl font-semibold text-foreground">{t('login.title')}</p>
+                    <p className="sub-title text-muted-foreground mt-1 ">{t('login.subtitle')}</p>
                 </div>
                 <form onSubmit={handleLogin}>
                     {/*Email*/}
@@ -124,7 +127,7 @@ const LoginPage = () => {
                     {/*Password*/}
                     <div className="mt-5">
                         <label htmlFor="password" className="font-medium ">
-                            Mật khẩu
+                            {t('login.password')}
                         </label>
                         <div className = {cn("email flex flex-row h-10 w-96 p-2 mt-2 border rounded-xl", getBorderClass('password') )}>
                             <LockKeyhole className="size-5 mr-3 text-gray-400"/>
@@ -156,25 +159,25 @@ const LoginPage = () => {
                             <input type="checkbox" id="remember"
                                     className="bg-amber-50 mr-2"
                             ></input>
-                            <label htmlFor="remember" className="cursor-pointer">Ghi nhớ đăng nhập ?</label>
+                            <label htmlFor="remember" className="cursor-pointer">{t('login.rememberMe')}</label>
                         </div>
 
                         <a
                             className="cursor-pointer hover:underline text-primary "
                             href="#"
-                        >Quên mật khẩu ?</a>
+                        >{t('login.forgotPassword')}</a>
                     </div>
 
                     {/*LoginAndRegister button*/}
                     <button type={"submit"} className="bg-primary text-white w-full h-10 rounded-xl mt-5 flex justify-center items-center
                                      cursor-pointer select-none hover:bg-primary-500  active:scale-95 active:bg-primary-500/80
                                         transition-all duration-150">
-                        Đăng nhập
+                        {t('login.loginButton')}
                     </button>
 
                     <div className="flex justify-center text-xs w-full mt-5 relative ">
                         <div className="absolute top-1/2 left-0 border-border border-b w-full"></div>
-                        <span className="bg-background z-10 pl-1 pr-1 text-muted-foreground">HOẶC ĐĂNG NHẬP VỚI</span>
+                        <span className="bg-background z-10 pl-1 pr-1 text-muted-foreground">{t('login.orLoginWith')}</span>
                     </div>
 
                     <div className="flex row items-center h-10 mt-5">
@@ -191,8 +194,8 @@ const LoginPage = () => {
                     </div>
 
                     <div className="p-3 flex justify-center mt-5 text-foreground">
-                        <span>Chưa có tài khoản ?</span>
-                        <a href="/dang-ky" className="text-primary pl-2 hover:underline">Đăng kí ngay</a>
+                        <span>{t('login.noAccount')}</span>
+                        <a href="/dang-ky" className="text-primary pl-2 hover:underline">{t('login.registerNow')}</a>
                     </div>
 
 
