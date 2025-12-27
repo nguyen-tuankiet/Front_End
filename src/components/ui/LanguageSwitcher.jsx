@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 /**
  * Language Switcher component with dropdown
  * @param {Object} props
- * @param {string} props.variant - 'dropdown' | 'toggle' | 'minimal'
+ * @param {string} props.variant - 'dropdown' | 'toggle' | 'minimal' | 'flags'
  * @param {string} props.className - Additional CSS classes
  */
 export function LanguageSwitcher({ variant = 'dropdown', className }) {
@@ -47,20 +47,43 @@ export function LanguageSwitcher({ variant = 'dropdown', className }) {
     );
   }
 
-  // Minimal variant - just flag and code
+  // Minimal variant - just flag
   if (variant === 'minimal') {
     return (
       <button
         onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
         className={cn(
-          'flex items-center gap-1 p-1.5 rounded-full',
-          'hover:bg-accent transition-colors',
+          'flex items-center gap-1.5 p-1.5 rounded-full',
+          'hover:bg-accent transition-all duration-200',
           className
         )}
         title={t('language.selectLanguage')}
       >
-        <span className="text-sm">{currentLanguage?.flag}</span>
+        <span className="text-lg leading-none">{currentLanguage?.flag}</span>
       </button>
+    );
+  }
+
+  // Flags variant - shows both flags with active indicator
+  if (variant === 'flags') {
+    return (
+      <div className={cn('flex items-center gap-1 bg-muted rounded-full p-1', className)}>
+        {languages.map((lang) => (
+          <button
+            key={lang.code}
+            onClick={() => setLanguage(lang.code)}
+            className={cn(
+              'flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200',
+              language === lang.code
+                ? 'bg-background shadow-sm scale-110'
+                : 'hover:bg-background/50 opacity-60 hover:opacity-100'
+            )}
+            title={lang.name}
+          >
+            <span className="text-xl leading-none">{lang.flag}</span>
+          </button>
+        ))}
+      </div>
     );
   }
 
