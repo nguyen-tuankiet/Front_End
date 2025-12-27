@@ -22,13 +22,29 @@ export function Header() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const navRef = useRef(null);
   const userMenuRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
   const context = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  // Format date based on current language
+  const formatDate = (date) => {
+    if (language === 'vi') {
+      const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+      const dayName = days[date.getDay()];
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${dayName}, ${day}/${month}/${year}`;
+    } else {
+      const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
+      return date.toLocaleDateString('en-US', options);
+    }
+  };
 
   // Xác định category hiện tại dựa trên URL
   const getCurrentCategorySlug = () => {
@@ -72,10 +88,21 @@ export function Header() {
     fetchCategories();
   }, []);
 
-  // Scroll detection for collapsing header
+  // Scroll detection for collapsing header with debounce
   useEffect(() => {
+    let ticking = false;
+    let lastScrollY = window.scrollY;
+    
     const handleScroll = () => {
-      setIsCollapsed(window.scrollY > 80);
+      lastScrollY = window.scrollY;
+      
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsCollapsed(lastScrollY > 80);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -110,17 +137,17 @@ export function Header() {
 
   return (
     <header className={cn(
-      "bg-background font-sans border-b border-border sticky top-0 z-20 transition-all duration-300",
+      "bg-background font-sans border-b border-border sticky top-0 z-20 transition-shadow duration-300 will-change-[box-shadow]",
       isCollapsed && "shadow-md"
     )}>
       {/* Row 1: Top Utility Bar - Hidden when collapsed */}
       <div className={cn(
-        "border-b border-border transition-all duration-300",
-        isCollapsed ? "max-h-0 opacity-0 overflow-hidden" : "max-h-12 opacity-100"
+        "border-b border-border transition-[max-height,opacity] duration-300 ease-in-out will-change-[max-height,opacity]",
+        isCollapsed ? "max-h-0 opacity-0 overflow-hidden pointer-events-none" : "max-h-12 opacity-100"
       )}>
         <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>Thứ Hai, 01/12/2025</span>
+            <span>{formatDate(currentDate)}</span>
             <span className="text-muted-foreground/50">|</span>
             <span>{t('header.cityWeather')}: 29°C</span>
               <span className="text-muted-foreground/50">|</span>
@@ -265,6 +292,7 @@ export function Header() {
             {/* Show utility icons when collapsed */}
             {isCollapsed && (
               <div className="hidden sm:flex items-center gap-2 mr-2">
+                <LanguageSwitcher variant="minimal" />
                 <button
                   onClick={toggleTheme}
                   className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground"
@@ -274,6 +302,39 @@ export function Header() {
                 <button className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground">
                   <Bell className="h-4 w-4" />
                 </button>
+                {context.isLoggedIn ? (
+                  <div ref={userMenuRef} className="relative">
+                    <button
+                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      className="flex items-center gap-1.5 hover:bg-muted p-1.5 rounded-full transition-colors"
+                    >
+                      <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 text-xs font-semibold">
+                        {context.user.name?.charAt(0).toUpperCase() || 'A'}
+                      </div>
+                    </button>
+                    {isUserMenuOpen && (
+                      <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border py-1 z-50">
+                        <div className="px-3 py-2 border-b border-border">
+                          <p className="font-medium text-sm">{context.user.name}</p>
+                          <p className="text-xs text-muted-foreground">{context.user.email}</p>
+                        </div>
+                        <Link to="/ho-so" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <User className="h-4 w-4" /> {t('header.profile')}
+                        </Link>
+                        <Link to="/bai-viet-da-luu" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <Bookmark className="h-4 w-4" /> {t('header.savedArticles')}
+                        </Link>
+                        <button onClick={() => { context.logout(); setIsUserMenuOpen(false); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                          <LogOut className="h-4 w-4" /> {t('header.logout')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link to="/dang-nhap" className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground">
+                    <User className="h-4 w-4" />
+                  </Link>
+                )}
               </div>
             )}
 
