@@ -124,22 +124,20 @@ export function Weather() {
 
     const hours = weather?.forecast?.forecastday?.[0]?.hour;
 
-// Lấy giờ hiện tại
     const currentHour = new Date().getHours();
 
-// Tìm trong mảng hour[] giờ >= giờ hiện tại
     const startIndex = hours?.findIndex(h => {
         const hHour = new Date(h.time).getHours();
         return hHour >= currentHour;
     });
 
-// Nếu không tìm được thì startIndex = 0
     const next6Hours = startIndex !== -1
         ? hours?.slice(startIndex, startIndex + 6)
         : hours?.slice(0, 6);
 
+    return (
 
-    return (<div>
+        <div>
             <ExtensionHeader/>
             <div className={cn("container mx-auto my-5 bg-white rounded-3xl overflow-hidden flex flex-row", {})}>
 
