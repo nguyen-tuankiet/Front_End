@@ -9,7 +9,9 @@ import BlankLayout from "../layout/BlankLayout";
 import RegisterPage from "@/components/LoginAndRegister/RegisterPage.jsx";
 import AdvertisingPage from "../pages/AdvertisingPage";
 import OrderPage from "../pages/OrderPage";
+import ContactPage from "../pages/ContactPage";
 import {Weather} from "@/components/extensions/Weather.jsx";
+import {ExchangeRate} from "@/components/extensions/ExchangeRate.jsx";
 
 const routes = createBrowserRouter([
     {
@@ -25,7 +27,9 @@ const routes = createBrowserRouter([
             { path: "tim-kiem", element: <SearchPage /> },
             { path: "quang-cao", element: <AdvertisingPage /> },
             { path: "dat-bao", element: <OrderPage /> },
+            { path: "lien-he", element: <ContactPage /> },
             { path: "tien-ich/thoi-tiet", element: <Weather /> },
+            { path: "tien-ich/ty-gia", element: <ExchangeRate /> },
         ],
     },
     {
