@@ -22,9 +22,11 @@ export function Header() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [userMenuPosition, setUserMenuPosition] = useState({ top: 0, right: 0 });
   const [currentDate, setCurrentDate] = useState(new Date());
   const navRef = useRef(null);
   const userMenuRef = useRef(null);
+  const userButtonRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -90,24 +92,32 @@ export function Header() {
 
   // Scroll detection for collapsing header with debounce
   useEffect(() => {
-    let ticking = false;
-    let lastScrollY = window.scrollY;
+  let ticking = false;
+  let lastScrollY = window.scrollY;
+  
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
     
-    const handleScroll = () => {
-      lastScrollY = window.scrollY;
-      
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setIsCollapsed(lastScrollY > 80);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrollingDown = currentScrollY > lastScrollY;
+        
+        if (scrollingDown && currentScrollY > 100) {
+          setIsCollapsed(true);
+        } else if (!scrollingDown && currentScrollY < 5) {
+          setIsCollapsed(false);
+        }
+        
+        lastScrollY = currentScrollY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
   // Click outside to close user menu
   useEffect(() => {
@@ -137,13 +147,14 @@ export function Header() {
 
   return (
     <header className={cn(
-      "bg-background font-sans border-b border-border sticky top-0 z-20 transition-shadow duration-300 will-change-[box-shadow]",
+      "bg-background font-sans border-b border-border sticky top-0 z-20",
+      "transition-shadow duration-300",
       isCollapsed && "shadow-md"
     )}>
       {/* Row 1: Top Utility Bar - Hidden when collapsed */}
       <div className={cn(
-        "border-b border-border transition-[max-height,opacity] duration-300 ease-in-out will-change-[max-height,opacity]",
-        isCollapsed ? "max-h-0 opacity-0 overflow-hidden pointer-events-none" : "max-h-12 opacity-100"
+        "border-b border-border overflow-hidden transition-all duration-300 ease-out",
+        isCollapsed ? "h-0 opacity-0" : "h-9 opacity-100"
       )}>
         <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -170,7 +181,17 @@ export function Header() {
               {context.isLoggedIn ?
                   <div ref={userMenuRef} className="relative">
                       <button
-                          onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                          ref={userButtonRef}
+                          onClick={() => {
+                              if (!isUserMenuOpen && userButtonRef.current) {
+                                  const rect = userButtonRef.current.getBoundingClientRect();
+                                  setUserMenuPosition({
+                                      top: rect.bottom + 8,
+                                      right: window.innerWidth - rect.right
+                                  });
+                              }
+                              setIsUserMenuOpen(!isUserMenuOpen);
+                          }}
                           className="flex items-center gap-1.5 hover:bg-accent p-1.5 rounded-2xl transition-colors">
                           <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 text-xs font-semibold">
                               {context.user.name?.charAt(0).toUpperCase() || 'A'}
@@ -180,7 +201,9 @@ export function Header() {
 
                       {/* Dropdown Menu */}
                       {isUserMenuOpen && (
-                          <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border py-2 z-[100]">
+                          <div 
+                              className="fixed w-48 bg-card rounded-lg shadow-lg border border-border py-2 z-[9999]"
+                              style={{ top: userMenuPosition.top, right: userMenuPosition.right }}>
                               <Link
                                   to="/ho-so"
                                   onClick={() => setIsUserMenuOpen(false)}
@@ -307,7 +330,17 @@ export function Header() {
                 {context.isLoggedIn ? (
                   <div ref={userMenuRef} className="relative">
                     <button
-                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                      ref={userButtonRef}
+                      onClick={() => {
+                        if (!isUserMenuOpen && userButtonRef.current) {
+                          const rect = userButtonRef.current.getBoundingClientRect();
+                          setUserMenuPosition({
+                            top: rect.bottom + 8,
+                            right: window.innerWidth - rect.right
+                          });
+                        }
+                        setIsUserMenuOpen(!isUserMenuOpen);
+                      }}
                       className="flex items-center gap-1.5 hover:bg-muted p-1.5 rounded-full transition-colors"
                     >
                       <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 text-xs font-semibold">
@@ -315,19 +348,59 @@ export function Header() {
                       </div>
                     </button>
                     {isUserMenuOpen && (
-                      <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border py-1 z-50">
-                        <div className="px-3 py-2 border-b border-border">
-                          <p className="font-medium text-sm">{context.user.name}</p>
-                          <p className="text-xs text-muted-foreground">{context.user.email}</p>
-                        </div>
-                        <Link to="/ho-so" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <User className="h-4 w-4" /> {t('header.profile')}
+                      <div 
+                        className="fixed w-48 bg-card rounded-lg shadow-lg border border-border py-2 z-[9999]"
+                        style={{ top: userMenuPosition.top, right: userMenuPosition.right }}>
+                        <Link
+                          to="/ho-so"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
+                        >
+                          <User className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{t('header.profile')}</span>
                         </Link>
-                        <Link to="/bai-viet-da-luu" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <Bookmark className="h-4 w-4" /> {t('header.savedArticles')}
+                        <Link
+                          to="/bai-viet-da-luu"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
+                        >
+                          <Bookmark className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{t('header.savedArticles')}</span>
                         </Link>
-                        <button onClick={() => { context.logout(); setIsUserMenuOpen(false); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                          <LogOut className="h-4 w-4" /> {t('header.logout')}
+                        <Link
+                          to="/podcast"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
+                        >
+                          <Headphones className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{t('header.podcast')}</span>
+                        </Link>
+                        <Link
+                          to="/quang-cao"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
+                        >
+                          <Megaphone className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{t('header.advertising')}</span>
+                        </Link>
+                        <Link
+                          to="/dat-bao"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
+                        >
+                          <Newspaper className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm">{t('header.orderNewspaper')}</span>
+                        </Link>
+                        <div className="border-t border-border my-1"></div>
+                        <button
+                          onClick={() => {
+                            context.logout();
+                            setIsUserMenuOpen(false);
+                          }}
+                          className="flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          <span className="text-sm">{t('header.logout')}</span>
                         </button>
                       </div>
                     )}
@@ -370,8 +443,8 @@ export function Header() {
 
       {/* Row 3: Navigation (Desktop) - Hidden when collapsed */}
       <nav className={cn(
-        "hidden lg:block border-b border-border transition-all duration-300",
-        isCollapsed ? "max-h-0 opacity-0 overflow-hidden" : "opacity-100"
+        "hidden lg:block border-b border-border overflow-hidden transition-all duration-300 ease-out",
+        isCollapsed ? "h-0 opacity-0" : "h-auto opacity-100"
       )}>
         <div className="container mx-auto px-4">
           {/* Loading skeleton */}
@@ -386,7 +459,7 @@ export function Header() {
           {/* All categories in one single row - no wrap */}
           <ul className="flex items-center justify-center gap-0 whitespace-nowrap overflow-x-auto scrollbar-hide" ref={navRef}>
             {/* Home icon */}
-            <li className="relative shrink-0">
+            <li className="shrink-0">
               <Link
                 to="/"
                 className={cn(
@@ -402,7 +475,7 @@ export function Header() {
             {categoriesWithSubs.filter(cat => cat.slug !== "home").map((cat) => (
               <li
                 key={cat.slug}
-                className="relative shrink-0"
+                className="shrink-0"
                 onMouseEnter={(e) => {
                   if (cat.subs.length > 0) {
                     const rect = e.currentTarget.getBoundingClientRect();
@@ -490,8 +563,8 @@ export function Header() {
 
       {/* Row 4: Hot News Ticker (Orange Bar) - Hidden when collapsed */}
       <div className={cn(
-        "bg-primary text-white overflow-hidden transition-all duration-300",
-        isCollapsed ? "max-h-0 opacity-0" : "max-h-12 opacity-100"
+        "bg-primary text-white overflow-hidden transition-all duration-300 ease-out",
+        isCollapsed ? "h-0 opacity-0" : "h-12 opacity-100"
       )}>
         <div className="container mx-auto px-4 py-1.5 flex items-center text-sm">
           <span className="bg-red-700 px-2 py-0.5 rounded text-xs font-bold mr-4 shrink-0 uppercase">
