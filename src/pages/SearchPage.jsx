@@ -5,12 +5,14 @@ import { SearchResults } from '@/components/ui/SearchResults';
 import { NewsletterSection } from '@/components/ui/NewsletterSection';
 import { apiService } from '@/services/api';
 import { decodeHtmlEntities } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
  * Search page component
  */
 export function SearchPage() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const { language } = useLanguage();
     
     const query = searchParams.get('q') || '';
     const category = searchParams.get('category') || 'all';
@@ -30,14 +32,14 @@ export function SearchPage() {
         const loadAllArticles = async () => {
             try {
                 setLoading(true);
-                const categories = await apiService.getCategories();
+                const categories = await apiService.getCategories(language);
 
                 const filteredCategories = categories.filter(cat => cat.slug !== "home");
 
                 // Lấy toàn bộ bài báo từ toàn bộ danh mục (có thể giới hạn ít lại để tránh load lâu)
                 const categoryPromises = filteredCategories.slice(0, 10).map(async (cat) => {
                     try {
-                        const response = await apiService.getCategoryArticles(cat.slug);
+                        const response = await apiService.getCategoryArticles(cat.slug, language);
                         if (response && response.articles) {
                             return response.articles.map(article => ({
                                 ...article,
@@ -68,7 +70,7 @@ export function SearchPage() {
         };
 
         loadAllArticles();
-    }, []);
+    }, [language]);
 
     useEffect(() => {
         if (query && searchParams.get('page') !== '1') {

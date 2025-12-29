@@ -5,12 +5,14 @@ import { ArticleList } from '@/components/Category/ArticleList';
 import { CategorySidebar } from '@/components/Category/CategorySidebar';
 import { Pagination } from '@/components/ui/pagination';
 import { apiService } from '@/services/api';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ARTICLES_PER_PAGE = 10;
 
 export function CategoryPage() {
     const { category, subcategory } = useParams();
     const navigate = useNavigate();
+    const { language } = useLanguage();
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,7 +29,7 @@ export function CategoryPage() {
 
             try {
                 // Fetch category để lấy thông tin category và subcategory
-                const categories = await apiService.getCategories();
+                const categories = await apiService.getCategories(language);
                 const currentCategory = categories.find(cat => cat.slug === category);
                 
                 if (currentCategory) {
@@ -63,9 +65,9 @@ export function CategoryPage() {
 
                 let response;
                 if (subcategory) {
-                    response = await apiService.getSubcategoryArticles(category, subcategory);
+                    response = await apiService.getSubcategoryArticles(category, subcategory, language);
                 } else {
-                    response = await apiService.getCategoryArticles(category);
+                    response = await apiService.getCategoryArticles(category, language);
                 }
 
                 setArticles(response.articles || []);
@@ -80,7 +82,7 @@ export function CategoryPage() {
         };
 
         fetchArticles();
-    }, [category, subcategory]);
+    }, [category, subcategory, language]);
 
     // Tính toán phân trang
     const totalPages = useMemo(() => {

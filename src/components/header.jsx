@@ -62,7 +62,7 @@ export function Header() {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
-        const data = await apiService.getCategories();
+        const data = await apiService.getCategories(language);
 
         // Transform API data to match component format
         const transformedCategories = data.map(cat => ({
@@ -86,7 +86,7 @@ export function Header() {
     };
 
     fetchCategories();
-  }, []);
+  }, [language]);
 
   // Scroll detection for collapsing header with debounce
   useEffect(() => {

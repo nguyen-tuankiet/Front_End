@@ -9,12 +9,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export function HomePage() {
     const [homeData, setHomeData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     useEffect(() => {
         const fetchHomeData = async () => {
             try {
-                const data = await apiService.getHomePageData();
+                const data = await apiService.getHomePageData(language);
                 setHomeData(data);
             } catch (error) {
                 console.error("Failed to fetch home page data:", error);
@@ -24,7 +24,7 @@ export function HomePage() {
         };
 
         fetchHomeData();
-    }, []);
+    }, [language]);
 
     const featuredArticles = homeData?.featuredArticles || [];
     const heroArticle = featuredArticles[0];

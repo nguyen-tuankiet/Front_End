@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, ChevronDown, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiService } from "@/services/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Search và Filter bar component
@@ -19,6 +20,7 @@ export function SearchFilterBar({
     onSearch,
     className
 }) {
+    const { language } = useLanguage();
     const [query, setQuery] = useState(initialQuery);
     const [category, setCategory] = useState(initialCategory);
     const [timeRange, setTimeRange] = useState(initialTimeRange);
@@ -30,7 +32,7 @@ export function SearchFilterBar({
     useEffect(() => {
         const loadCategories = async () => {
             try {
-                const data = await apiService.getCategories();
+                const data = await apiService.getCategories(language);
                 const filtered = (data || []).filter(cat => cat.slug !== "home");
                 setCategories(filtered);
             } catch (error) {
@@ -38,7 +40,7 @@ export function SearchFilterBar({
             }
         };
         loadCategories();
-    }, []);
+    }, [language]);
 
     const categoryOptions = [
         { value: 'all', label: 'Tất cả' },

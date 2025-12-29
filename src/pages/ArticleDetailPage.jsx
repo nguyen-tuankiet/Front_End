@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { ArticleDetailView } from '@/components/ui/ArticleDetailView';
 import { getCommentsByArticleId, createComment } from '@/data/mockComments';
 import { apiService } from '@/services/api';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function decodeHTMLEntities(text) {
     if (!text) return '';
@@ -74,6 +75,7 @@ export function ArticleDetailPage() {
     const [searchParams] = useSearchParams();
     const { articleId } = useParams();
     const navigate = useNavigate();
+    const { language } = useLanguage();
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
     const [relatedArticles, setRelatedArticles] = useState([]);
@@ -94,7 +96,7 @@ export function ArticleDetailPage() {
             setLoading(false);
             setError('Không tìm thấy bài viết. Vui lòng cung cấp URL bài viết.');
         }
-    }, [articleUrl]);
+    }, [articleUrl, language]);
 
     // Fetch article từ API
     const fetchArticleFromAPI = async (url) => {
@@ -102,7 +104,7 @@ export function ArticleDetailPage() {
             setLoading(true);
             setError(null);
 
-            const response = await apiService.getArticleDetail(url);
+            const response = await apiService.getArticleDetail(url, language);
 
             // Convert API response sang format tương thích với ArticleDetailView
             const formattedArticle = {
@@ -132,7 +134,7 @@ export function ArticleDetailPage() {
             // Fetch category và bài báo từ cùng category
             if (response.category) {
                 try {
-                    const categories = await apiService.getCategories();
+                    const categories = await apiService.getCategories(language);
                     
                     // Tìm category và subcategory từ response.category
                     const { category: currentCategory, subcategory: foundSubcategory } = 
@@ -153,7 +155,7 @@ export function ArticleDetailPage() {
                         }
                         
                         // Fetch bài báo liên quan từ category chính
-                        const categoryResponse = await apiService.getCategoryArticles(currentCategory.slug);
+                        const categoryResponse = await apiService.getCategoryArticles(currentCategory.slug, language);
                         const allArticles = categoryResponse.articles || [];
                         
                         // Lọc bỏ bài viết hiện tại và lấy 5 bài
