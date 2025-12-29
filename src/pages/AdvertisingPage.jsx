@@ -47,13 +47,43 @@ function FaqItem({ q, a }) {
     );
 }
 
+const PRICING_URL_MAP = {
+    // Báo Online
+    pr: "pr-online-4",
+    display: "qc-hien-thi-5",
+    online: "truc-tuyen-6",
+    video: "video-7",
+    social: "mang-xa-hoi-8",
+    tech: "cong-nghe-game-9",
+    fashion: "thoi-trang-tre-10",
+    promo: "uu-dai-28",
+    surcharge: "phi-phu-thu-11",
+    "video-prod": "san-xuat-video-27",
+    classifieds: "rao-vat-nha-dat-25",
+    criteria: "tieu-chi-pr-30",
+    
+    // Báo in
+    "bao-xuan": "bao-xuan-2026-17",
+    "bao-ngay": "bao-ngay-toan-quoc-12",
+    "rao-vat": "rao-vat-toan-quoc-13",
+    "trang-dia-phuong": "trang-dia-phuong-14",
+    "phi-bai-viet": "phi-bai-viet-15",
+};
+
+
 export function AdvertisingPage() {
     const [form, setForm] = useState({ name: "", company: "", phone: "", email: "", message: "" });
-    const [selectedCategory, setSelectedCategory] = useState("display");
 
     const scrollToContact = () => {
         const el = document.getElementById("lien-he");
         el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const handleCategoryClick = (key) => {
+        const urlSlug = PRICING_URL_MAP[key];
+        if (urlSlug) {
+            window.open(`https://banggia.thanhnien.vn/bao-dien-tu/${urlSlug}.html`, '_blank');
+        }
     };
 
     const categoryGrids = useMemo(
@@ -149,16 +179,14 @@ export function AdvertisingPage() {
                 <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categoryGrids.map((item) => {
                         const Icon = item.icon;
-                        const active = selectedCategory === item.key;
                         return (
                             <button
                                 key={item.key}
                                 type="button"
-                                onClick={() => setSelectedCategory(item.key)}
+                                onClick={() => handleCategoryClick(item.key)}
                                 className={cn(
                                     "group w-full rounded-xl bg-muted/40 p-6 text-left shadow-sm transition-all",
-                                    "hover:bg-muted/60 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                                    active && "ring-2 ring-primary/30"
+                                    "hover:bg-muted/60 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                                 )}
                             >
                                 <div className="flex items-start gap-5">
@@ -204,16 +232,14 @@ export function AdvertisingPage() {
                 <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {printNewspaperGrids.map((item) => {
                         const Icon = item.icon;
-                        const active = selectedCategory === item.key;
                         return (
                             <button
                                 key={item.key}
                                 type="button"
-                                onClick={() => setSelectedCategory(item.key)}
+                                onClick={() => handleCategoryClick(item.key)}
                                 className={cn(
                                     "group w-full rounded-xl bg-muted/40 p-6 text-left shadow-sm transition-all",
-                                    "hover:bg-muted/60 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                                    active && "ring-2 ring-secondary/30"
+                                    "hover:bg-muted/60 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                                 )}
                             >
                                 <div className="flex items-start gap-5">
@@ -289,12 +315,8 @@ export function AdvertisingPage() {
 
                     <div className="lg:col-span-7">
                         <form onSubmit={onSubmit} className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                            <div className="flex items-start justify-between gap-4">
-                                <div>
-                                    <div className="mt-1 text-xl font-extrabold text-primary">
-                                        Nhận tư vấn & báo giá
-                                    </div>
-                                </div>
+                            <div className="text-xl font-extrabold text-primary mb-5">
+                                Nhận tư vấn & báo giá
                             </div>
 
                             <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
