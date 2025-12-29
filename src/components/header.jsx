@@ -15,7 +15,6 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { isDarkMode, toggleTheme } = useTheme();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [categoriesWithSubs, setCategoriesWithSubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -88,27 +87,6 @@ export function Header() {
     fetchCategories();
   }, []);
 
-  // Scroll detection for collapsing header with debounce
-  useEffect(() => {
-    let ticking = false;
-    let lastScrollY = window.scrollY;
-    
-    const handleScroll = () => {
-      lastScrollY = window.scrollY;
-      
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setIsCollapsed(lastScrollY > 80);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // Click outside to close user menu
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -136,15 +114,9 @@ export function Header() {
   };
 
   return (
-    <header className={cn(
-      "bg-background font-sans border-b border-border sticky top-0 z-20 transition-shadow duration-300 will-change-[box-shadow]",
-      isCollapsed && "shadow-md"
-    )}>
-      {/* Row 1: Top Utility Bar - Hidden when collapsed */}
-      <div className={cn(
-        "border-b border-border transition-[max-height,opacity] duration-300 ease-in-out will-change-[max-height,opacity]",
-        isCollapsed ? "max-h-0 opacity-0 overflow-hidden pointer-events-none" : "max-h-12 opacity-100"
-      )}>
+    <header className="bg-background font-sans border-b border-border sticky top-0 z-20 shadow-md">
+      {/* Row 1: Top Utility Bar */}
+      <div className="border-b border-border">
         <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>{formatDate(currentDate)}</span>
@@ -152,6 +124,8 @@ export function Header() {
             <span>{t('header.cityWeather')}: 29°C</span>
               <span className="text-muted-foreground/50">|</span>
               <a href="/tien-ich/thoi-tiet">{t('header.utilities')}</a>
+              <span className="text-muted-foreground/50">|</span>
+              <Link to="/lien-he" className="hover:text-primary transition-colors">Liên hệ</Link>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <LanguageSwitcher variant="minimal" />
@@ -249,18 +223,12 @@ export function Header() {
 
       {/* Row 2: Logo & Search */}
       <div className="border-b border-border">
-        <div className={cn(
-          "container mx-auto px-4 flex items-center justify-between transition-all duration-300",
-          isCollapsed ? "py-1.5" : "py-3"
-        )}>
+        <div className="container mx-auto px-4 flex items-center justify-between py-3">
           {/* Left side: Menu Button + Logo */}
           <div className="flex items-center gap-2">
-            {/* Menu Button - Shows on mobile always, shows on desktop only when collapsed */}
+            {/* Menu Button - Shows on mobile only */}
             <button
-              className={cn(
-                "p-2 -ml-2 text-foreground hover:bg-muted rounded-lg transition-all duration-300",
-                isCollapsed ? "block" : "lg:hidden"
-              )}
+              className="p-2 -ml-2 text-foreground hover:bg-muted rounded-lg transition-all duration-300 lg:hidden"
               onClick={() => {
                 setIsMenuOpen(!isMenuOpen);
                 setExpandedCategory(null); // Reset expanded category when opening menu
@@ -271,73 +239,18 @@ export function Header() {
 
             {/* Logo */}
             <Link to="/" className="flex flex-col items-start group">
-              <h1 className={cn(
-                "font-extrabold tracking-tight leading-none transition-all duration-300",
-                isCollapsed ? "text-xl md:text-2xl" : "text-2xl md:text-3xl"
-              )}>
+              <h1 className="font-extrabold tracking-tight leading-none text-2xl md:text-3xl">
                 <span className="text-primary">TIN</span>
                 <span className="text-secondary"> TỨC</span>
               </h1>
-              <span className={cn(
-                "text-muted-foreground tracking-[0.15em] uppercase transition-all duration-300",
-                isCollapsed ? "text-[7px]" : "text-[9px]"
-              )}>
+              <span className="text-muted-foreground tracking-[0.15em] uppercase text-[9px]">
                 {t('footer.vietnamNewspaper')}
               </span>
             </Link>
           </div>
 
-          {/* Right side icons (visible when collapsed) + Search */}
+          {/* Right side icons + Search */}
           <div className="flex items-center gap-2">
-            {/* Show utility icons when collapsed */}
-            {isCollapsed && (
-              <div className="hidden sm:flex items-center gap-2 mr-2">
-                <LanguageSwitcher variant="minimal" />
-                <button
-                  onClick={toggleTheme}
-                  className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground"
-                >
-                  {isDarkMode ? <Moon className="h-4 w-4 text-blue-400" /> : <Sun className="h-4 w-4 text-amber-500" />}
-                </button>
-                <button className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground">
-                  <Bell className="h-4 w-4" />
-                </button>
-                {context.isLoggedIn ? (
-                  <div ref={userMenuRef} className="relative">
-                    <button
-                      onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                      className="flex items-center gap-1.5 hover:bg-muted p-1.5 rounded-full transition-colors"
-                    >
-                      <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 text-xs font-semibold">
-                        {context.user.name?.charAt(0).toUpperCase() || 'A'}
-                      </div>
-                    </button>
-                    {isUserMenuOpen && (
-                      <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border py-1 z-50">
-                        <div className="px-3 py-2 border-b border-border">
-                          <p className="font-medium text-sm">{context.user.name}</p>
-                          <p className="text-xs text-muted-foreground">{context.user.email}</p>
-                        </div>
-                        <Link to="/ho-so" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <User className="h-4 w-4" /> {t('header.profile')}
-                        </Link>
-                        <Link to="/bai-viet-da-luu" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <Bookmark className="h-4 w-4" /> {t('header.savedArticles')}
-                        </Link>
-                        <button onClick={() => { context.logout(); setIsUserMenuOpen(false); }} className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                          <LogOut className="h-4 w-4" /> {t('header.logout')}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Link to="/dang-nhap" className="p-1.5 hover:bg-muted rounded-full transition-colors text-muted-foreground">
-                    <User className="h-4 w-4" />
-                  </Link>
-                )}
-              </div>
-            )}
-
             {isSearchOpen && (
               <div className="flex items-center mr-2 animate-in fade-in slide-in-from-right-3 duration-200">
                 <Input
@@ -366,11 +279,8 @@ export function Header() {
         </div>
       </div>
 
-      {/* Row 3: Navigation (Desktop) - Hidden when collapsed */}
-      <nav className={cn(
-        "hidden lg:block border-b border-border transition-all duration-300",
-        isCollapsed ? "max-h-0 opacity-0 overflow-hidden" : "opacity-100"
-      )}>
+      {/* Row 3: Navigation (Desktop) */}
+      <nav className="hidden lg:block border-b border-border">
         <div className="container mx-auto px-4">
           {/* Loading skeleton */}
           {isLoading ? (
@@ -486,11 +396,8 @@ export function Header() {
         </div>
       </nav>
 
-      {/* Row 4: Hot News Ticker (Orange Bar) - Hidden when collapsed */}
-      <div className={cn(
-        "bg-primary text-white overflow-hidden transition-all duration-300",
-        isCollapsed ? "max-h-0 opacity-0" : "max-h-12 opacity-100"
-      )}>
+      {/* Row 4: Hot News Ticker (Orange Bar) */}
+      <div className="bg-primary text-white overflow-hidden">
         <div className="container mx-auto px-4 py-1.5 flex items-center text-sm">
           <span className="bg-red-700 px-2 py-0.5 rounded text-xs font-bold mr-4 shrink-0 uppercase">
             Tin Nóng
@@ -509,7 +416,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Sidebar Menu - Works on both mobile and desktop when collapsed */}
+      {/* Sidebar Menu - Works on both mobile and desktop */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-50">
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsMenuOpen(false)} />
