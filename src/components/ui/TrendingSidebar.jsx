@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
+import LazyImage from "./LazyImage";
 
 /**
 
@@ -11,10 +12,6 @@ import { cn, decodeHtmlEntities } from "@/lib/utils";
 export function TrendingSidebar({ title = "Tin nổi bật", articles, className }) {
     const FALLBACK_IMAGE = "https://placehold.co/100x70?text=News";
 
-    const handleImageError = (e) => {
-        e.target.src = FALLBACK_IMAGE;
-        e.target.onerror = null;
-    };
     const decodedTitle = decodeHtmlEntities(title);
     return (
         <div className={cn("bg-card rounded-lg p-4", className)}>
@@ -36,10 +33,9 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
                             className="flex gap-3 group"
                         >
                             <div className="relative shrink-0 w-16 h-12 rounded overflow-hidden">
-                                <img
+                                <LazyImage
                                     src={article.imageUrl || FALLBACK_IMAGE}
                                     alt={article.title}
-                                    onError={handleImageError}
                                     className="w-full h-full object-cover"
                                 />
                                 <span className={cn(
