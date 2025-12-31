@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import LazyImage from "@/components/ui/LazyImage";
 
 
 function decodeHTMLEntities(text) {
@@ -23,11 +24,6 @@ export function ArticleList({
     className
 }) {
     const FALLBACK_IMAGE = "https://placehold.co/600x400?text=News";
-
-    const handleImageError = (e) => {
-        e.target.src = FALLBACK_IMAGE;
-        e.target.onerror = null;
-    };
 
   
     const getTitle = (article) => decodeHTMLEntities(article.title || article['Tiêu đề'] || '');
@@ -75,12 +71,10 @@ export function ArticleList({
                         className="w-full sm:w-64 aspect-[16/10] sm:aspect-[4/3] max-h-48 sm:max-h-full bg-muted rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all shrink-0"
                         onClick={() => onArticleClick?.(article, index)}
                     >
-                        <img
+                        <LazyImage
                             src={getImage(article)}
                             alt={getTitle(article)}
-                            loading="lazy"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            onError={handleImageError}
                         />
                     </div>
 

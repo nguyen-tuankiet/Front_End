@@ -1,6 +1,7 @@
 import { cn, decodeHtmlEntities } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
+import LazyImage from "./LazyImage";
 
 /**
  * Component hiển thị danh sách bài viết liên quan
@@ -53,11 +54,10 @@ function RelatedArticleItem({ article, onClick }) {
         >
             {article.imageUrl ? (
                 <div className="shrink-0 w-24 h-16 rounded overflow-hidden">
-                    <img
+                    <LazyImage
                         src={article.imageUrl}
                         alt={decodedTitle}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => e.target.style.display = 'none'}
                     />
                 </div>
             ) : (

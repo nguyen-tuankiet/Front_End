@@ -18,3 +18,6 @@ export { CommentsSection } from './CommentsSection';
 export { Pagination } from './pagination';
 export { ListenButton } from './ListenButton';
 
+// Lazy loading components
+export { default as LoadingSpinner } from './LoadingSpinner';
+export { default as LazyImage } from './LazyImage';

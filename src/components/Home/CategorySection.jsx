@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
+import LazyImage from "@/components/ui/LazyImage";
 
 /**
  * @param {Object} props
@@ -18,11 +19,6 @@ export function CategorySection({
     className
 }) {
     const FALLBACK_IMAGE = "https://placehold.co/600x400?text=News";
-
-    const handleImageError = (e) => {
-        e.target.src = FALLBACK_IMAGE;
-        e.target.onerror = null;
-    };
 
     if (!featuredArticle) return null;
 
@@ -50,10 +46,9 @@ export function CategorySection({
                     style={{ boxShadow: 'var(--card-shadow)' }}
                 >
                     <div className="relative overflow-hidden">
-                        <img
+                        <LazyImage
                             src={featuredArticle.imageUrl || FALLBACK_IMAGE}
                             alt={featuredArticle.title}
-                            onError={handleImageError}
                             className="w-full h-52 object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                         <div className="absolute top-3 left-3">
@@ -86,10 +81,9 @@ export function CategorySection({
                             to={articleRoute}
                             className="flex gap-4 group"
                         >
-                            <img
+                            <LazyImage
                                 src={article.imageUrl || FALLBACK_IMAGE}
                                 alt={article.title}
-                                onError={handleImageError}
                                 className="w-28 h-20 object-cover rounded-lg shrink-0 group-hover:brightness-110 transition-all"
                             />
                             <div className="flex-1 min-w-0">
