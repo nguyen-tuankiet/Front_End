@@ -97,8 +97,12 @@ const LazyImage = ({
   }
 
   return (
-    <div ref={imgRef} className="relative overflow-hidden w-full h-full">
-      {!isLoaded && (placeholder || defaultPlaceholder)}
+    <div ref={imgRef} className="relative overflow-hidden h-full">
+      {!isLoaded && (
+        <div className="absolute inset-0 w-full h-full">
+          {placeholder || defaultPlaceholder}
+        </div>
+      )}
       {isInView && (
         <img
           src={src}

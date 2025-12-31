@@ -86,7 +86,7 @@ export function CategorySection({
                                 alt={article.title}
                                 className="w-28 h-20 object-cover rounded-lg shrink-0 group-hover:brightness-110 transition-all"
                             />
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 py-2">
                                 <h4 className="font-medium text-sm text-foreground line-clamp-2 group-hover:text-primary transition-colors">
                                     {decodeHtmlEntities(article.title)}
                                 </h4>
