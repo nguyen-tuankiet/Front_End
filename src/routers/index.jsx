@@ -5,13 +5,7 @@ import LoadingSpinner from "../components/ui/LoadingSpinner";
 // Layouts - không lazy load vì cần render ngay
 import MainLayout from "../layout/MainLayout";
 import BlankLayout from "../layout/BlankLayout";
-import RegisterPage from "@/components/LoginAndRegister/RegisterPage.jsx";
-import AdvertisingPage from "../pages/AdvertisingPage";
-import OrderPage from "../pages/OrderPage";
-import ContactPage from "../pages/ContactPage";
 import ProfilePage from "../pages/ProfilePage";
-import {Weather} from "@/components/extensions/Weather.jsx";
-import {ExchangeRate} from "@/components/extensions/ExchangeRate.jsx";
 
 // Lazy load các pages
 const HomePage = lazy(() => import("../pages/HomePage"));
