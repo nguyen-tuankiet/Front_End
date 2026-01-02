@@ -35,7 +35,6 @@ export function ExchangeRate() {
 
     const [rate, setRate] = useState(data);
 
-
     return ( <div>
             <ExtensionHeader/>
 
