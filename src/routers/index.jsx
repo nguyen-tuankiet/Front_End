@@ -8,6 +8,7 @@ import BlankLayout from "../layout/BlankLayout";
 import ProfilePage from "../pages/ProfilePage";
 import {GoldPrice} from "@/components/extensions/GoldPrice.jsx";
 import {LotteryResult} from "@/components/extensions/LotteryResult.jsx";
+import {StockMarket} from "@/components/extensions/StockMarket.jsx";
 
 // Lazy load các pages
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -57,6 +58,7 @@ const routes = createBrowserRouter([
             { path: "tien-ich/ty-gia", element: <LazyComponent><ExchangeRate /></LazyComponent> },
             { path: "tien-ich/gia-vang", element: <LazyComponent><GoldPrice /></LazyComponent> },
             { path: "tien-ich/kqsx", element: <LazyComponent><LotteryResult /></LazyComponent> },
+            { path: "tien-ich/chung-khoan", element: <LazyComponent><StockMarket /></LazyComponent> },
         ],
     },
     {
