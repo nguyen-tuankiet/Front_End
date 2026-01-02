@@ -49,7 +49,7 @@ export function StockMarket() {
     const currentItem = stockData.find(item => item.id == selectedId);
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 space-y-4 mx-auto">
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 space-y-4 mx-auto w-3/4">
             <ExtensionHeader />
             {/* Select Box */}
             <div className=" sm:w-64">
