@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Search, Menu, X, Sun, Moon, Bell, User, Home, ChevronDown, Bookmark, Headphones, Megaphone, Newspaper, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { apiService } from "@/services/api";
@@ -213,7 +212,7 @@ export function Header() {
                                   <span className="text-sm">{t('header.profile')}</span>
                               </Link>
                               <Link
-                                  to="/bai-viet-da-luu"
+                                  to="/ho-so?tab=saved"
                                   onClick={() => setIsUserMenuOpen(false)}
                                   className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                               >
@@ -360,7 +359,7 @@ export function Header() {
                           <span className="text-sm">{t('header.profile')}</span>
                         </Link>
                         <Link
-                          to="/bai-viet-da-luu"
+                          to="/ho-so?tab=saved"
                           onClick={() => setIsUserMenuOpen(false)}
                           className="flex items-center gap-3 px-4 py-2.5 text-foreground hover:bg-muted transition-colors"
                         >

@@ -138,7 +138,7 @@ export function ArticleDetailView({
                                     url={article.url || window.location.href} 
                                     title={article.title} 
                                 />
-                                <SaveButton articleId={article.id || article.url} />
+                                <SaveButton articleId={article.id || article.url} article={article} />
                             </div>
                         </div>
 

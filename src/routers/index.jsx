@@ -5,6 +5,13 @@ import LoadingSpinner from "../components/ui/LoadingSpinner";
 // Layouts - không lazy load vì cần render ngay
 import MainLayout from "../layout/MainLayout";
 import BlankLayout from "../layout/BlankLayout";
+import RegisterPage from "@/components/LoginAndRegister/RegisterPage.jsx";
+import AdvertisingPage from "../pages/AdvertisingPage";
+import OrderPage from "../pages/OrderPage";
+import ContactPage from "../pages/ContactPage";
+import ProfilePage from "../pages/ProfilePage";
+import {Weather} from "@/components/extensions/Weather.jsx";
+import {ExchangeRate} from "@/components/extensions/ExchangeRate.jsx";
 
 // Lazy load các pages
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -49,6 +56,7 @@ const routes = createBrowserRouter([
             { path: "quang-cao", element: <LazyComponent><AdvertisingPage /></LazyComponent> },
             { path: "dat-bao", element: <LazyComponent><OrderPage /></LazyComponent> },
             { path: "lien-he", element: <LazyComponent><ContactPage /></LazyComponent> },
+            { path: "ho-so", element:  <LazyComponent><ProfilePage /></LazyComponent> },
             { path: "tien-ich/thoi-tiet", element: <LazyComponent><Weather /></LazyComponent> },
             { path: "tien-ich/ty-gia", element: <LazyComponent><ExchangeRate /></LazyComponent> },
         ],
