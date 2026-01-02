@@ -7,6 +7,7 @@ import { SaveButton } from "@/components/ui/SaveButton";
 import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
 import ListenButton from "@/components/ui/ListenButton.jsx";
+import LazyImage from "./LazyImage";
 
 /**
  * Component hiển thị chi tiết bài báo
@@ -156,11 +157,10 @@ export function ArticleDetailView({
                         {/* Ảnh tiêu đề */}
                         {article.imageUrl && (
                             <div className="mb-8 rounded-xl overflow-hidden">
-                                <img
+                                <LazyImage
                                     src={article.imageUrl}
                                     alt={article.title}
                                     className="w-full h-auto"
-                                    onError={(e) => e.target.style.display = 'none'}
                                 />
                             </div>
                         )}
@@ -190,10 +190,9 @@ export function ArticleDetailView({
                                             return (
                                                 <figure key={index} className="my-6">
                                                     <div className="rounded-xl overflow-hidden shadow-md">
-                                                        <img
+                                                        <LazyImage
                                                             src={currentImage}
                                                             alt={`Hình minh họa`}
-                                                            loading="lazy"
                                                             className="w-full h-auto"
                                                         />
                                                     </div>
@@ -219,10 +218,9 @@ export function ArticleDetailView({
                                                 return (
                                                     <figure key={index} className="my-6">
                                                         <div className="rounded-xl overflow-hidden shadow-md">
-                                                            <img
+                                                            <LazyImage
                                                                 src={currentImage}
                                                                 alt={imageDescription}
-                                                                loading="lazy"
                                                                 className="w-full h-auto"
                                                             />
                                                         </div>

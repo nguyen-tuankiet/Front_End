@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
+import LazyImage from "./LazyImage";
 
 /**
  * @param {Object} props
@@ -29,11 +30,6 @@ export function ArticleCard({ article, variant = "featured", className }) {
 
     const FALLBACK_IMAGE = "https://placehold.co/600x400?text=News";
 
-    const handleImageError = (e) => {
-        e.target.src = FALLBACK_IMAGE;
-        e.target.onerror = null; 
-    };
-
     if (variant === "card-lg") {
         return (
             <Link
@@ -41,10 +37,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-xl overflow-hidden mb-4 shadow-sm aspect-[16/9]">
-                    <img
+                    <LazyImage
                         src={imageUrl || FALLBACK_IMAGE}
                         alt={decodedTitle}
-                        onError={handleImageError}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <span className="absolute top-3 left-3 px-3 py-1 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded shadow-sm">
@@ -73,10 +68,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-3 aspect-[3/2]">
-                    <img
+                    <LazyImage
                         src={imageUrl || FALLBACK_IMAGE}
                         alt={decodedTitle}
-                        onError={handleImageError}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     {category && (
@@ -102,10 +96,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 className={cn("block group", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-2 aspect-[16/10]">
-                    <img
+                    <LazyImage
                         src={imageUrl || FALLBACK_IMAGE}
                         alt={decodedTitle}
-                        onError={handleImageError}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     {category && (
@@ -133,10 +126,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                     className
                 )}
             >
-                <img
+                <LazyImage
                     src={imageUrl || FALLBACK_IMAGE}
                     alt={decodedTitle}
-                    onError={handleImageError}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
@@ -171,10 +163,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                     className
                 )}
             >
-                <img
+                <LazyImage
                     src={imageUrl || FALLBACK_IMAGE}
                     alt={decodedTitle}
-                    onError={handleImageError}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
@@ -206,10 +197,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 )}
             >
                 <div className="relative rounded-xl overflow-hidden mb-4 aspect-[16/10] shadow-sm">
-                    <img
+                    <LazyImage
                         src={imageUrl || FALLBACK_IMAGE}
                         alt={decodedTitle}
-                        onError={handleImageError}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <span className="absolute top-3 left-3 px-2.5 py-1 bg-card/90 backdrop-blur-sm text-foreground text-xs font-bold rounded shadow-sm">
@@ -241,10 +231,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 )}
             >
                 <div className="relative rounded-lg overflow-hidden shrink-0 w-28 h-20 bg-muted">
-                    <img
+                    <LazyImage
                         src={imageUrl || FALLBACK_IMAGE}
                         alt={decodedTitle}
-                        onError={handleImageError}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     {category && (
@@ -294,10 +283,9 @@ export function ArticleCard({ article, variant = "featured", className }) {
                 )}
             >
                 <div className="relative aspect-[16/10] overflow-hidden">
-                    <img
+                    <LazyImage
                         src={imageUrl || FALLBACK_IMAGE}
                         alt={decodedTitle}
-                        onError={handleImageError}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     {category && (
