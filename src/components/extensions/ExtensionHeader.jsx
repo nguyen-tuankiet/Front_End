@@ -10,7 +10,7 @@ export function ExtensionHeader() {
                 <a className={cn("hover:text-primary")} href="/tien-ich/thoi-tiet">Thời tiết</a>
                 <a className={cn("hover:text-primary")} href="/tien-ich/ty-gia">Tỷ giá ngoại tệ</a>
                 <a className={cn("hover:text-primary")} href="/tien-ich/gia-vang">Giá vàng</a>
-                <a className={cn("hover:text-primary")} href="#">Kết quả sổ số</a>
+                <a className={cn("hover:text-primary")} href="/tien-ich/kqsx">Kết quả sổ số</a>
                 <a className={cn("hover:text-primary")} href="#">Chứng Khoán</a>
                 <a className={cn("hover:text-primary")} href="#">Lịch truyền hình</a>
                 <a className={cn("hover:text-primary")} href="#">Lịch chiếu phim</a>
