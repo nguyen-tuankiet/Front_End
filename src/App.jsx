@@ -3,6 +3,7 @@ import './App.css'
 import { Header } from './components/header'
 import Footer from './components/Footer/Footer';
 
+
 function App() {
   return (
     <div className="app-root">
@@ -11,6 +12,7 @@ function App() {
         <Outlet />
       </div>
       <Footer />
+
     </div>
   )
 }
