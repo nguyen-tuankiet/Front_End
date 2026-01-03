@@ -9,9 +9,9 @@ export function ExtensionHeader() {
             <div className={cn("flex gap-4 text-muted-foreground font-medium text-sm my-2")}>
                 <a className={cn("hover:text-primary")} href="/tien-ich/thoi-tiet">Thời tiết</a>
                 <a className={cn("hover:text-primary")} href="/tien-ich/ty-gia">Tỷ giá ngoại tệ</a>
-                <a className={cn("hover:text-primary")} href="#">Giá vàng</a>
-                <a className={cn("hover:text-primary")} href="#">Kết quả sổ số</a>
-                <a className={cn("hover:text-primary")} href="#">Chứng Khoán</a>
+                <a className={cn("hover:text-primary")} href="/tien-ich/gia-vang">Giá vàng</a>
+                <a className={cn("hover:text-primary")} href="/tien-ich/kqsx">Kết quả sổ số</a>
+                <a className={cn("hover:text-primary")} href="/tien-ich/chung-khoan">Chứng Khoán</a>
                 <a className={cn("hover:text-primary")} href="#">Lịch truyền hình</a>
                 <a className={cn("hover:text-primary")} href="#">Lịch chiếu phim</a>
                 <a className={cn("hover:text-primary")} href="#">Giá xăng dầu</a>
