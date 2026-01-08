@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ExtensionHeader } from "@/components/extensions/ExtensionHeader.jsx";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Danh sách tỉnh thành từ thẻ select bạn cung cấp
 const PROVINCES = [
@@ -42,6 +43,7 @@ const PROVINCES = [
 ];
 
 export function LotteryResult() {
+    const { t } = useLanguage();
     const [location, setLocation] = useState("Miền Bắc");
     const [lotteryData, setLotteryData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -116,22 +118,22 @@ export function LotteryResult() {
 
                 {/* Text thông báo ngày */}
                 <div className="text-sm text-gray-600 text-right">
-                    Kết quả xổ số <span className="font-bold text-gray-900">{location}</span> ngày <span className="font-bold text-gray-900">{lotteryData?.time_spin_string || "..."}</span>
+                    {t("extensions.lottery.resultFor")} <span className="font-bold text-gray-900">{location}</span> {t("extensions.lottery.onDate")} <span className="font-bold text-gray-900">{lotteryData?.time_spin_string || "..."}</span>
                 </div>
             </div>
 
             {/* Table Display */}
             {loading ? (
-                <div className="py-8 text-center text-gray-400">Đang quay số...</div>
+                <div className="py-8 text-center text-gray-400">{t("extensions.lottery.loading")}</div>
             ) : !lotteryData ? (
-                <div className="py-8 text-center text-gray-400">Chưa có dữ liệu cho ngày này</div>
+                <div className="py-8 text-center text-gray-400">{t("extensions.lottery.noData")}</div>
             ) : (
                 <div className="overflow-hidden border border-gray-200 rounded-lg w-3/4 mx-auto">
                     <table className="w-full text-sm text-left">
                         <thead className="bg-gray-50 text-gray-700 font-bold border-b border-gray-200">
                         <tr>
-                            <th className="py-3 pl-4">Tên giải</th>
-                            <th className="py-3 pr-4 text-right">Số Trúng thưởng</th>
+                            <th className="py-3 pl-4">{t("extensions.lottery.prizeName")}</th>
+                            <th className="py-3 pr-4 text-right">{t("extensions.lottery.winningNumber")}</th>
                         </tr>
                         </thead>
                         <tbody>

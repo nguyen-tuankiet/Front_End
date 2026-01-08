@@ -2,19 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/components/Context/AuthContext";
 import { SavedArticlesTab, AccountInfoTab, PasswordTab, ProfileSidebar } from "@/components/Profile";
-
-const menuItems = [
-    { id: "account", label: "Thông tin tài khoản" },
-    { id: "password", label: "Đổi mật khẩu" },
-    { id: "comments", label: "Bình luận đã đăng" },
-    { id: "saved", label: "Tin đã lưu" },
-    { id: "viewed", label: "Tin đã xem" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ProfilePage() {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { user, logout } = useAuth();
+    const { t } = useLanguage();
     const tabParam = searchParams.get('tab');
     const [activeTab, setActiveTab] = useState(tabParam || "account");
     const [provinces, setProvinces] = useState([]);
@@ -28,6 +22,14 @@ export function ProfilePage() {
         phone: "",
         address: "",
     });
+
+    const menuItems = [
+        { id: "account", label: t("profile.accountInfo") },
+        { id: "password", label: t("profile.changePassword") },
+        { id: "comments", label: t("profile.comments") },
+        { id: "saved", label: t("profile.savedArticles") },
+        { id: "viewed", label: t("profile.viewedArticles") },
+    ];
 
     // Cập nhật activeTab khi tab param thay đổi
     useEffect(() => {
@@ -55,7 +57,7 @@ export function ProfilePage() {
 
     const handleSave = () => {
         // Handle save logic
-        alert("Đã lưu thay đổi");
+        alert(t("profile.savedChanges"));
     };
 
     const handleLogout = () => {
@@ -65,12 +67,12 @@ export function ProfilePage() {
 
     const handleImageChange = () => {
         // Handle image upload
-        alert("Chức năng đang phát triển");
+        alert(t("profile.featureInDevelopment"));
     };
 
     const handleDeleteAccount = () => {
-        if (window.confirm("Bạn có chắc chắn muốn xóa tài khoản? Tất cả dữ liệu sẽ bị xóa vĩnh viễn và không thể khôi phục.")) {
-            alert("Tài khoản đã được xóa");
+        if (window.confirm(t("profile.deleteAccountConfirm"))) {
+            alert(t("profile.accountDeleted"));
             logout();
             navigate("/");
         }
@@ -100,8 +102,8 @@ export function ProfilePage() {
             case "comments":
                 return (
                     <div>
-                        <h2 className="text-2xl font-extrabold text-foreground mb-6">Hoạt động bình luận</h2>
-                        <p className="text-muted-foreground">Chức năng đang phát triển</p>
+                        <h2 className="text-2xl font-extrabold text-foreground mb-6">{t("profile.commentActivity")}</h2>
+                        <p className="text-muted-foreground">{t("profile.featureInDevelopment")}</p>
                     </div>
                 );
 
@@ -111,8 +113,8 @@ export function ProfilePage() {
             case "viewed":
                 return (
                     <div>
-                        <h2 className="text-2xl font-extrabold text-foreground mb-6">Tin đã xem</h2>
-                        <p className="text-muted-foreground">Chức năng đang phát triển</p>
+                        <h2 className="text-2xl font-extrabold text-foreground mb-6">{t("profile.viewedArticles")}</h2>
+                        <p className="text-muted-foreground">{t("profile.featureInDevelopment")}</p>
                     </div>
                 );
 
@@ -129,8 +131,8 @@ export function ProfilePage() {
                 <div className="relative max-w-7xl mx-auto px-4 py-12 lg:py-16">
                     <div className="text-center">
                         <h1 className="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight text-foreground">
-                            Hồ sơ{" "}
-                            <span className="text-primary">cá nhân</span>
+                            {t("profile.title")}{" "}
+                            <span className="text-primary">{t("profile.personalProfile")}</span>
                         </h1>
                     </div>
                 </div>

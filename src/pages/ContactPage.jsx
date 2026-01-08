@@ -1,6 +1,7 @@
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const contactOffices = [
     {
@@ -111,6 +112,8 @@ function formatCurrency(amount) {
 }
 
 export function ContactPage() {
+    const { t } = useLanguage();
+
     return (
         <div className="min-h-screen bg-background">
             {/* Hero Section */}
@@ -119,12 +122,12 @@ export function ContactPage() {
                 <div className="relative max-w-7xl mx-auto px-4 py-12 lg:py-16">
                     <div className="text-center">
                         <h1 className="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight text-foreground">
-                            Liên hệ{" "}
+                            {t("contactPage.title")}{" "}
                             <span className="text-primary">TIN</span>
                             <span className="text-secondary"> TỨC</span>
                         </h1>
                         <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                            Thông tin liên hệ tòa soạn, quảng cáo, phát hành và các văn phòng đại diện
+                            {t("contactPage.subtitle")}
                         </p>
                     </div>
                 </div>
@@ -134,12 +137,12 @@ export function ContactPage() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link to="/dat-bao">
                         <Button size="lg" className="w-full sm:w-auto">
-                            Đặt báo
+                            {t("contactPage.orderNewspaper")}
                         </Button>
                     </Link>
                     <Link to="/quang-cao">
                         <Button size="lg" className="w-full sm:w-auto">
-                            Quảng cáo
+                            {t("contactPage.advertising")}
                         </Button>
                     </Link>
                 </div>
@@ -150,8 +153,8 @@ export function ContactPage() {
                 <section className="mb-12">
                     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                         <div className="text-center mb-6">
-                            <h2 className="text-2xl font-extrabold text-foreground">Nhật báo Thanh Niên</h2>
-                            <p className="text-sm text-muted-foreground mt-1">5.500đ/số</p>
+                            <h2 className="text-2xl font-extrabold text-foreground">{t("contactPage.dailyNewspaper")}</h2>
+                            <p className="text-sm text-muted-foreground mt-1">5.500đ{t("contactPage.perIssue")}</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {subscriptionPackages.map((pkg, idx) => (
@@ -179,7 +182,7 @@ export function ContactPage() {
                 {/* Văn phòng */}
                 <section>
                     <h2 className="text-2xl md:text-3xl font-extrabold text-foreground mb-6">
-                        Tòa soạn và các văn phòng đại diện
+                        {t("contactPage.officeTitle")}
                     </h2>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {contactOffices.map((office, idx) => (

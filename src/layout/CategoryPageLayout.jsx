@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Layout chung cho trang danh mục
@@ -23,6 +24,7 @@ export function CategoryPageLayout({
     pagination,
     className
 }) {
+    const { t } = useLanguage();
 
     return (
         <div className={cn("max-w-7xl mx-auto py-6 px-4", className)}>
@@ -33,7 +35,7 @@ export function CategoryPageLayout({
                         className="flex items-center gap-1 text-primary hover:underline"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        Trang chủ
+                        {t('category.home')}
                     </Link>
                     {categoryName && (
                         <>

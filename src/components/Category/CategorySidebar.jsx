@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 
 function decodeHTMLEntities(text) {
@@ -18,12 +19,14 @@ function decodeHTMLEntities(text) {
  */
 export function CategorySidebar({
     articles = [],
-    title = "Bài mới nhất",
+    title,
     onArticleClick,
     limit = 5,
     className
 }) {
+    const { t } = useLanguage();
     const displayedArticles = articles.slice(0, limit);
+    const sidebarTitle = title || t('category.latestSidebar');
 
     // Helper để lấy title (hỗ trợ cả API và CSV format)
     const getTitle = (article) => decodeHTMLEntities(article.title || article['Tiêu đề'] || '');
@@ -36,7 +39,7 @@ export function CategorySidebar({
             {/* Title */}
             <h2 className="text-base font-bold text-foreground mb-4 pb-3 border-b-2 border-border flex items-center gap-2">
                 <span className="w-1 h-5 bg-primary rounded-full" />
-                {title}
+                {sidebarTitle}
             </h2>
 
             {/* Danh sách bài viết */}
@@ -71,7 +74,7 @@ export function CategorySidebar({
 
             {articles.length === 0 && (
                 <p className="text-sm text-muted-foreground text-center py-4">
-                    Chưa có bài viết
+                    {t('category.noArticles')}
                 </p>
             )}
         </div>

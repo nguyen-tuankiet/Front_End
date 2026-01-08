@@ -163,7 +163,7 @@ export function Header() {
               <span className="text-muted-foreground/50">|</span>
               <a href="/tien-ich/thoi-tiet">{t('header.utilities')}</a>
               <span className="text-muted-foreground/50">|</span>
-              <Link to="/lien-he" className="hover:text-primary transition-colors">Liên hệ</Link>
+              <Link to="/lien-he" className="hover:text-primary transition-colors">{t('header.contact')}</Link>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <LanguageSwitcher variant="minimal" />
@@ -549,7 +549,7 @@ export function Header() {
                     to={cat.href}
                     className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium mt-2"
                   >
-                    Xem tất cả {cat.name} →
+                    {t('common.viewAll')} {cat.name} →
                   </Link>
                 </div>
               </div>
@@ -567,17 +567,18 @@ export function Header() {
       )}>
         <div className="container mx-auto px-4 py-1.5 flex items-center text-sm">
           <span className="bg-red-700 px-2 py-0.5 rounded text-xs font-bold mr-4 shrink-0 uppercase">
-            Tin Nóng
+            {t('header.hotNews')}
           </span>
           <div className="overflow-hidden relative flex-1">
             <div className="animate-marquee whitespace-nowrap flex items-center gap-4">
-              <span>Cầu thủ Lào gặp chấn thương nặng</span>
-              <span className="text-white/60">•</span>
-              <span>Học sinh Huế hào hứng trải nghiệm 'Hạo khí Cần vương'</span>
-              <span className="text-white/60">•</span>
-              <span>Khởi nghĩa Hòn Khoai, mốc son lịch sử của tỉnh Cà Mau</span>
-              <span className="text-white/60">•</span>
-              <span>Đường phố</span>
+              {t('header.hotNewsItems').map((item, index) => (
+                <>
+                  <span key={index}>{item}</span>
+                  {index < t('header.hotNewsItems').length - 1 && (
+                    <span className="text-white/60">•</span>
+                  )}
+                </>
+              ))}
             </div>
           </div>
         </div>
