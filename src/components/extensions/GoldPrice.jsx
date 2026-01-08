@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { ExtensionHeader } from "@/components/extensions/ExtensionHeader.jsx";
 import {cn} from "@/lib/utils.js";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function GoldPrice() {
+    const { t } = useLanguage();
     const [goldData, setGoldData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [lastUpdated, setLastUpdated] = useState("");
@@ -44,19 +46,19 @@ export function GoldPrice() {
             {/* Dòng hiển thị ngày cập nhật */}
             <div className={cn("mx-32")}>
                 <div className="text-sm text-gray-500 mb-4 mt-2">
-                    Giá vàng cập nhật ngày {lastUpdated || "..."}
+                    {t("extensions.goldPrice.lastUpdated")} {lastUpdated || "..."}
                 </div>
 
                 {loading ? (
-                    <div className="text-center py-4 text-gray-400">Đang tải dữ liệu...</div>
+                    <div className="text-center py-4 text-gray-400">{t("extensions.goldPrice.loading")}</div>
                 ) : (
                     <div className="">
                         <table className="w-3/4 text-sm text-left">
                             <thead className="text-gray-700 font-bold border-b border-gray-200">
                             <tr>
-                                <th className="py-3 pr-4">Loại vàng</th>
-                                <th className="py-3 px-2 text-right">Giá mua</th>
-                                <th className="py-3 pl-4 text-right">Bán</th>
+                                <th className="py-3 pr-4">{t("extensions.goldPrice.type")}</th>
+                                <th className="py-3 px-2 text-right">{t("extensions.goldPrice.buy")}</th>
+                                <th className="py-3 pl-4 text-right">{t("extensions.goldPrice.sell")}</th>
                             </tr>
                             </thead>
                             <tbody>

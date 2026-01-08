@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { ExtensionHeader } from "@/components/extensions/ExtensionHeader.jsx";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function StockMarket() {
+    const { t } = useLanguage();
     const [stockData, setStockData] = useState([]);
     const [selectedId, setSelectedId] = useState(null); // ID của sàn đang chọn
     const [loading, setLoading] = useState(true);
@@ -71,13 +73,13 @@ export function StockMarket() {
 
             {loading ? (
                 <div className="h-32 flex items-center justify-center text-gray-400 text-sm">
-                    Đang tải dữ liệu chứng khoán...
+                    {t("extensions.stock.loading")}
                 </div>
             ) : currentItem ? (
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {/* Blue Header */}
                     <div className="bg-[#4299e1] text-white px-4 py-3 font-semibold text-sm sm:text-base">
-                        Thông tin chứng khoán sàn {currentItem.name} ngày {currentDate}
+                        {t("extensions.stock.info").replace("{name}", currentItem.name).replace("{date}", currentDate)}
                     </div>
 
                     {/* Data Grid */}
@@ -91,7 +93,7 @@ export function StockMarket() {
 
                         {/* Cột 2: Thay đổi */}
                         <div className="border-b sm:border-b-0 sm:border-r border-gray-100 pb-4 sm:pb-0 sm:pr-4 last:border-0">
-                            <div className="text-gray-900 font-bold mb-1">Thay đổi:</div>
+                            <div className="text-gray-900 font-bold mb-1">{t("extensions.stock.change")}:</div>
                             <div className={`${currentItem.change.includes('-') ? 'text-red-500' : 'text-green-600'}`}>
                                 {currentItem.change}
                             </div>
@@ -99,7 +101,7 @@ export function StockMarket() {
 
                         {/* Cột 3: Thay đổi % */}
                         <div>
-                            <div className="text-gray-900 font-bold mb-1">Thay đổi (%):</div>
+                            <div className="text-gray-900 font-bold mb-1">{t("extensions.stock.changePercent")}:</div>
                             <div className={`${currentItem.percent.includes('-') ? 'text-red-500' : 'text-green-600'}`}>
                                 {currentItem.percent}
                             </div>
@@ -107,25 +109,25 @@ export function StockMarket() {
 
                         {/* Hàng 2 - Cột 1: KLGD */}
                         <div className="border-b sm:border-b-0 sm:border-r border-gray-100 pb-4 sm:pb-0 sm:pr-4 last:border-0 pt-2 sm:pt-0">
-                            <div className="text-gray-900 font-bold mb-1">KLGD</div>
+                            <div className="text-gray-900 font-bold mb-1">{t("extensions.stock.volume")}</div>
                             <div className="text-gray-600">{currentItem.volume}</div>
                         </div>
 
                         {/* Hàng 2 - Cột 2: NN Mua */}
                         <div className="border-b sm:border-b-0 sm:border-r border-gray-100 pb-4 sm:pb-0 sm:pr-4 last:border-0 pt-2 sm:pt-0">
-                            <div className="text-gray-900 font-bold mb-1">NN mua:</div>
-                            <div className="text-gray-600">{currentItem.foreignBuyFormat} (tỷ)</div>
+                            <div className="text-gray-900 font-bold mb-1">{t("extensions.stock.foreignBuy")}:</div>
+                            <div className="text-gray-600">{currentItem.foreignBuyFormat} ({t("extensions.stock.billion")})</div>
                         </div>
 
                         {/* Hàng 2 - Cột 3: NN Bán */}
                         <div className="pt-2 sm:pt-0">
-                            <div className="text-gray-900 font-bold mb-1">NN bán:</div>
-                            <div className="text-gray-600">{currentItem.foreignSellFormat} (tỷ)</div>
+                            <div className="text-gray-900 font-bold mb-1">{t("extensions.stock.foreignSell")}:</div>
+                            <div className="text-gray-600">{currentItem.foreignSellFormat} ({t("extensions.stock.billion")})</div>
                         </div>
                     </div>
                 </div>
             ) : (
-                <div className="p-4 text-center text-gray-500">Không có dữ liệu hiển thị</div>
+                <div className="p-4 text-center text-gray-500">{t("extensions.stock.noData")}</div>
             )}
         </div>
     );
