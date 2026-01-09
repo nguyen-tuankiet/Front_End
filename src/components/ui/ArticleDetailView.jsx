@@ -8,6 +8,8 @@ import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
 import ListenButton from "@/components/ui/ListenButton.jsx";
 import LazyImage from "./LazyImage";
+import { FontSizeControls } from "@/components/ui/FontSizeControls";
+import { useFontSize, FONT_SIZES } from "@/contexts/FontSizeContext";
 
 /**
  * Component hiển thị chi tiết bài báo
@@ -36,6 +38,9 @@ export function ArticleDetailView({
     onRelatedArticleClick,
     className
 }) {
+    const { fontSize } = useFontSize();
+    const fontSizeClass = FONT_SIZES[fontSize]?.class || 'text-base';
+
     if (!article) {
         return (
             <div className="text-center py-12 text-muted-foreground">
@@ -48,7 +53,6 @@ export function ArticleDetailView({
     const publishTime = article.pubDate || "1 phút trước";
     const author = article.author || "Trang Châu";
 
-    console.log(article)
     return (
         <div className={cn("max-w-7xl mx-auto", className)}>
             <div className="mb-4">
@@ -133,7 +137,8 @@ export function ArticleDetailView({
                         {/* Meta & nút chức năng */}
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4">
                             <ArticleMeta author={author} publishTime={publishTime} />
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 flex-wrap">
+                                <FontSizeControls />
                                 <ShareButtons 
                                     url={article.url || window.location.href} 
                                     title={article.title} 
@@ -149,7 +154,11 @@ export function ArticleDetailView({
 
                         {/* Tóm tắt bài báo */}
                         {article.description && (
-                            <div className="text-lg text-muted-foreground italic mb-6 pl-4 border-l-4 border-primary">
+                            <div className={cn(
+                                "text-muted-foreground italic mb-6 pl-4 border-l-4 border-primary",
+                                fontSize === 'sm' ? 'text-base' : fontSize === 'base' ? 'text-lg' : 
+                                fontSize === 'lg' ? 'text-xl' : fontSize === 'xl' ? 'text-2xl' : 'text-3xl'
+                            )}>
                                 {article.description}
                             </div>
                         )}
@@ -236,7 +245,10 @@ export function ArticleDetailView({
                                     
                                     // Paragraph thông thường
                                     return (
-                                        <p key={index} className="text-foreground leading-relaxed mb-4 text-justify text-base">
+                                        <p key={index} className={cn(
+                                            "text-foreground leading-relaxed mb-4 text-justify",
+                                            fontSizeClass
+                                        )}>
                                             {trimmedParagraph}
                                         </p>
                                     );
