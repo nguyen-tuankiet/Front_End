@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
 import LazyImage from "./LazyImage";
+import { handleArticleClick } from "@/lib/articleNavigation";
 
 /**
  * @param {Object} props
@@ -30,10 +31,16 @@ export function ArticleCard({ article, variant = "featured", className }) {
 
     const FALLBACK_IMAGE = "https://placehold.co/600x400?text=News";
 
+    // Lưu vào danh sách đã xem khi nhấn vào link
+    const handleClick = () => {
+        handleArticleClick(article);
+    };
+
     if (variant === "card-lg") {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-xl overflow-hidden mb-4 shadow-sm aspect-[16/9]">
@@ -65,6 +72,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn("block group h-full", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-3 aspect-[3/2]">
@@ -93,6 +101,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn("block group", className)}
             >
                 <div className="relative rounded-lg overflow-hidden mb-2 aspect-[16/10]">
@@ -121,6 +130,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn(
                     "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
                     className
@@ -158,6 +168,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn(
                     "block relative rounded-xl overflow-hidden group h-full min-h-[400px] md:min-h-[500px] shadow-lg",
                     className
@@ -191,6 +202,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn(
                     "block group h-full flex flex-col",
                     className
@@ -225,6 +237,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn(
                     "flex gap-3 group items-start",
                     className
@@ -256,6 +269,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn(
                     "block group py-3 border-b border-border last:border-0 hover:bg-muted/50 px-2 -mx-2 rounded transition-colors",
                     className
@@ -277,6 +291,7 @@ export function ArticleCard({ article, variant = "featured", className }) {
         return (
             <Link
                 to={articleRoute}
+                onClick={handleClick}
                 className={cn(
                     "block group bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300",
                     className

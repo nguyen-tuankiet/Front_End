@@ -2,6 +2,7 @@ import { cn, decodeHtmlEntities } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 import LazyImage from "./LazyImage";
+import { handleArticleClick } from "@/lib/articleNavigation";
 
 /**
  * Component hiển thị danh sách bài viết liên quan
@@ -46,10 +47,15 @@ function RelatedArticleItem({ article, onClick }) {
     const routeUrl = articleUrl ? `/bai-viet?url=${encodeURIComponent(articleUrl)}` : "#";
     const decodedTitle = decodeHtmlEntities(article.title || "");
 
+    const handleClick = () => {
+        handleArticleClick(article);
+        if (onClick) onClick();
+    };
+
     return (
         <Link
             to={routeUrl}
-            onClick={onClick}
+            onClick={handleClick}
             className="flex gap-3 group"
         >
             {article.imageUrl ? (

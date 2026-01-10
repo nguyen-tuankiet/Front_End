@@ -1,8 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/components/Context/AuthContext";
-import { SavedArticlesTab, AccountInfoTab, PasswordTab, ProfileSidebar } from "@/components/Profile";
+import { SavedArticlesTab, ViewedArticlesTab, AccountInfoTab, PasswordTab, ProfileSidebar } from "@/components/Profile";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+const menuItems = [
+    { id: "account", label: "Thông tin tài khoản" },
+    { id: "password", label: "Đổi mật khẩu" },
+    { id: "comments", label: "Bình luận đã đăng" },
+    { id: "saved", label: "Tin đã lưu" },
+    { id: "viewed", label: "Tin đã xem" },
+];
+
 
 export function ProfilePage() {
     const navigate = useNavigate();
@@ -111,12 +120,7 @@ export function ProfilePage() {
                 return <SavedArticlesTab />;
 
             case "viewed":
-                return (
-                    <div>
-                        <h2 className="text-2xl font-extrabold text-foreground mb-6">{t("profile.viewedArticles")}</h2>
-                        <p className="text-muted-foreground">{t("profile.featureInDevelopment")}</p>
-                    </div>
-                );
+                return <ViewedArticlesTab />;
 
             default:
                 return null;

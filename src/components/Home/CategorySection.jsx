@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
 import LazyImage from "@/components/ui/LazyImage";
+import { handleArticleClick } from "@/lib/articleNavigation";
 
 /**
  * @param {Object} props
@@ -42,6 +43,7 @@ export function CategorySection({
                     to={featuredArticle.link 
                         ? `/bai-viet/${encodeURIComponent(featuredArticle.link)}`
                         : `/bai-viet/${featuredArticle.id || ''}`}
+                    onClick={() => handleArticleClick(featuredArticle)}
                     className="group bg-card rounded-xl overflow-hidden border border-border transition-shadow hover:shadow-lg"
                     style={{ boxShadow: 'var(--card-shadow)' }}
                 >
@@ -79,6 +81,7 @@ export function CategorySection({
                         <Link
                             key={article.id || article.link || index}
                             to={articleRoute}
+                            onClick={() => handleArticleClick(article)}
                             className="flex gap-4 group"
                         >
                             <LazyImage

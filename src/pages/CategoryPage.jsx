@@ -6,6 +6,7 @@ import { CategorySidebar } from '@/components/Category/CategorySidebar';
 import { Pagination } from '@/components/ui/pagination';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { handleArticleClick as saveViewedArticle } from '@/lib/articleNavigation';
 
 const ARTICLES_PER_PAGE = 10;
 
@@ -116,6 +117,9 @@ export function CategoryPage() {
     }, [pageTitle]);
 
     const handleArticleClick = (article) => {
+        // Lưu bài viết vào danh sách xem gần đây
+        saveViewedArticle(article);
+        
         const articleUrl = encodeURIComponent(article.link);
         navigate(`/bai-viet?url=${articleUrl}`);
     };
