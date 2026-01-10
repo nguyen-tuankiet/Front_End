@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { ArticleMeta } from "@/components/ui/ArticleMeta";
 import { ShareButtons } from "@/components/ui/ShareButtons";
 import { SaveButton } from "@/components/ui/SaveButton";
@@ -10,6 +11,7 @@ import ListenButton from "@/components/ui/ListenButton.jsx";
 import LazyImage from "./LazyImage";
 import { FontSizeControls } from "@/components/ui/FontSizeControls";
 import { useFontSize, FONT_SIZES } from "@/contexts/FontSizeContext";
+import { addViewedArticle } from "@/lib/viewedArticles";
 
 /**
  * Component hiển thị chi tiết bài báo
@@ -40,6 +42,13 @@ export function ArticleDetailView({
 }) {
     const { fontSize } = useFontSize();
     const fontSizeClass = FONT_SIZES[fontSize]?.class || 'text-base';
+
+    // Lưu bài viết vào danh sách xem gần đây
+    useEffect(() => {
+        if (article) {
+            addViewedArticle(article);
+        }
+    }, [article]);
 
     if (!article) {
         return (
