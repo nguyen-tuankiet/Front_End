@@ -99,7 +99,7 @@ export function Weather() {
     useEffect(() => {
         const getWeather = async () => {
             try {
-                const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${selected}&days=7&aqi=no&alerts=no`);
+                const res = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${selected}&days=7&aqi=no&alerts=no`);
                 const data = await res.json();
                 setWeather(data);
             } catch (err) {
