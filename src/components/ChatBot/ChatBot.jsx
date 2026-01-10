@@ -3,17 +3,12 @@ import { MessageCircle, X, Send, Bot, User, Loader2, ExternalLink, ChevronDown, 
 import { useNavigate } from "react-router-dom";
 import { apiService } from "@/services/api";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ChatBot() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      type: "bot",
-      content: "Xin chào! Tôi là trợ lý tin tức. Bạn có thể hỏi tôi về tin tức hôm nay, ví dụ:\n• \"Hôm nay có tin gì về thể thao?\"\n• \"Tin về iPhone 16 hôm nay\"\n• \"Có tin gì về World Cup không?\"\n• \"Mở tin số 1\" (sau khi xem danh sách tin)",
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isShifted, setIsShifted] = useState(false); // State to track position shift
@@ -21,6 +16,18 @@ export function ChatBot() {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const navigate = useNavigate();
+
+  // Initialize greeting message with translation
+  useEffect(() => {
+    setMessages([
+      {
+        id: 1,
+        type: "bot",
+        content: t("chatbot.greeting"),
+        timestamp: new Date(),
+      },
+    ]);
+  }, [t]);
 
   // Toggle expanded state for a message's article list
   const toggleExpanded = (messageId) => {
@@ -110,7 +117,7 @@ export function ChatBot() {
       const errorMessage = {
         id: Date.now() + 1,
         type: "bot",
-        content: "Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.",
+        content: t("chatbot.error"),
         isError: true,
         timestamp: new Date(),
       };
@@ -176,7 +183,7 @@ export function ChatBot() {
     return (
       <div className="mt-3 space-y-2">
         <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
-           Bấm vào tin để xem chi tiết:
+           {t("chatbot.clickToView")}
         </p>
         {displayedArticles.map((article, index) => (
           <button
@@ -210,12 +217,12 @@ export function ChatBot() {
             {isExpanded ? (
               <>
                 <ChevronUp className="w-4 h-4" />
-                <span>Thu gọn</span>
+                <span>{t("chatbot.collapse")}</span>
               </>
             ) : (
               <>
                 <ChevronDown className="w-4 h-4" />
-                <span>Xem thêm {articles.length - 5} tin khác</span>
+                <span>{t("chatbot.showMore").replace("{count}", articles.length - 5)}</span>
               </>
             )}
           </button>
@@ -262,8 +269,8 @@ export function ChatBot() {
             <Bot className="w-6 h-6 text-white" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-white">Trợ lý Tin tức</h3>
-            <p className="text-xs text-white/90">Luôn sẵn sàng hỗ trợ bạn</p>
+            <h3 className="font-semibold text-white">{t("chatbot.title")}</h3>
+            <p className="text-xs text-white/90">{t("chatbot.subtitle")}</p>
           </div>
           <button
             onClick={() => setIsOpen(false)}
@@ -334,7 +341,7 @@ export function ChatBot() {
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin text-primary" />
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Đang tìm kiếm tin tức...
+                    {t("chatbot.searching")}
                   </span>
                 </div>
               </div>
@@ -353,7 +360,7 @@ export function ChatBot() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Nhập câu hỏi của bạn..."
+              placeholder={t("chatbot.placeholder")}
               disabled={isLoading}
               className={cn(
                 "flex-1 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600",
@@ -378,7 +385,7 @@ export function ChatBot() {
             </button>
           </div>
           <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 text-center">
-            Hỏi về tin tức theo chủ đề hoặc danh mục
+            {t("chatbot.hint")}
           </p>
         </div>
       </div>

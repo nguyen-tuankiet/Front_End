@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
     ArrowRight,
     Building2,
@@ -72,6 +73,7 @@ const PRICING_URL_MAP = {
 
 
 export function AdvertisingPage() {
+    const { t } = useLanguage();
     const [form, setForm] = useState({ name: "", company: "", phone: "", email: "", message: "" });
 
     const scrollToContact = () => {
@@ -88,36 +90,36 @@ export function AdvertisingPage() {
 
     const categoryGrids = useMemo(
         () => [
-            { key: "pr", label: "PR Online", icon: FileText },
-            { key: "display", label: "Quảng cáo hiển thị", icon: Eye },
-            { key: "online", label: "Trực tuyến", icon: Globe },
-            { key: "video", label: "Video", icon: Clapperboard },
-            { key: "social", label: "Mạng xã hội", icon: Megaphone },
-            { key: "tech", label: "Công nghệ - Game", icon: Gamepad2 },
-            { key: "fashion", label: "Thời trang trẻ", icon: Building2 },
-            { key: "promo", label: "Ưu đãi", icon: Percent },
-            { key: "surcharge", label: "Phí phụ thu", icon: DollarSign },
-            { key: "video-prod", label: "Sản xuất Video", icon: Clapperboard },
-            { key: "classifieds", label: "Rao vặt - Nhà đất", icon: Building2 },
-            { key: "criteria", label: "Tiêu chí PR", icon: ListChecks },
+            { key: "pr", label: t("advertisingPage.prOnline"), icon: FileText },
+            { key: "display", label: t("advertisingPage.displayAds"), icon: Eye },
+            { key: "online", label: t("advertisingPage.online"), icon: Globe },
+            { key: "video", label: t("advertisingPage.video"), icon: Clapperboard },
+            { key: "social", label: t("advertisingPage.socialMedia"), icon: Megaphone },
+            { key: "tech", label: t("advertisingPage.techGame"), icon: Gamepad2 },
+            { key: "fashion", label: t("advertisingPage.youngFashion"), icon: Building2 },
+            { key: "promo", label: t("advertisingPage.offers"), icon: Percent },
+            { key: "surcharge", label: t("advertisingPage.surcharge"), icon: DollarSign },
+            { key: "video-prod", label: t("advertisingPage.videoProduction"), icon: Clapperboard },
+            { key: "classifieds", label: t("advertisingPage.classifiedsRealEstate"), icon: Building2 },
+            { key: "criteria", label: t("advertisingPage.prCriteria"), icon: ListChecks },
         ],
-        []
+        [t]
     );
 
     const printNewspaperGrids = useMemo(
         () => [
-            { key: "bao-xuan", label: "Báo xuân 2026", icon: Calendar },
-            { key: "bao-ngay", label: "Báo ngày - toàn quốc", icon: Newspaper },
-            { key: "rao-vat", label: "Rao vặt toàn quốc", icon: Megaphone },
-            { key: "trang-dia-phuong", label: "Trang địa phương", icon: MapPin },
-            { key: "phi-bai-viet", label: "Phí bài viết", icon: DollarSign },
+            { key: "bao-xuan", label: t("advertisingPage.springNewspaper"), icon: Calendar },
+            { key: "bao-ngay", label: t("advertisingPage.dailyNational"), icon: Newspaper },
+            { key: "rao-vat", label: t("advertisingPage.classifiedsNational"), icon: Megaphone },
+            { key: "trang-dia-phuong", label: t("advertisingPage.localPages"), icon: MapPin },
+            { key: "phi-bai-viet", label: t("advertisingPage.articleFee"), icon: DollarSign },
         ],
-        []
+        [t]
     );
 
     const onSubmit = (e) => {
         e.preventDefault();
-        alert("Đã gửi yêu cầu");
+        alert(t("advertisingPage.requestSent"));
         setForm({ name: "", company: "", phone: "", email: "", message: "" });
     };
 
@@ -130,30 +132,30 @@ export function AdvertisingPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                         <div className="lg:col-span-7">
                             <h1 className="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight text-foreground">
-                                Quảng cáo trên{" "}
+                                {t("advertisingPage.title")}{" "}
                                 <span className="text-primary">TIN</span>
                                 <span className="text-secondary"> TỨC</span>
                             </h1>
                             <p className="mt-4 text-base md:text-lg text-muted-foreground max-w-2xl">
-                                Trải nghiệm hiện đại, tiếp cận hàng triệu khách hàng tiềm năng với mức chi phi tối ưu.
+                                {t("advertisingPage.subtitle")}
                             </p>
                             <div className="mt-6 flex flex-col sm:flex-row gap-3">
                                 <Button onClick={scrollToContact} className="shadow-sm">
-                                    Nhận báo giá nhanh <ArrowRight className="h-4 w-4" />
+                                    {t("advertisingPage.getQuote")} <ArrowRight className="h-4 w-4" />
                                 </Button>
                                 <Link to="/trang-chu">
                                     <Button variant="outline" className="w-full sm:w-auto">
-                                        Về trang chủ
+                                        {t("advertisingPage.backToHome")}
                                     </Button>
                                 </Link>
                             </div>
                         </div>
                         <div className="lg:col-span-5">
                             <div className="grid grid-cols-2 gap-4">
-                                <Stat label="Lượt xem trang / năm" value="1,3 Tỷ+" />
-                                <Stat label="Chiến dịch thành công" value="1 Tr+" />
-                                <Stat label="Hạng mục quảng cáo" value="18+" />
-                                <Stat label="Kinh nghiệm vận hành" value="10+ năm" />
+                                <Stat label={t("advertisingPage.pageViewsYear")} value="1,3 Tỷ+" />
+                                <Stat label={t("advertisingPage.successfulCampaigns")} value="1 Tr+" />
+                                <Stat label={t("advertisingPage.adCategories")} value="18+" />
+                                <Stat label={t("advertisingPage.yearsExperience")} value="10+ năm" />
                             </div>
                         </div>
                     </div>
@@ -163,16 +165,16 @@ export function AdvertisingPage() {
             <section className="max-w-7xl mx-auto px-4 pb-12 pt-12">
                 <div className="flex items-end justify-between gap-4 flex-wrap">
                     <div>
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Báo online</h2>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">{t("advertisingPage.onlineNews")}</h2>
                         <p className="mt-2 text-muted-foreground">
-                            Chọn hạng mục phù hợp. Báo giá chi tiết sẽ tùy theo vị trí, chuyên mục và thời lượng.
+                            {t("advertisingPage.selectCategory")}
                         </p>
                     </div>
                     <a
                         href="#lien-he"
                         className="text-sm font-semibold text-primary hover:underline underline-offset-4"
                     >
-                        Liên hệ tư vấn →
+                        {t("advertisingPage.contactConsult")}
                     </a>
                 </div>
 
@@ -202,7 +204,7 @@ export function AdvertisingPage() {
                                         </div>
                                         <div className="mt-3 h-0.5 w-24 bg-primary" />
                                         <div className="mt-3 text-sm text-muted-foreground">
-                                            Xem chi tiết
+                                            {t("advertisingPage.viewDetails")}
                                         </div>
                                     </div>
                                 </div>
@@ -215,9 +217,9 @@ export function AdvertisingPage() {
             <section className="max-w-7xl mx-auto px-4 pb-12">
                 <div className="flex items-end justify-between gap-4 flex-wrap">
                     <div>
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Báo in</h2>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">{t("advertisingPage.printNews")}</h2>
                         <p className="mt-2 text-muted-foreground">
-                            Chọn hạng mục phù hợp. Báo giá chi tiết sẽ tùy theo vị trí, chuyên mục và thời lượng.
+                            {t("advertisingPage.selectCategory")}
 
                         </p>
                     </div>
@@ -225,7 +227,7 @@ export function AdvertisingPage() {
                         href="#lien-he"
                         className="text-sm font-semibold text-secondary hover:underline underline-offset-4"
                     >
-                        Liên hệ tư vấn →
+                        {t("advertisingPage.contactConsult")}
                     </a>
                 </div>
 
@@ -255,7 +257,7 @@ export function AdvertisingPage() {
                                         </div>
                                         <div className="mt-3 h-0.5 w-24 bg-secondary" />
                                         <div className="mt-3 text-sm text-muted-foreground">
-                                            Xem chi tiết
+                                            {t("advertisingPage.viewDetails")}
                                         </div>
                                     </div>
                                 </div>
@@ -269,9 +271,9 @@ export function AdvertisingPage() {
             <section id="lien-he" className="max-w-7xl mx-auto px-4 pb-14 scroll-mt-24">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     <div className="lg:col-span-5">
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Liên hệ nhận báo giá</h2>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">{t("advertisingPage.contactQuote")}</h2>
                         <p className="mt-2 text-muted-foreground">
-                            Gửi thông tin cơ bản, đội ngũ kinh doanh sẽ phản hồi kèm proposal phù hợp.
+                            {t("advertisingPage.contactQuoteDesc")}
                         </p>
 
                         <div className="mt-6 space-y-3">
@@ -281,7 +283,7 @@ export function AdvertisingPage() {
                                         <Phone className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-semibold text-foreground">Hotline</div>
+                                        <div className="text-sm font-semibold text-foreground">{t("advertisingPage.hotline")}</div>
                                         <div className="text-sm text-muted-foreground">098 765 4321</div>
                                     </div>
                                 </div>
@@ -292,7 +294,7 @@ export function AdvertisingPage() {
                                         <Mail className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-semibold text-foreground">Email</div>
+                                        <div className="text-sm font-semibold text-foreground">{t("advertisingPage.email")}</div>
                                         <div className="text-sm text-muted-foreground">quangcao@tintuc.vn</div>
                                     </div>
                                 </div>
@@ -303,9 +305,9 @@ export function AdvertisingPage() {
                                         <ShieldCheck className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-semibold text-foreground">Cam kết</div>
+                                        <div className="text-sm font-semibold text-foreground">{t("advertisingPage.commitment")}</div>
                                         <div className="text-sm text-muted-foreground">
-                                            Tư vấn nhanh • minh bạch • tối ưu hiệu quả theo mục tiêu.
+                                            {t("advertisingPage.commitmentDesc")}
                                         </div>
                                     </div>
                                 </div>
@@ -316,12 +318,12 @@ export function AdvertisingPage() {
                     <div className="lg:col-span-7">
                         <form onSubmit={onSubmit} className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                             <div className="text-xl font-extrabold text-primary mb-5">
-                                Nhận tư vấn & báo giá
+                                {t("advertisingPage.getConsultQuote")}
                             </div>
 
                             <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="text-sm font-semibold text-foreground">Họ tên</label>
+                                    <label className="text-sm font-semibold text-foreground">{t("advertisingPage.yourName")}</label>
                                     <Input
                                         value={form.name}
                                         onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
@@ -331,16 +333,16 @@ export function AdvertisingPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm font-semibold text-foreground">Công ty</label>
+                                    <label className="text-sm font-semibold text-foreground">{t("advertisingPage.company")}</label>
                                     <Input
                                         value={form.company}
                                         onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
-                                        placeholder="Tên doanh nghiệp"
+                                        placeholder={t("advertisingPage.companyPlaceholder")}
                                         className="mt-2"
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm font-semibold text-foreground">Số điện thoại</label>
+                                    <label className="text-sm font-semibold text-foreground">{t("advertisingPage.phoneNumber")}</label>
                                     <Input
                                         value={form.phone}
                                         onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
@@ -350,7 +352,7 @@ export function AdvertisingPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm font-semibold text-foreground">Email</label>
+                                    <label className="text-sm font-semibold text-foreground">{t("advertisingPage.email")}</label>
                                     <Input
                                         type="email"
                                         value={form.email}
@@ -363,12 +365,12 @@ export function AdvertisingPage() {
                             </div>
 
                             <div className="mt-4">
-                                <label className="text-sm font-semibold text-foreground">Nhu cầu</label>
+                                <label className="text-sm font-semibold text-foreground">{t("advertisingPage.needs")}</label>
                                 <textarea
                                     value={form.message}
                                     onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                                     rows={5}
-                                    placeholder="Mục tiêu quảng cáo, ngân sách tham khảo, chuyên mục ưu tiên..."
+                                    placeholder={t("advertisingPage.needsPlaceholder")}
                                     className={cn(
                                         "mt-2 flex w-full rounded-md border border-input bg-background px-3 py-2",
                                         "text-base ring-offset-background placeholder:text-muted-foreground",
@@ -381,7 +383,7 @@ export function AdvertisingPage() {
 
                             <div className="mt-5 sm:flex-row sm:items-center sm:justify-between">
                                 <Button type="submit">
-                                    Gửi yêu cầu <ArrowRight className="h-4 w-4" />
+                                    {t("advertisingPage.sendRequest")} <ArrowRight className="h-4 w-4" />
                                 </Button>
                             </div>
                         </form>
@@ -391,23 +393,23 @@ export function AdvertisingPage() {
 
             {/* FAQ */}
             <section className="max-w-7xl mx-auto px-4 pb-16">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">Câu hỏi thường gặp</h2>
+                <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">{t("advertisingPage.faq")}</h2>
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FaqItem
-                        q="Báo giá được tính theo tiêu chí nào?"
-                        a="Thường phụ thuộc vị trí hiển thị, kích thước, chuyên mục, thời lượng, tần suất và mục tiêu chiến dịch. Với PR/Native sẽ thêm yêu cầu biên tập, phân phối và tracking."
+                        q={t("advertisingPage.faqPricing")}
+                        a={t("advertisingPage.faqPricingAnswer")}
                     />
                     <FaqItem
-                        q="Có hỗ trợ thiết kế banner và biên tập nội dung không?"
-                        a="Có. Bạn có thể gửi banner sẵn hoặc brief để đội ngũ hỗ trợ thiết kế/biên tập theo guideline."
+                        q={t("advertisingPage.faqDesign")}
+                        a={t("advertisingPage.faqDesignAnswer")}
                     />
                     <FaqItem
-                        q="Có xuất báo cáo sau chiến dịch không?"
-                        a="Có báo cáo cơ bản theo chiến dịch. Nếu cần tracking nâng cao (UTM/Pixel/GA4), có thể triển khai theo yêu cầu."
+                        q={t("advertisingPage.faqReport")}
+                        a={t("advertisingPage.faqReportAnswer")}
                     />
                     <FaqItem
-                        q="Thời gian triển khai trung bình?"
-                        a="Display có thể lên nhanh sau khi chốt booking & vật liệu. PR/Native và multimedia tùy theo khối lượng sản xuất, thường từ 2–7 ngày."
+                        q={t("advertisingPage.faqTime")}
+                        a={t("advertisingPage.faqTimeAnswer")}
                     />
                 </div>
             </section>

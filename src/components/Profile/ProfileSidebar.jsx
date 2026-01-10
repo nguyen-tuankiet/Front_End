@@ -1,18 +1,21 @@
 import { User, Lock, MessageSquare, Bookmark, Eye, LogOut, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const menuItems = [
-    { id: "account", label: "Thông tin tài khoản", icon: User },
-    { id: "password", label: "Đổi mật khẩu", icon: Lock },
-    { id: "comments", label: "Bình luận đã đăng", icon: MessageSquare },
-    { id: "saved", label: "Tin đã lưu", icon: Bookmark },
-    { id: "viewed", label: "Tin đã xem", icon: Eye },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Component sidebar của trang profile
  */
 export function ProfileSidebar({ user, activeTab, onTabChange, onImageChange, onLogout }) {
+    const { t } = useLanguage();
+
+    const menuItems = [
+        { id: "account", label: t("profile.accountInfo"), icon: User },
+        { id: "password", label: t("profile.changePassword"), icon: Lock },
+        { id: "comments", label: t("profile.comments"), icon: MessageSquare },
+        { id: "saved", label: t("profile.savedArticles"), icon: Bookmark },
+        { id: "viewed", label: t("profile.viewedArticles"), icon: Eye },
+    ];
+
     return (
         <aside className="lg:col-span-3">
             <div className="rounded-2xl border border-border bg-card p-6 shadow-sm sticky top-24">
@@ -32,7 +35,7 @@ export function ProfileSidebar({ user, activeTab, onTabChange, onImageChange, on
                         </button>
                     </div>
                     <p className="text-lg font-semibold text-foreground text-center">
-                        {user?.name || "Người dùng"}
+                        {user?.name || t("profile.user")}
                     </p>
                 </div>
 
@@ -61,7 +64,7 @@ export function ProfileSidebar({ user, activeTab, onTabChange, onImageChange, on
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-foreground hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-500 transition-colors"
                     >
                         <LogOut className="h-5 w-5" />
-                        <span className="text-sm font-medium">Đăng xuất</span>
+                        <span className="text-sm font-medium">{t("profile.logout")}</span>
                     </button>
                 </nav>
             </div>
