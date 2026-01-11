@@ -157,7 +157,7 @@ export function Header() {
       )}>
         <div className="container mx-auto px-6 h-9 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>{formatDate(currentDate)}</span>
+            <a href={"/lich"}>{formatDate(currentDate)}</a>
             <span className="text-muted-foreground/50">|</span>
             <span>{t('header.cityWeather')}: 29°C</span>
               <span className="text-muted-foreground/50">|</span>
