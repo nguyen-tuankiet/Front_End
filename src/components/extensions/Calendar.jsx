@@ -5,7 +5,28 @@ const DAYS_OF_WEEK = [
 ];
 
 export  function Calendar() {
+    const [month, setMonth] = useState(0); // Tháng 1 (index 0)
+    const [year, setYear] = useState(2026);
+    const [selectedDate, setSelectedDate] = useState(11); // Giả lập ngày đang chọn
 
+    // --- Logic giả lập Âm lịch (Giữ nguyên như trước) ---
+    const getMockLunarDate = (d, m, y) => {
+        if (m === 0 && y === 2026) {
+            if (d === 1) return "13";
+            if (d === 19) return "1/12";
+            let lunarDay = 13 + (d - 1);
+            if (d >= 19) return `${d - 18}`;
+            return `${lunarDay}`;
+        }
+        return "1";
+    };
+
+    const getDaysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
+
+    const getFirstDayOfMonth = (m, y) => {
+        const day = new Date(y, m, 1).getDay();
+        return day === 0 ? 6 : day - 1; // Chuyển CN (0) thành index 6
+    };
 
     const renderDays = () => {
         const totalSlots = [];
