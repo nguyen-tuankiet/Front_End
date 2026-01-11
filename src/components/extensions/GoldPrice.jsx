@@ -12,8 +12,9 @@ export function GoldPrice() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // URL API bạn cung cấp
-                const response = await fetch('https://eth2.cnnd.vn/Handlers/RateGoldUsdHandler.ashx?c=gold&type=%22SJC_Ha_Noi%22%2C%22SJC_HCM%22%2C%22DOJI_AVPL_%2F_HN%22%2C%22DOJI_AVPL_%2F_HCM%22%2C%22VIETINBANK_GOLD%22%2C%22MARITIME_BANK%22%2C%22PNJ_SJC%22%2C%22EXIMBANK%22%2C%22PHU_QUY_SJC%22%2C%22SJC_Da_Nang%22&date=2%2F1%2F2026');
+                // Sử dụng proxy để tránh CORS - trên Vercel sẽ đi qua /api/gold
+                const baseUrl = import.meta.env.PROD ? '/api/gold' : 'https://eth2.cnnd.vn';
+                const response = await fetch(`${baseUrl}/Handlers/RateGoldUsdHandler.ashx?c=gold&type=%22SJC_Ha_Noi%22%2C%22SJC_HCM%22%2C%22DOJI_AVPL_%2F_HN%22%2C%22DOJI_AVPL_%2F_HCM%22%2C%22VIETINBANK_GOLD%22%2C%22MARITIME_BANK%22%2C%22PNJ_SJC%22%2C%22EXIMBANK%22%2C%22PHU_QUY_SJC%22%2C%22SJC_Da_Nang%22&date=2%2F1%2F2026`);
                 const result = await response.json();
 
                 if (result.success && result.data) {

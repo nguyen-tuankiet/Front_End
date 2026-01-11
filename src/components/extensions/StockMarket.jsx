@@ -16,7 +16,9 @@ export function StockMarket() {
 
         const fetchData = async () => {
             try {
-                const response = await fetch('https://eth2.cnnd.vn/api-stockdata.htm?m=index');
+                // Sử dụng proxy để tránh CORS - trên Vercel sẽ đi qua /api/stock
+                const baseUrl = import.meta.env.PROD ? '/api/stock' : 'https://eth2.cnnd.vn';
+                const response = await fetch(`${baseUrl}/api-stockdata.htm?m=index`);
                 const rawResult = await response.json();
 
                 // API trả về field Data là một chuỗi JSON, cần parse lần nữa
