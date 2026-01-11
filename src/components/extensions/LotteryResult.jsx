@@ -52,9 +52,10 @@ export function LotteryResult() {
         const fetchLottery = async () => {
             setLoading(true);
             try {
-                // Encode location để đưa vào URL (ví dụ: Miền Bắc -> Mi%C3%AA%CC%80n%20B%C4%83%CC%81c)
+                // Sử dụng proxy để tránh CORS - trên Vercel sẽ đi qua /api/lottery
+                const baseUrl = import.meta.env.PROD ? '/api/lottery' : 'https://eth2.cnnd.vn';
                 const encodedLoc = encodeURIComponent(location);
-                const response = await fetch(`https://eth2.cnnd.vn/get-kqxs?sdate=null&lc=${encodedLoc}`);
+                const response = await fetch(`${baseUrl}/get-kqxs?sdate=null&lc=${encodedLoc}`);
                 const result = await response.json();
 
                 if (result.items && result.items.length > 0) {
