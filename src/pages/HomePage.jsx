@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { HeroSection } from "@/components/Home/HeroSection";
 import { CategorySection } from "@/components/Home/CategorySection";
-import { TrendingSidebar } from "@/components/ui/TrendingSidebar";
+import { HomeSidebar } from "@/components/Home/HomeSidebar";
 import { NewsletterSection } from "@/components/ui/NewsletterSection";
 import { apiService } from "@/services/api";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -48,8 +48,8 @@ export function HomePage() {
             />
 
             <div className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <div className="lg:col-span-9 space-y-8">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="flex-1 min-w-0 space-y-8">
                         {homeData?.categorySections?.map((section) => {
                             const articles = section.articles || [];
 
@@ -67,20 +67,11 @@ export function HomePage() {
                         })}
                     </div>
 
-                    <div className="lg:col-span-3">
-                        <div className="sticky top-4">
-                            <TrendingSidebar
-                                title={t('home.featuredNews')}
-                                articles={trendingArticles || []}
-                            />
-
-                            <div className="mt-8">
-                                <TrendingSidebar
-                                    title={t('home.mostRead')}
-                                    articles={mostReadArticles || []}
-                                />
-                            </div>
-                        </div>
+                    <div className="w-full lg:w-[300px] shrink-0">
+                        <HomeSidebar
+                            trendingArticles={trendingArticles || []}
+                            mostReadArticles={mostReadArticles || []}
+                        />
                     </div>
                 </div>
             </div>
