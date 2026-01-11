@@ -5,29 +5,29 @@ const DAYS_OF_WEEK = [
 ];
 
 export  function Calendar() {
-    const [month, setMonth] = useState(0); // Tháng 1 (index 0)
-    const [year, setYear] = useState(2026);
-    const [selectedDate, setSelectedDate] = useState(11); // Giả lập ngày đang chọn
 
-    // --- Logic giả lập Âm lịch (Giữ nguyên như trước) ---
-    const getMockLunarDate = (d, m, y) => {
-        if (m === 0 && y === 2026) {
-            if (d === 1) return "13";
-            if (d === 19) return "1/12";
-            let lunarDay = 13 + (d - 1);
-            if (d >= 19) return `${d - 18}`;
-            return `${lunarDay}`;
+
+    const renderDays = () => {
+        const totalSlots = [];
+        const daysInMonth = getDaysInMonth(month, year);
+        const firstDayIndex = getFirstDayOfMonth(month, year);
+        const prevMonthDays = getDaysInMonth(month - 1, year);
+
+        // Ngày tháng trước
+        for (let i = firstDayIndex - 1; i >= 0; i--) {
+            totalSlots.push({ day: prevMonthDays - i, type: "prev", lunar: "10" });
         }
-        return "1";
+        // Ngày tháng hiện tại
+        for (let i = 1; i <= daysInMonth; i++) {
+            totalSlots.push({ day: i, type: "current", lunar: getMockLunarDate(i, month, year) });
+        }
+        // Ngày tháng sau (lấp đầy lưới 42 ô)
+        const remainingSlots = 42 - totalSlots.length;
+        for (let i = 1; i <= remainingSlots; i++) {
+            totalSlots.push({ day: i, type: "next", lunar: i + 10 });
+        }
+        return totalSlots;
     };
-
-    const getDaysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
-
-    const getFirstDayOfMonth = (m, y) => {
-        const day = new Date(y, m, 1).getDay();
-        return day === 0 ? 6 : day - 1; // Chuyển CN (0) thành index 6
-    };
-
 
     const days = renderDays();
 
