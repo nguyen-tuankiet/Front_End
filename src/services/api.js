@@ -48,6 +48,9 @@ export const API_ENDPOINTS = {
 
   // Get All Feeds (Testing only - very slow)
   ALL_FEEDS: (lang = DEFAULT_LANG) => withLang(`${BASE_URL}/api/rss/all`, lang),
+
+  // Chatbot API
+  CHATBOT: `${BASE_URL}/api/chatbot/chat`,
 };
 
 // API Service Functions
@@ -142,6 +145,29 @@ export const apiService = {
   getAllFeeds: async (lang = DEFAULT_LANG) => {
     const response = await fetch(API_ENDPOINTS.ALL_FEEDS(lang));
     if (!response.ok) throw new Error("Failed to fetch all feeds");
+    return response.json();
+  },
+
+  /**
+   * Send message to chatbot
+   * @param {string} message - User message (e.g., "hôm nay bản tin thời sự có gì?", "tin về iPhone 16 hôm nay")
+   * @returns {Promise<{message: string, category?: string, articleCount?: number, articles?: Array}>}
+   * @example
+   * // Ask by category
+   * chatbot.sendMessage("hôm nay bản tin thời sự có gì?")
+   * // Ask about specific topic
+   * chatbot.sendMessage("tin về iPhone 16 hôm nay")
+   * chatbot.sendMessage("có tin gì về World Cup không?")
+   */
+  sendChatMessage: async (message) => {
+    const response = await fetch(API_ENDPOINTS.CHATBOT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message }),
+    });
+    if (!response.ok) throw new Error("Failed to send chat message");
     return response.json();
   },
 };

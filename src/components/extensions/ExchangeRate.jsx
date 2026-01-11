@@ -2,8 +2,10 @@ import {ExtensionHeader} from "@/components/extensions/ExtensionHeader.jsx";
 import React, {useEffect, useState} from "react";
 import {cn} from "@/lib/utils.js";
 import {Clock9} from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function ExchangeRate() {
+    const { t } = useLanguage();
 
     const data = {
         "date": "12/28/2025 9:36:19 PM",
@@ -40,8 +42,8 @@ export function ExchangeRate() {
 
             <div className={cn("container mx-auto my-5 ")}>
                 <div className={cn("flex flex-col items-center justify-center ")}>
-                    <span className={cn("text-3xl font-bold")}>Tỷ giá ngoại tệ</span>
-                    <span className={cn("text-muted-foreground m-2")}>Tỷ giá quy đổi sang Đồng Việt Nam (VND)</span>
+                    <span className={cn("text-3xl font-bold")}>{t("extensions.exchangeRate.title")}</span>
+                    <span className={cn("text-muted-foreground m-2")}>{t("extensions.exchangeRate.subtitle")}</span>
                 </div>
             </div>
 
@@ -49,18 +51,18 @@ export function ExchangeRate() {
 
                 <div className={cn("text-xs text-muted-foreground flex flex-row items-center justify-center m-5")}>
                     <Clock9/>
-                    <span className={cn("pl-2 ")}>Cập nhật lúc: {rate?.date}</span>
+                    <span className={cn("pl-2 ")}>{t("extensions.exchangeRate.lastUpdated")}: {rate?.date}</span>
                 </div>
 
                 <div className={cn("w-4/5 rounded-xl overflow-hidden border border-gray-400")}>
                     <table className={cn("w-full ")}>
                         <thead className={cn("bg-gray-100 h-12 border-b border-gray-200")}>
                         <tr>
-                            <th className={cn("text-left p-4")}>Tên</th>
-                            <th className={cn("text-center p-4")}>Mã</th>
-                            <th className={cn("text-right p-4")}>Mua</th>
-                            <th className={cn("text-right p-4")}>Chuyển khoản</th>
-                            <th className={cn("text-right p-4")}>Bán</th>
+                            <th className={cn("text-left p-4")}>{t("extensions.exchangeRate.name")}</th>
+                            <th className={cn("text-center p-4")}>{t("extensions.exchangeRate.code")}</th>
+                            <th className={cn("text-right p-4")}>{t("extensions.exchangeRate.buy")}</th>
+                            <th className={cn("text-right p-4")}>{t("extensions.exchangeRate.transfer")}</th>
+                            <th className={cn("text-right p-4")}>{t("extensions.exchangeRate.sell")}</th>
                         </tr>
                         </thead>
 

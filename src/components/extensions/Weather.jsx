@@ -2,8 +2,10 @@ import {ExtensionHeader} from "@/components/extensions/ExtensionHeader.jsx";
 import React, {useEffect, useState} from "react";
 import {cn} from "@/lib/utils.js";
 import {Droplet, Wind} from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Weather() {
+    const { t } = useLanguage();
 
     const provinces = {
         "Ho Chi Minh": "Hồ Chí Minh",
@@ -97,7 +99,7 @@ export function Weather() {
     useEffect(() => {
         const getWeather = async () => {
             try {
-                const res = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${selected}&days=7&aqi=no&alerts=no`);
+                const res = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${selected}&days=7&aqi=no&alerts=no`);
                 const data = await res.json();
                 setWeather(data);
             } catch (err) {
@@ -116,10 +118,10 @@ export function Weather() {
     const getGreeting = () => {
         const hour = new Date().getHours();
 
-        if (hour >= 5 && hour < 12) return "Good morning";
-        if (hour >= 12 && hour < 17) return "Good afternoon";
-        if (hour >= 17 && hour < 21) return "Good evening";
-        return "Good night";
+        if (hour >= 5 && hour < 12) return t("extensions.weather.goodMorning");
+        if (hour >= 12 && hour < 17) return t("extensions.weather.goodAfternoon");
+        if (hour >= 17 && hour < 21) return t("extensions.weather.goodEvening");
+        return t("extensions.weather.goodNight");
     }
 
     const hours = weather?.forecast?.forecastday?.[0]?.hour;
@@ -152,7 +154,7 @@ export function Weather() {
                                 </option>))}
                         </select>
 
-                        <div><span className={cn("")}>Cập nhật lần cuối:</span>
+                        <div><span className={cn("")}>{t("extensions.weather.lastUpdated")}:</span>
                             <span className={cn("font-bold pl-2")}>{weather?.current.last_updated}</span>
                         </div>
                     </div>
@@ -224,11 +226,11 @@ export function Weather() {
 
                         </div>
                     </div>
-                    <span className={cn("text-xs pt-2")}>Cảm giác như: {weather?.current?.feelslike_c} °"</span>
+                    <span className={cn("text-xs pt-2")}>{t("extensions.weather.feelsLike")}: {weather?.current?.feelslike_c} °"</span>
 
 
                     <div className={cn("flex flex-col items-center justify-center mt-5")}>
-                        <span className={cn("text-2xl font-medium mb-5")}>Trong các giờ tới</span>
+                        <span className={cn("text-2xl font-medium mb-5")}>{t("extensions.weather.nextHours")}</span>
                         <div className={cn("grid grid-cols-3 gap-3")}>
                             {next6Hours?.map((item) => (
                                 <div

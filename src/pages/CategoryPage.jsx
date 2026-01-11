@@ -6,13 +6,14 @@ import { CategorySidebar } from '@/components/Category/CategorySidebar';
 import { Pagination } from '@/components/ui/pagination';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { handleArticleClick as saveViewedArticle } from '@/lib/articleNavigation';
 
 const ARTICLES_PER_PAGE = 10;
 
 export function CategoryPage() {
     const { category, subcategory } = useParams();
     const navigate = useNavigate();
-    const { language } = useLanguage();
+    const { language, t } = useLanguage();
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -116,6 +117,9 @@ export function CategoryPage() {
     }, [pageTitle]);
 
     const handleArticleClick = (article) => {
+        // Lưu bài viết vào danh sách xem gần đây
+        saveViewedArticle(article);
+        
         const articleUrl = encodeURIComponent(article.link);
         navigate(`/bai-viet?url=${articleUrl}`);
     };
@@ -129,7 +133,7 @@ export function CategoryPage() {
             sidebar={
                 <CategorySidebar
                     articles={articles}
-                    title="Bài mới nhất"
+                    title={t('category.latestSidebar')}
                     onArticleClick={handleArticleClick}
                     limit={5}
                 />
@@ -143,7 +147,7 @@ export function CategoryPage() {
                             onPageChange={handlePageChange}
                         />
                         <p className="text-center text-sm text-muted-foreground mt-3">
-                            Hiển thị {((currentPage - 1) * ARTICLES_PER_PAGE) + 1} - {Math.min(currentPage * ARTICLES_PER_PAGE, articles.length)} / {articles.length} bài viết
+                            {t('category.showing')} {((currentPage - 1) * ARTICLES_PER_PAGE) + 1} - {Math.min(currentPage * ARTICLES_PER_PAGE, articles.length)} {t('category.of')} {articles.length} {t('category.articles')}
                         </p>
                     </>
                 )

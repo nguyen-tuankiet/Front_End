@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { cn, decodeHtmlEntities } from "@/lib/utils";
 import LazyImage from "./LazyImage";
+import { handleArticleClick } from "@/lib/articleNavigation";
 
 /**
 
@@ -26,10 +27,15 @@ export function TrendingSidebar({ title = "Tin nổi bật", articles, className
                         ? `/bai-viet/${encodeURIComponent(articleIdentifier)}`
                         : '#';
                     
+                    const handleClick = () => {
+                        handleArticleClick(article);
+                    };
+
                     return (
                     <li key={article.id || index}>
                         <Link
                             to={articleRoute}
+                            onClick={handleClick}
                             className="flex gap-3 group"
                         >
                             <div className="relative shrink-0 w-16 h-12 rounded overflow-hidden">

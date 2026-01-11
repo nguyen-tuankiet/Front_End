@@ -3,35 +3,36 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Newspaper, Calendar, Building2, Home, Banknote, Smartphone} from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const PROMOTION_TABLE = [
-    { period: "3 Tháng", price: 5500, quantity: 92, discount: 5, total: 480700 },
-    { period: "6 Tháng", price: 5500, quantity: 180, discount: 10, total: 891000 },
-    { period: "12 Tháng", price: 5500, quantity: 345, discount: 15, total: 1612875 },
+    { period: "months3", price: 5500, quantity: 92, discount: 5, total: 480700 },
+    { period: "months6", price: 5500, quantity: 180, discount: 10, total: 891000 },
+    { period: "months12", price: 5500, quantity: 345, discount: 15, total: 1612875 },
 ];
 
-const PAYMENT_METHODS = [
+const getPaymentMethods = (t) => [
     {
         id: "office",
-        label: "Tại Phòng phát hành",
+        label: t("orderPage.atOffice"),
         icon: Building2,
         note: "268-270 Nguyễn Đình Chiểu, Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh\nĐiện thoại: 028.39309243 - 0903035758"
     },
     {
         id: "home",
-        label: "Tại nhà",
+        label: t("orderPage.atHome"),
         icon: Home,
         note: "Thanh toán tại nhà: Vui lòng gọi hotline 0903035758. email : phathanh@thanhnien.vn"
     },
     {
         id: "bank",
-        label: "Chuyển khoản qua Ngân hàng",
+        label: t("orderPage.bankTransfer"),
         icon: Banknote,
         note: "Tên đơn vị: Báo Thanh niên\nSố tài khoản: 115000005982\nTại: Ngân hàng TMCP Công thương Việt Nam (Vietinbank) Chi nhánh 3, TP.HCM\n(Khi chuyển khoản vui lòng ghi chú : Địa chỉ đặt báo, số điện thoại)"
     },
     {
         id: "momo",
-        label: "Ví Momo",
+        label: t("orderPage.momoWallet"),
         icon: Smartphone,
         note: "Thanh toán bằng hình thức quét mã từ ứng dụng ví Momo"
     },
@@ -55,9 +56,12 @@ const calculateDiscount = (numberOfIssues, quantityPerIssue) => {
 };
 
 export function OrderPage() {
+    const { t } = useLanguage();
     // Format date
     const today = new Date().toISOString().split('T')[0];
     const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    const PAYMENT_METHODS = getPaymentMethods(t);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -89,7 +93,7 @@ export function OrderPage() {
         
         // Kiểm tra không cho chọn ngày đã qua
         if (newStartDate < today) {
-            setDateError("Không thể chọn ngày đã qua");
+            setDateError(t("orderPage.cannotSelectPastDate"));
             return;
         }
 
@@ -105,13 +109,13 @@ export function OrderPage() {
 
         // Kiểm tra cùng năm
         if (startDate && startYear !== endYear) {
-            setDateError("Hai ngày phải trong cùng một năm");
+            setDateError(t("orderPage.datesInSameYear"));
             return;
         }
 
         // Kiểm tra endDate không được trước startDate
         if (startDate && newEndDate < startDate) {
-            setDateError("Ngày kết thúc không được trước ngày bắt đầu");
+            setDateError(t("orderPage.endDateAfterStart"));
             return;
         }
 
@@ -168,30 +172,30 @@ export function OrderPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!startDate || !endDate || calculation.numberOfIssues === 0) {
-            alert("Vui lòng chọn thời gian đặt báo");
+            alert(t("orderPage.pleaseSelectTime"));
             return;
         }
         // Kiểm tra không cho chọn ngày đã qua
         if (startDate < today || endDate < today) {
-            alert("Không thể chọn ngày đã qua");
+            alert(t("orderPage.cannotSelectPastDate"));
             return;
         }
         // Kiểm tra điều kiện ngày
         const startYear = getYear(startDate);
         const endYear = getYear(endDate);
         if (startYear !== endYear) {
-            alert("Hai ngày phải trong cùng một năm");
+            alert(t("orderPage.datesInSameYear"));
             return;
         }
         if (endDate < startDate) {
-            alert("Ngày kết thúc không được trước ngày bắt đầu");
+            alert(t("orderPage.endDateAfterStart"));
             return;
         }
         if (!formData.name || !formData.phone || !formData.province) {
-            alert("Vui lòng điền đầy đủ thông tin bắt buộc (*)");
+            alert(t("orderPage.pleaseEnterRequired"));
             return;
         }
-        alert("Đã gửi yêu cầu đặt báo thành công!");
+        alert(t("orderPage.orderSuccess"));
         console.log({ formData, startDate, endDate, quantityPerIssue, calculation });
     };
 
@@ -207,12 +211,12 @@ export function OrderPage() {
                 <div className="relative max-w-7xl mx-auto px-4 py-12 lg:py-16">
                     <div className="text-center">
                         <h1 className="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight text-foreground">
-                            Đặt báo{" "}
+                            {t("orderPage.title")}{" "}
                             <span className="text-primary">TIN</span>
                             <span className="text-secondary"> TỨC</span>
                         </h1>
                         <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                            Đặt báo giao tận nhà
+                            {t("orderPage.heroSubtitle")}
                         </p>
                     </div>
                 </div>
@@ -229,15 +233,15 @@ export function OrderPage() {
                                     <Newspaper className="h-6 w-6" />
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-extrabold text-foreground">Nhật báo TIN TỨC</h2>
-                                    <p className="text-sm text-muted-foreground">Chọn thời gian đặt báo</p>
+                                    <h2 className="text-xl font-extrabold text-foreground">{t("orderPage.dailyNews")}</h2>
+                                    <p className="text-sm text-muted-foreground">{t("orderPage.selectTime")}</p>
                                 </div>
                             </div>
 
                             {/* Chọn ngày */}
                             <div className="mb-6 flex items-center gap-4 flex-wrap">
                                 <div className="flex-1 min-w-[200px]">
-                                    <label className="text-sm font-semibold text-foreground mb-2 block">Thời gian</label>
+                                    <label className="text-sm font-semibold text-foreground mb-2 block">{t("orderPage.time")}</label>
                                     <div className="flex items-center gap-3">
                                         <div className="relative flex-1">
                                             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -251,7 +255,7 @@ export function OrderPage() {
                                                 required
                                             />
                                         </div>
-                                        <span className="text-sm text-muted-foreground">đến</span>
+                                        <span className="text-sm text-muted-foreground">{t("orderPage.to")}</span>
                                         <div className="relative flex-1">
                                             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                             <Input
@@ -276,17 +280,17 @@ export function OrderPage() {
                                 <table className="w-full border-collapse">
                                     <thead>
                                         <tr className="bg-primary/10 border-b-2 border-primary">
-                                            <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">Loại báo</th>
-                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Giá</th>
-                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Số kỳ</th>
-                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Số lượng/kỳ</th>
-                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Khuyến mãi</th>
-                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">Thành tiền</th>
+                                            <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">{t("orderPage.newspaperType")}</th>
+                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">{t("orderPage.price")}</th>
+                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">{t("orderPage.issues")}</th>
+                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">{t("orderPage.quantityPerIssue")}</th>
+                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">{t("orderPage.promotion")}</th>
+                                            <th className="text-right py-3 px-4 text-sm font-semibold text-foreground">{t("orderPage.subtotal")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr className="border-b border-border">
-                                            <td className="py-3 px-4 text-sm text-foreground">Nhật báo TIN TỨC</td>
+                                            <td className="py-3 px-4 text-sm text-foreground">{t("orderPage.dailyNews")}</td>
                                             <td className="py-3 px-4 text-sm text-foreground text-right">{formatCurrency(calculation.unitPrice)}</td>
                                             <td className="py-3 px-4 text-sm text-foreground text-right">{calculation.numberOfIssues}</td>
                                             <td className="py-3 px-4 text-sm text-foreground text-right">
@@ -315,22 +319,22 @@ export function OrderPage() {
 
                             {/* Bảng khuyến mãi */}
                             <div className="mt-6">
-                                <h3 className="text-sm font-semibold text-foreground mb-3">Thông tin khuyến mãi</h3>
+                                <h3 className="text-sm font-semibold text-foreground mb-3">{t("orderPage.promotionInfo")}</h3>
                                 <div className="overflow-x-auto">
                                     <table className="w-full border-collapse text-sm">
                                         <thead>
                                             <tr className="bg-muted border-b border-border">
-                                                <th className="text-left py-2 px-3 font-semibold text-foreground">Thời gian</th>
-                                                <th className="text-right py-2 px-3 font-semibold text-foreground">Giá</th>
-                                                <th className="text-right py-2 px-3 font-semibold text-foreground">Số lượng</th>
-                                                <th className="text-right py-2 px-3 font-semibold text-foreground">Khuyến mãi</th>
-                                                <th className="text-right py-2 px-3 font-semibold text-foreground">Tổng</th>
+                                                <th className="text-left py-2 px-3 font-semibold text-foreground">{t("orderPage.period")}</th>
+                                                <th className="text-right py-2 px-3 font-semibold text-foreground">{t("orderPage.price")}</th>
+                                                <th className="text-right py-2 px-3 font-semibold text-foreground">{t("orderPage.quantity")}</th>
+                                                <th className="text-right py-2 px-3 font-semibold text-foreground">{t("orderPage.promotion")}</th>
+                                                <th className="text-right py-2 px-3 font-semibold text-foreground">{t("orderPage.total")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {PROMOTION_TABLE.map((item, idx) => (
                                                 <tr key={idx} className="border-b border-border hover:bg-muted/30 transition-colors">
-                                                    <td className="py-2 px-3 text-foreground">{item.period}</td>
+                                                    <td className="py-2 px-3 text-foreground">{t(`orderPage.${item.period}`)}</td>
                                                     <td className="py-2 px-3 text-foreground text-right">{formatCurrency(item.price)}</td>
                                                     <td className="py-2 px-3 text-foreground text-right">{item.quantity}</td>
                                                     <td className="py-2 px-3 text-primary text-right font-semibold">{item.discount}%</td>
@@ -345,11 +349,11 @@ export function OrderPage() {
 
                         {/* Thông tin khách hàng */}
                         <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                            <h2 className="text-xl font-extrabold text-foreground mb-6">Thông tin</h2>
+                            <h2 className="text-xl font-extrabold text-foreground mb-6">{t("orderPage.customerInfo")}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="md:col-span-2">
                                     <label className="text-sm font-semibold text-foreground">
-                                        Họ và tên <span className="text-primary">*</span>
+                                        {t("orderPage.fullName")} <span className="text-primary">*</span>
                                     </label>
                                     <Input
                                         value={formData.name}
@@ -360,7 +364,7 @@ export function OrderPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-sm font-semibold text-foreground">Email</label>
+                                    <label className="text-sm font-semibold text-foreground">{t("orderPage.email")}</label>
                                     <Input
                                         type="email"
                                         value={formData.email}
@@ -371,7 +375,7 @@ export function OrderPage() {
                                 </div>
                                 <div>
                                     <label className="text-sm font-semibold text-foreground">
-                                        Điện thoại <span className="text-primary">*</span>
+                                        {t("orderPage.phone")} <span className="text-primary">*</span>
                                     </label>
                                     <Input
                                         value={formData.phone}
@@ -383,7 +387,7 @@ export function OrderPage() {
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="text-sm font-semibold text-foreground">
-                                        Chọn Tỉnh / Thành phố <span className="text-primary">*</span>
+                                        {t("orderPage.selectProvince")} <span className="text-primary">*</span>
                                     </label>
                                     <select
                                         value={formData.province}
@@ -396,18 +400,18 @@ export function OrderPage() {
                                         required
                                         disabled={loadingProvinces}
                                     >
-                                        <option value="">-- Chọn Tỉnh / Thành phố --</option>
+                                        <option value="">{t("orderPage.selectProvinceOption")}</option>
                                         {provinces.map((province, idx) => (
                                             <option key={idx} value={province}>{province}</option>
                                         ))}
                                     </select>
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label className="text-sm font-semibold text-foreground">Số nhà, tên đường, phường/xã/đặc khu</label>
+                                    <label className="text-sm font-semibold text-foreground">{t("orderPage.detailedAddress")}</label>
                                     <Input
                                         value={formData.address}
                                         onChange={(e) => setFormData(f => ({ ...f, address: e.target.value }))}
-                                        placeholder="Địa chỉ chi tiết"
+                                        placeholder={t("orderPage.addressPlaceholder")}
                                         className="mt-2"
                                     />
                                 </div>
@@ -416,7 +420,7 @@ export function OrderPage() {
 
                         {/* Phương thức thanh toán */}
                         <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                            <h2 className="text-xl font-extrabold text-foreground mb-6">Thanh toán</h2>
+                            <h2 className="text-xl font-extrabold text-foreground mb-6">{t("orderPage.payment")}</h2>
                             <div className="space-y-4">
                                 {PAYMENT_METHODS.map((method) => {
                                     const Icon = method.icon;
@@ -453,7 +457,7 @@ export function OrderPage() {
 
                         {/* Thông tin đơn đặt */}
                         <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                            <h2 className="text-xl font-extrabold text-foreground mb-6">Thông tin hoá đơn</h2>
+                            <h2 className="text-xl font-extrabold text-foreground mb-6">{t("orderPage.invoiceInfo")}</h2>
                             <div className="space-y-4">
                                 <div className="flex items-center gap-4">
                                     <label className="flex items-center gap-2 cursor-pointer">
@@ -463,7 +467,7 @@ export function OrderPage() {
                                             checked={!formData.hasInvoice}
                                             onChange={() => setFormData(f => ({ ...f, hasInvoice: false }))}
                                         />
-                                        <span className="text-sm font-medium text-foreground">Không xuất hóa đơn</span>
+                                        <span className="text-sm font-medium text-foreground">{t("orderPage.noInvoice")}</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                         <input
@@ -472,19 +476,19 @@ export function OrderPage() {
                                             checked={formData.hasInvoice}
                                             onChange={() => setFormData(f => ({ ...f, hasInvoice: true }))}
                                         />
-                                        <span className="text-sm font-medium text-foreground">Có hoá đơn</span>
+                                        <span className="text-sm font-medium text-foreground">{t("orderPage.hasInvoice")}</span>
                                     </label>
                                 </div>
                                 {formData.hasInvoice && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-border">
                                         <div>
                                             <label className="text-sm font-semibold text-foreground">
-                                                Tên đơn vị <span className="text-primary">*</span>
+                                                {t("orderPage.companyName")} <span className="text-primary">*</span>
                                             </label>
                                             <Input
                                                 value={formData.companyName}
                                                 onChange={(e) => setFormData(f => ({ ...f, companyName: e.target.value }))}
-                                                placeholder="Tên công ty"
+                                                placeholder={t("orderPage.companyPlaceholder")}
                                                 className="mt-2"
                                                 required={formData.hasInvoice}
                                             />
@@ -496,7 +500,7 @@ export function OrderPage() {
                                             <Input
                                                 value={formData.taxCode}
                                                 onChange={(e) => setFormData(f => ({ ...f, taxCode: e.target.value }))}
-                                                placeholder="Mã số thuế"
+                                                placeholder={t("orderPage.taxCode")}
                                                 className="mt-2"
                                                 required={formData.hasInvoice}
                                             />
@@ -511,16 +515,16 @@ export function OrderPage() {
                     <div className="lg:col-span-1">
                         <div className="sticky top-8">
                             <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                                <h2 className="text-xl font-extrabold text-foreground mb-6">Tổng kết</h2>
+                                <h2 className="text-xl font-extrabold text-foreground mb-6">{t("orderPage.summary")}</h2>
                                 <div className="space-y-4">
                                     {calculation.dailyTotal > 0 && (
                                         <div className="flex items-center justify-between py-2 border-b border-border">
-                                            <span className="text-sm text-muted-foreground">Nhật báo TIN TỨC</span>
+                                            <span className="text-sm text-muted-foreground">{t("orderPage.dailyNews")}</span>
                                             <span className="text-sm font-semibold text-foreground">{formatCurrency(calculation.dailyTotal)}</span>
                                         </div>
                                     )}
                                     <div className="flex items-center justify-between py-4 border-t-2 border-border">
-                                        <span className="text-base font-extrabold text-foreground">Tổng thanh toán</span>
+                                        <span className="text-base font-extrabold text-foreground">{t("orderPage.totalPayment")}</span>
                                         <span className="text-lg font-extrabold text-primary">{formatCurrency(calculation.finalTotal)}</span>
                                     </div>
                                 </div>
@@ -531,11 +535,11 @@ export function OrderPage() {
                                     size="lg"
                                     disabled={calculation.finalTotal === 0}
                                 >
-                                    Đặt báo
+                                    {t("orderPage.orderNewspaper")}
                                 </Button>
 
                                 <p className="mt-4 text-xs text-muted-foreground text-center">
-                                    Mọi thắc mắc xin liên hệ đường dây nóng:{" "}
+                                    {t("orderPage.hotlineNote")}{" "}
                                     <a href="tel:0903035758" className="text-primary hover:underline">
                                         0903 035 758
                                     </a>
