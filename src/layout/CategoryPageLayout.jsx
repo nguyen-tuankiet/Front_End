@@ -92,7 +92,7 @@ export function CategoryPageLayout({
 
                 {/* Sidebar */}
                 {sidebar && (
-                    <aside className="w-full lg:w-80 shrink-0">
+                    <aside className="w-full lg:w-[300px] shrink-0">
                         {sidebar}
                     </aside>
                 )}

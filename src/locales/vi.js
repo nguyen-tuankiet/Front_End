@@ -204,6 +204,12 @@ const vi = {
     showing: "Hiển thị",
     of: "/",
     articles: "bài viết",
+    popularTags: "Chủ đề phổ biến",
+    statistics: "Thống kê",
+    totalArticles: "Bài viết",
+    subCategories: "Chuyên mục con",
+    updatedRecently: "Cập nhật liên tục",
+    adPlaceholder: "Quảng cáo",
   },
 
   // Advertising

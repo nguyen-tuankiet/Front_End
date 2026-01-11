@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CategoryPageLayout } from '@/layout/CategoryPageLayout';
 import { ArticleList } from '@/components/Category/ArticleList';
-import { CategorySidebar } from '@/components/Category/CategorySidebar';
+import { CategoryPageSidebar } from '@/components/Category/CategoryPageSidebar';
 import { Pagination } from '@/components/ui/pagination';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -15,6 +15,7 @@ export function CategoryPage() {
     const navigate = useNavigate();
     const { language, t } = useLanguage();
     const [articles, setArticles] = useState([]);
+    const [sidebarArticles, setSidebarArticles] = useState([]); // Bài viết cho sidebar
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [subCategories, setSubCategories] = useState([]);
@@ -67,8 +68,13 @@ export function CategoryPage() {
                 let response;
                 if (subcategory) {
                     response = await apiService.getSubcategoryArticles(category, subcategory, language);
+                    // Khi đang xem subcategory, fetch thêm bài viết của category cha cho sidebar
+                    const categoryResponse = await apiService.getCategoryArticles(category, language);
+                    setSidebarArticles(categoryResponse.articles || []);
                 } else {
                     response = await apiService.getCategoryArticles(category, language);
+                    // Khi xem category chính, sidebar dùng luôn danh sách này
+                    setSidebarArticles(response.articles || []);
                 }
 
                 setArticles(response.articles || []);
@@ -77,6 +83,7 @@ export function CategoryPage() {
                 console.error('Lỗi fetch articles:', err);
                 setError(err.message);
                 setArticles([]);
+                setSidebarArticles([]);
             } finally {
                 setLoading(false);
             }
@@ -131,11 +138,11 @@ export function CategoryPage() {
             categorySlug={category}
             subCategories={subCategories}
             sidebar={
-                <CategorySidebar
-                    articles={articles}
-                    title={t('category.latestSidebar')}
+                <CategoryPageSidebar
+                    articles={sidebarArticles}
+                    categoryName={categoryName}
+                    subCategories={subCategories}
                     onArticleClick={handleArticleClick}
-                    limit={5}
                 />
             }
             pagination={

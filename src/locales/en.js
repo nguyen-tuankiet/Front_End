@@ -204,6 +204,12 @@ const en = {
     showing: "Showing",
     of: "/",
     articles: "articles",
+    popularTags: "Popular Topics",
+    statistics: "Statistics",
+    totalArticles: "Articles",
+    subCategories: "Subcategories",
+    updatedRecently: "Updated continuously",
+    adPlaceholder: "Advertisement",
   },
 
   // Advertising
