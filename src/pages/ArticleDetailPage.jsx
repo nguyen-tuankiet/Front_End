@@ -79,12 +79,12 @@ export function ArticleDetailPage() {
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
     const [relatedArticles, setRelatedArticles] = useState([]);
+    const [mostReadArticles, setMostReadArticles] = useState([]);
     const [categoryData, setCategoryData] = useState(null);
     const [subcategoryName, setSubcategoryName] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Hỗ trợ cả 2 cách: query string (?url=...) và URL params (/bai-viet/:articleId)
     const articleUrl = searchParams.get('url') || (articleId ? decodeURIComponent(articleId) : null);
 
     useEffect(() => {
@@ -106,11 +106,10 @@ export function ArticleDetailPage() {
 
             const response = await apiService.getArticleDetail(url, language);
 
-            // Convert API response sang format tương thích với ArticleDetailView
+            // Convert API response sang format ArticleDetailView
             const formattedArticle = {
                 // API format
                 ...response,
-                // Map sang format cũ để tương thích với ArticleDetailView
                 'Tiêu đề': decodeHTMLEntities(response.title),
                 'Tóm tắt': decodeHTMLEntities(response.description),
                 'Nội dung': response.content,
@@ -168,6 +167,14 @@ export function ArticleDetailPage() {
                 } catch (relatedErr) {
                     console.error('Lỗi fetch related articles:', relatedErr);
                 }
+            }
+
+            // Fetch tin đọc nhiều từ home page data
+            try {
+                const homeData = await apiService.getHomePageData(language);
+                setMostReadArticles(homeData?.mostReadArticles || []);
+            } catch (mostReadErr) {
+                console.error('Lỗi fetch most read articles:', mostReadErr);
             }
 
         } catch (err) {
@@ -254,6 +261,7 @@ export function ArticleDetailPage() {
                 subcategoryName={subcategoryName}
                 categoryData={categoryData}
                 relatedArticles={relatedArticles}
+                mostReadArticles={mostReadArticles}
                 comments={comments}
                 onCommentSubmit={handleCommentSubmit}
                 onRelatedArticleClick={handleRelatedArticleClick}

@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
+import { TrendingSidebar } from "@/components/ui/TrendingSidebar";
+import { ExchangeRateSummary } from "@/components/ui/ExchangeRateSummary";
+import { RecentlyViewedSidebar } from "@/components/ui/RecentlyViewedSidebar";
 import LazyImage from "./LazyImage";
 import { useFontSize, FONT_SIZES } from "@/contexts/FontSizeContext";
 import { addViewedArticle } from "@/lib/viewedArticles";
@@ -31,6 +34,7 @@ export function ArticleDetailView({
     subcategoryName,
     categoryData = null,
     relatedArticles = [],
+    mostReadArticles = [],
     comments = [],
     onCommentSubmit,
     onRelatedArticleClick,
@@ -468,17 +472,36 @@ export function ArticleDetailView({
                     </div>
                 </article>
 
-                {/* Danh sách bài viết liên quan */}
-                {relatedArticles.length > 0 && (
-                    <aside className="w-full lg:w-80 shrink-0">
-                        <RelatedArticles 
-                            articles={relatedArticles}
-                            title="Bài viết liên quan"
-                            onArticleClick={onRelatedArticleClick}
-                        />
-                    </aside>
-                )}
+                {/* Sidebar bên phải */}
+                <aside className="w-full lg:w-80 shrink-0">
+                    <div className="sticky top-4 space-y-6">
+                        {/* Tỷ giá ngoại tệ */}
+                        <ExchangeRateSummary />
+
+                        {/* Tin đọc nhiều */}
+                        {mostReadArticles.length > 0 && (
+                            <TrendingSidebar 
+                                title="Tin đọc nhiều"
+                                articles={mostReadArticles}
+                            />
+                        )}
+
+                        {/* Tin đã xem gần đây */}
+                        <RecentlyViewedSidebar />
+                    </div>
+                </aside>
             </div>
+
+            {/* Danh sách bài viết cùng chuyên mục */}
+            {relatedArticles.length > 0 && (
+                <div className="mt-8">
+                    <RelatedArticles 
+                        articles={relatedArticles}
+                        title={`Tin cùng chuyên mục: ${categoryData?.name || article.category || 'Tin tức'}`}
+                        onArticleClick={onRelatedArticleClick}
+                    />
+                </div>
+            )}
         </div>
     );
 }
