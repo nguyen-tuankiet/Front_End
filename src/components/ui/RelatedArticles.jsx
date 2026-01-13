@@ -1,6 +1,6 @@
 import { cn, decodeHtmlEntities } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { Clock } from "lucide-react";
+import { Clock, ChevronRight } from "lucide-react";
 import LazyImage from "./LazyImage";
 import { handleArticleClick } from "@/lib/articleNavigation";
 
@@ -9,12 +9,14 @@ import { handleArticleClick } from "@/lib/articleNavigation";
  * @param {Object} props
  * @param {Array} props.articles - Danh sách bài viết liên quan
  * @param {string} props.title - Tiêu đề section
+ * @param {string} props.categorySlug - Slug của category
  * @param {Function} props.onArticleClick - Callback khi click vào bài viết
  * @param {string} props.className - CSS class bổ sung
  */
 export function RelatedArticles({ 
     articles = [], 
     title = "Bài viết liên quan",
+    categorySlug,
     onArticleClick,
     className 
 }) {
@@ -24,9 +26,20 @@ export function RelatedArticles({
 
     return (
         <div className={cn("bg-card rounded-xl shadow-sm p-6", className)}>
-            <h2 className="text-xl font-bold text-foreground mb-6">
-                {title}
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-foreground">
+                    {title}
+                </h2>
+                {categorySlug && (
+                    <Link
+                        to={`/danh-muc/${categorySlug}`}
+                        className="flex items-center gap-1 text-primary hover:text-primary/80 font-medium text-sm transition-colors"
+                    >
+                        Xem thêm
+                        <ChevronRight className="w-4 h-4" />
+                    </Link>
+                )}
+            </div>
 
             <div className="space-y-0">
                 {articles.map((article, index) => (

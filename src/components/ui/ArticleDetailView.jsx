@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
 import { TrendingSidebar } from "@/components/ui/TrendingSidebar";
-import { ExchangeRateSummary } from "@/components/ui/ExchangeRateSummary";
 import { RecentlyViewedSidebar } from "@/components/ui/RecentlyViewedSidebar";
 import LazyImage from "./LazyImage";
 import { useFontSize, FONT_SIZES } from "@/contexts/FontSizeContext";
@@ -475,9 +474,6 @@ export function ArticleDetailView({
                 {/* Sidebar bên phải */}
                 <aside className="w-full lg:w-80 shrink-0">
                     <div className="sticky top-4 space-y-6">
-                        {/* Tỷ giá ngoại tệ */}
-                        <ExchangeRateSummary />
-
                         {/* Tin đọc nhiều */}
                         {mostReadArticles.length > 0 && (
                             <TrendingSidebar 
@@ -488,6 +484,18 @@ export function ArticleDetailView({
 
                         {/* Tin đã xem gần đây */}
                         <RecentlyViewedSidebar />
+
+                        {/* Quảng cáo */}
+                        <div className="bg-card rounded-xl overflow-hidden shadow-sm">
+                            <iframe 
+                                src="https://cdnstoremedia.com/adt/banners/nam2015/4043/min_html5/2025-11-03/huyenntt/300x600alpha11/300x600alpha11/300x600alpha11.html?url=%2F%2Flg1.logging.admicro.vn%2Fadn%3Fdmn%3Dhttps%253A%252F%252Fthanhnien.vn%252F%26rid%3D0118gjpvnla700g%26sspb%3D7350%26sspr%3D7350%26lsn%3D1768128946081%26ce%3D1%26lc%3D5%26cr%3D%26ui%3D%26dg%3D6a9716013b04dba4d4d4dd83ab38dcb9%26uuid%3D%26profileID%3D%26bi%3D0%26cmpg%3D98719%26items%3D447977%26zid%3D522701%26pr%3D44857131313%26cid%3D-1%26tp%3D11%26tpn%3D4%26alg%3D1102%26dg%3D6a9716013b04dba4d4d4dd83ab38dcb9%26pgl%3D1%26xtr%3DeyJhc2lkIjoxNDU3OSwicHJvZmlsZWlkIjoiIn0%253D%26sspz%3D2028505%26adc_cpa%3D1%26cov%3D1%26re%3Dhttps%253A%252F%252Fconcung.com%252F1423-thuong-hieu-alphagen.html%253Futm_source%253DAdmicro_AdX%2526utm_campaign%253DAdX%2526utm_content%253Dthanhnien.vn&temp=0&loc=5&weath=&autoplay=0"
+                                title="Quảng cáo Alphagen"
+                                className="w-full border-0 block"
+                                style={{ height: '600px', maxWidth: '100%' }}
+                                scrolling="no"
+                                allowFullScreen
+                            />
+                        </div>
                     </div>
                 </aside>
             </div>
@@ -498,6 +506,7 @@ export function ArticleDetailView({
                     <RelatedArticles 
                         articles={relatedArticles}
                         title={`Tin cùng chuyên mục: ${categoryData?.name || article.category || 'Tin tức'}`}
+                        categorySlug={categorySlug}
                         onArticleClick={onRelatedArticleClick}
                     />
                 </div>
