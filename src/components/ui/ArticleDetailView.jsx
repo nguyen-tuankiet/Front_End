@@ -144,8 +144,8 @@ export function ArticleDetailView({
 
     const listImages = article.images || [];
     const publishTime = article.pubDate || "1 phút trước";
-    const viewCount = article.viewCount || Math.floor(Math.random() * 10000) + 1000;
-    const shareCount = article.shareCount || Math.floor(Math.random() * 500) + 50;
+    const viewCount = article.viewCount || 700;
+    const shareCount = article.shareCount || 300;
     const author = article.author || "Trang Châu";
 
     return (
