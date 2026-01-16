@@ -6,6 +6,7 @@ import { CategoryPageSidebar } from '@/components/Category/CategoryPageSidebar';
 import { Pagination } from '@/components/ui/pagination';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCategories } from '@/contexts/CategoryContext';
 import { handleArticleClick as saveViewedArticle } from '@/lib/articleNavigation';
 
 const ARTICLES_PER_PAGE = 10;
@@ -14,6 +15,7 @@ export function CategoryPage() {
     const { category, subcategory } = useParams();
     const navigate = useNavigate();
     const { language, t } = useLanguage();
+    const { getCategoryBySlug } = useCategories();
     const [articles, setArticles] = useState([]);
     const [sidebarArticles, setSidebarArticles] = useState([]); // Bài viết cho sidebar
     const [loading, setLoading] = useState(true);
@@ -30,9 +32,8 @@ export function CategoryPage() {
             setError(null);
 
             try {
-                // Fetch category để lấy thông tin category và subcategory
-                const categories = await apiService.getCategories(language);
-                const currentCategory = categories.find(cat => cat.slug === category);
+                // Lấy thông tin category từ context (không cần gọi API)
+                const currentCategory = getCategoryBySlug(category);
                 
                 if (currentCategory) {
                     // Lấy tên category cha
@@ -90,7 +91,7 @@ export function CategoryPage() {
         };
 
         fetchArticles();
-    }, [category, subcategory, language]);
+    }, [category, subcategory, language, getCategoryBySlug]);
 
     // Tính toán phân trang
     const totalPages = useMemo(() => {

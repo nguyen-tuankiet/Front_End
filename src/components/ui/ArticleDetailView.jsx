@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CommentsSection } from "@/components/ui/CommentsSection";
 import { RelatedArticles } from "@/components/ui/RelatedArticles";
-import { TrendingSidebar } from "@/components/ui/TrendingSidebar";
 import { RecentlyViewedSidebar } from "@/components/ui/RecentlyViewedSidebar";
 import LazyImage from "./LazyImage";
 import { useFontSize, FONT_SIZES } from "@/contexts/FontSizeContext";
@@ -23,6 +22,7 @@ import { saveArticle, removeSavedArticle, isArticleSaved } from "@/lib/savedArti
  * @param {Array} props.relatedArticles - Danh sách bài viết liên quan
  * @param {Array} props.comments - Danh sách comments
  * @param {Function} props.onCommentSubmit - Callback khi submit comment
+ * @param {Function} props.onRelatedArticleClick - Callback khi click bài viết liên quan
  * @param {string} props.className - CSS class bổ sung
  */
 export function ArticleDetailView({
@@ -33,7 +33,6 @@ export function ArticleDetailView({
     subcategoryName,
     categoryData = null,
     relatedArticles = [],
-    mostReadArticles = [],
     comments = [],
     onCommentSubmit,
     onRelatedArticleClick,
@@ -474,14 +473,6 @@ export function ArticleDetailView({
                 {/* Sidebar bên phải */}
                 <aside className="w-full lg:w-80 shrink-0">
                     <div className="sticky top-4 space-y-6">
-                        {/* Tin đọc nhiều */}
-                        {mostReadArticles.length > 0 && (
-                            <TrendingSidebar 
-                                title="Tin đọc nhiều"
-                                articles={mostReadArticles}
-                            />
-                        )}
-
                         {/* Tin đã xem gần đây */}
                         <RecentlyViewedSidebar />
 
