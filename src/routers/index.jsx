@@ -19,6 +19,7 @@ const SearchPage = lazy(() => import("../pages/SearchPage"));
 const AdvertisingPage = lazy(() => import("../pages/AdvertisingPage"));
 const OrderPage = lazy(() => import("../pages/OrderPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
+const PodcastPage = lazy(() => import("../pages/PodcastPage"));
 
 // Lazy load auth pages
 const LoginPage = lazy(() => import("../components/LoginAndRegister/LoginPage"));
@@ -54,6 +55,7 @@ const routes = createBrowserRouter([
             { path: "quang-cao", element: <LazyComponent><AdvertisingPage /></LazyComponent> },
             { path: "dat-bao", element: <LazyComponent><OrderPage /></LazyComponent> },
             { path: "lien-he", element: <LazyComponent><ContactPage /></LazyComponent> },
+            { path: "podcast", element: <LazyComponent><PodcastPage /></LazyComponent> },
             { path: "ho-so", element:  <LazyComponent><ProfilePage /></LazyComponent> },
             { path: "tien-ich/thoi-tiet", element: <LazyComponent><Weather /></LazyComponent> },
             { path: "tien-ich/ty-gia", element: <LazyComponent><ExchangeRate /></LazyComponent> },
