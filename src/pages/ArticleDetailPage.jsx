@@ -81,6 +81,8 @@ export function ArticleDetailPage() {
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
     const [relatedArticles, setRelatedArticles] = useState([]);
+    const [relatedNews, setRelatedNews] = useState([]);
+    const [mostReadArticles, setMostReadArticles] = useState([]);
     const [categoryData, setCategoryData] = useState(null);
     const [subcategoryName, setSubcategoryName] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -170,6 +172,11 @@ export function ArticleDetailPage() {
             setArticle(formattedArticle);
             document.title = formattedArticle['Tiêu đề'] || 'Chi tiết bài viết';
 
+            // Lấy tin liên quan từ API
+            if (response.relatedNews && Array.isArray(response.relatedNews)) {
+                setRelatedNews(response.relatedNews);
+            }
+
             // Load mock comments
             setComments(getCommentsByArticleId(url));
 
@@ -257,6 +264,8 @@ export function ArticleDetailPage() {
                 subcategoryName={subcategoryName}
                 categoryData={categoryData}
                 relatedArticles={relatedArticles}
+                relatedNews={relatedNews}
+                mostReadArticles={mostReadArticles}
                 comments={comments}
                 onCommentSubmit={handleCommentSubmit}
                 onRelatedArticleClick={handleRelatedArticleClick}

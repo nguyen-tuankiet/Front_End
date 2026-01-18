@@ -3,7 +3,9 @@ import { ArrowLeft, Bookmark, BookmarkCheck, MessageSquare, Volume2, Printer, Fa
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CommentsSection } from "@/components/ui/CommentsSection";
-import { RelatedArticles } from "@/components/ui/RelatedArticles";
+import { RelatedNews } from "@/components/ui/RelatedNews";
+import { TrendingSidebar } from "@/components/ui/TrendingSidebar";
+import { CategoryRelatedSidebar } from "@/components/ui/CategoryRelatedSidebar";
 import { RecentlyViewedSidebar } from "@/components/ui/RecentlyViewedSidebar";
 import LazyImage from "./LazyImage";
 import { useFontSize, FONT_SIZES } from "@/contexts/FontSizeContext";
@@ -19,7 +21,9 @@ import { saveArticle, removeSavedArticle, isArticleSaved } from "@/lib/savedArti
  * @param {string} props.subcategorySlug - Slug của subcategory
  * @param {string} props.subcategoryName - Tên của subcategory
  * @param {Object} props.categoryData - Dữ liệu category từ API
- * @param {Array} props.relatedArticles - Danh sách bài viết liên quan
+ * @param {Array} props.relatedArticles - Danh sách bài viết cùng chuyên mục
+ * @param {Array} props.relatedNews - Danh sách tin liên quan
+ * @param {Array} props.mostReadArticles - Danh sách tin đọc nhiều
  * @param {Array} props.comments - Danh sách comments
  * @param {Function} props.onCommentSubmit - Callback khi submit comment
  * @param {Function} props.onRelatedArticleClick - Callback khi click bài viết liên quan
@@ -33,6 +37,8 @@ export function ArticleDetailView({
     subcategoryName,
     categoryData = null,
     relatedArticles = [],
+    relatedNews = [],
+    mostReadArticles = [],
     comments = [],
     onCommentSubmit,
     onRelatedArticleClick,
@@ -473,6 +479,24 @@ export function ArticleDetailView({
                 {/* Sidebar bên phải */}
                 <aside className="w-full lg:w-80 shrink-0">
                     <div className="sticky top-4 space-y-6">
+                        {/* Tin cùng chuyên mục */}
+                        {relatedArticles.length > 0 && (
+                            <CategoryRelatedSidebar
+                                articles={relatedArticles}
+                                title={`Tin cùng chuyên mục: ${categoryData?.name || article.category || 'Tin tức'}`}
+                                categorySlug={categorySlug}
+                                onArticleClick={onRelatedArticleClick}
+                            />
+                        )}
+
+                        {/* Tin đọc nhiều */}
+                        {mostReadArticles.length > 0 && (
+                            <TrendingSidebar 
+                                title="Tin đọc nhiều"
+                                articles={mostReadArticles}
+                            />
+                        )}
+
                         {/* Tin đã xem gần đây */}
                         <RecentlyViewedSidebar />
 
@@ -491,15 +515,17 @@ export function ArticleDetailView({
                 </aside>
             </div>
 
-            {/* Danh sách bài viết cùng chuyên mục */}
-            {relatedArticles.length > 0 && (
-                <div className="mt-8">
-                    <RelatedArticles 
-                        articles={relatedArticles}
-                        title={`Tin cùng chuyên mục: ${categoryData?.name || article.category || 'Tin tức'}`}
-                        categorySlug={categorySlug}
-                        onArticleClick={onRelatedArticleClick}
-                    />
+            {/* Danh sách tin liên quan */}
+            {relatedNews.length > 0 && (
+                <div className="flex flex-col lg:flex-row gap-8 mt-8">
+                    <div className="flex-1 min-w-0">
+                        <RelatedNews 
+                            articles={relatedNews}
+                            title="Tin liên quan"
+                            onArticleClick={onRelatedArticleClick}
+                        />
+                    </div>
+                    <div className="hidden lg:block w-80 shrink-0"></div>
                 </div>
             )}
         </div>
