@@ -78,9 +78,10 @@ const FootballSchedule = () => {
     };
 
     return (
-        <div>
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 space-y-4 mx-auto my-5 w-3/4">
             <ExtensionHeader/>
-            <div className={cn("w-full flex justify-center py-8")}>
+            <div className={cn("w-full flex justify-center ")}>
+            {/*<div className={cn(" ")}>*/}
                 <div className="w-3/4 bg-white font-sans text-gray-800 p-5 rounded-lg">
 
                     <div className="mb-6">
