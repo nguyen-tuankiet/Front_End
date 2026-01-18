@@ -14,7 +14,7 @@ export function ExtensionHeader() {
                 <a className={cn("hover:text-primary")} href="/tien-ich/gia-vang">{t("extensions.header.goldPrice")}</a>
                 <a className={cn("hover:text-primary")} href="/tien-ich/kqsx">{t("extensions.header.lottery")}</a>
                 <a className={cn("hover:text-primary")} href="/tien-ich/chung-khoan">{t("extensions.header.stock")}</a>
-                <a className={cn("hover:text-primary")} href="#">{t("extensions.header.tvSchedule")}</a>
+                <a className={cn("hover:text-primary")} href="/tien-ich/bong-da">{t("extensions.header.footballSchedule")}</a>
                 <a className={cn("hover:text-primary")} href="#">{t("extensions.header.movieSchedule")}</a>
                 <a className={cn("hover:text-primary")} href="#">{t("extensions.header.gasPrice")}</a>
                 <a className={cn("hover:text-primary")} href="#">{t("extensions.header.aqi")}</a>

@@ -460,7 +460,7 @@ const vi = {
       goldPrice: "Giá vàng",
       lottery: "Kết quả sổ số",
       stock: "Chứng Khoán",
-      tvSchedule: "Lịch truyền hình",
+      footballSchedule: "Lịch bóng đá",
       movieSchedule: "Lịch chiếu phim",
       gasPrice: "Giá xăng dầu",
       aqi: "AQI",

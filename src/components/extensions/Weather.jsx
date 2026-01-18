@@ -138,8 +138,7 @@ export function Weather() {
         : hours?.slice(0, 6);
 
     return (
-
-        <div>
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 space-y-4 mx-auto my-5 w-3/4">
             <ExtensionHeader/>
             <div className={cn("container mx-auto my-5 bg-white rounded-3xl overflow-hidden flex flex-row", {})}>
 
