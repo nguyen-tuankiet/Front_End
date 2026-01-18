@@ -6,6 +6,7 @@ import { NewsletterSection } from '@/components/ui/NewsletterSection';
 import { apiService } from '@/services/api';
 import { decodeHtmlEntities } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCategories } from '@/contexts/CategoryContext';
 
 /**
  * Search page component
@@ -13,6 +14,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export function SearchPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const { language } = useLanguage();
+    const { categories } = useCategories();
     
     const query = searchParams.get('q') || '';
     const category = searchParams.get('category') || 'all';
@@ -30,9 +32,11 @@ export function SearchPage() {
         
         // Load toàn bộ bài báo
         const loadAllArticles = async () => {
+            // Đợi categories được load từ context
+            if (!categories || categories.length === 0) return;
+            
             try {
                 setLoading(true);
-                const categories = await apiService.getCategories(language);
 
                 const filteredCategories = categories.filter(cat => cat.slug !== "home");
 
@@ -70,7 +74,7 @@ export function SearchPage() {
         };
 
         loadAllArticles();
-    }, [language]);
+    }, [language, categories]);
 
     useEffect(() => {
         if (query && searchParams.get('page') !== '1') {

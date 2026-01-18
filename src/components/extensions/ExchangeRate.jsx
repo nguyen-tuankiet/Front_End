@@ -37,7 +37,8 @@ export function ExchangeRate() {
 
     const [rate, setRate] = useState(data);
 
-    return ( <div>
+    return (
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 space-y-4 mx-auto my-5 w-3/4">
             <ExtensionHeader/>
 
             <div className={cn("container mx-auto my-5 ")}>

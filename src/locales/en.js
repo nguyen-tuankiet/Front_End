@@ -460,7 +460,7 @@ const en = {
       goldPrice: "Gold Price",
       lottery: "Lottery Results",
       stock: "Stock Market",
-      tvSchedule: "TV Schedule",
+        footballSchedule: "Football Schedule",
       movieSchedule: "Movie Schedule",
       gasPrice: "Gas Price",
       aqi: "AQI",

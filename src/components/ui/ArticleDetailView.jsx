@@ -26,6 +26,7 @@ import { saveArticle, removeSavedArticle, isArticleSaved } from "@/lib/savedArti
  * @param {Array} props.mostReadArticles - Danh sách tin đọc nhiều
  * @param {Array} props.comments - Danh sách comments
  * @param {Function} props.onCommentSubmit - Callback khi submit comment
+ * @param {Function} props.onRelatedArticleClick - Callback khi click bài viết liên quan
  * @param {string} props.className - CSS class bổ sung
  */
 export function ArticleDetailView({

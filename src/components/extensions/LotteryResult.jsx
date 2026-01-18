@@ -94,7 +94,7 @@ export function LotteryResult() {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 space-y-4 mx-auto my-5 w-3/4">
             <ExtensionHeader />
 
             {/* Control & Header */}

@@ -4,6 +4,7 @@ import { ArticleDetailView } from '@/components/ui/ArticleDetailView';
 import { getCommentsByArticleId, createComment } from '@/data/mockComments';
 import { apiService } from '@/services/api';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCategories } from '@/contexts/CategoryContext';
 
 function decodeHTMLEntities(text) {
     if (!text) return '';
@@ -76,6 +77,7 @@ export function ArticleDetailPage() {
     const { articleId } = useParams();
     const navigate = useNavigate();
     const { language } = useLanguage();
+    const { categories } = useCategories();
     const [article, setArticle] = useState(null);
     const [comments, setComments] = useState([]);
     const [relatedArticles, setRelatedArticles] = useState([]);
@@ -88,6 +90,7 @@ export function ArticleDetailPage() {
 
     const articleUrl = searchParams.get('url') || (articleId ? decodeURIComponent(articleId) : null);
 
+    // Fetch article khi có URL
     useEffect(() => {
         document.title = 'Loading...';
 
@@ -98,6 +101,47 @@ export function ArticleDetailPage() {
             setError('Không tìm thấy bài viết. Vui lòng cung cấp URL bài viết.');
         }
     }, [articleUrl, language]);
+
+    // Fetch related articles khi categories đã sẵn sàng
+    useEffect(() => {
+        const fetchRelatedArticles = async () => {
+            if (!article?.category || !categories || categories.length === 0) return;
+
+            try {
+                const { category: currentCategory, subcategory: foundSubcategory } = 
+                    findCategoryAndSubcategory(article.category, categories);
+                
+                if (currentCategory) {
+                    setCategoryData({
+                        name: currentCategory.name,
+                        slug: currentCategory.slug,
+                        subCategories: currentCategory.subCategories || []
+                    });
+                    
+                    if (foundSubcategory) {
+                        setSubcategoryName(foundSubcategory.name);
+                    } else if (article.subCategory) {
+                        setSubcategoryName(article.subCategory);
+                    }
+                    
+                    // Fetch bài báo liên quan từ category chính
+                    const categoryResponse = await apiService.getCategoryArticles(currentCategory.slug, language);
+                    const allArticles = categoryResponse.articles || [];
+                    
+                    // Lọc bỏ bài viết hiện tại và lấy 5 bài
+                    const filtered = allArticles
+                        .filter(a => a.link !== article.url && a.url !== articleUrl)
+                        .slice(0, 5);
+                    
+                    setRelatedArticles(filtered);
+                }
+            } catch (err) {
+                console.error('Lỗi fetch related articles:', err);
+            }
+        };
+
+        fetchRelatedArticles();
+    }, [article, categories, language, articleUrl]);
 
     // Fetch article từ API
     const fetchArticleFromAPI = async (url) => {
@@ -135,53 +179,6 @@ export function ArticleDetailPage() {
 
             // Load mock comments
             setComments(getCommentsByArticleId(url));
-
-            // Fetch category và bài báo từ cùng category
-            if (response.category) {
-                try {
-                    const categories = await apiService.getCategories(language);
-                    
-                    // Tìm category và subcategory từ response.category
-                    const { category: currentCategory, subcategory: foundSubcategory } = 
-                        findCategoryAndSubcategory(response.category, categories);
-                    
-                    if (currentCategory) {
-                        setCategoryData({
-                            name: currentCategory.name,
-                            slug: currentCategory.slug,
-                            subCategories: currentCategory.subCategories || []
-                        });
-                        
-                        // Lưu subcategory name
-                        if (foundSubcategory) {
-                            setSubcategoryName(foundSubcategory.name);
-                        } else if (response.subCategory) {
-                            setSubcategoryName(response.subCategory);
-                        }
-                        
-                        // Fetch bài báo liên quan từ category chính
-                        const categoryResponse = await apiService.getCategoryArticles(currentCategory.slug, language);
-                        const allArticles = categoryResponse.articles || [];
-                        
-                        // Lọc bỏ bài viết hiện tại và lấy 5 bài
-                        const filtered = allArticles
-                            .filter(a => a.link !== response.url && a.url !== url)
-                            .slice(0, 5);
-                        
-                        setRelatedArticles(filtered);
-                    }
-                } catch (relatedErr) {
-                    console.error('Lỗi fetch related articles:', relatedErr);
-                }
-            }
-
-            // Fetch tin đọc nhiều từ home page data
-            try {
-                const homeData = await apiService.getHomePageData(language);
-                setMostReadArticles(homeData?.mostReadArticles || []);
-            } catch (mostReadErr) {
-                console.error('Lỗi fetch most read articles:', mostReadErr);
-            }
 
         } catch (err) {
             console.error('Lỗi fetch article từ API:', err);

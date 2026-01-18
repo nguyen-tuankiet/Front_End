@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Search, ChevronDown, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { apiService } from "@/services/api";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCategories } from "@/contexts/CategoryContext";
 
 /**
  * Search và Filter bar component
@@ -21,26 +21,15 @@ export function SearchFilterBar({
     className
 }) {
     const { language } = useLanguage();
+    const { categories: allCategories } = useCategories();
     const [query, setQuery] = useState(initialQuery);
     const [category, setCategory] = useState(initialCategory);
     const [timeRange, setTimeRange] = useState(initialTimeRange);
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [isTimeOpen, setIsTimeOpen] = useState(false);
-    const [categories, setCategories] = useState([]);
 
-    // Load categories
-    useEffect(() => {
-        const loadCategories = async () => {
-            try {
-                const data = await apiService.getCategories(language);
-                const filtered = (data || []).filter(cat => cat.slug !== "home");
-                setCategories(filtered);
-            } catch (error) {
-                console.error('Lỗi load categories:', error);
-            }
-        };
-        loadCategories();
-    }, [language]);
+    // Lấy categories từ context (filter bỏ home)
+    const categories = (allCategories || []).filter(cat => cat.slug !== "home");
 
     const categoryOptions = [
         { value: 'all', label: 'Tất cả' },

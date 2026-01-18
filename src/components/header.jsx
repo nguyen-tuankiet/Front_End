@@ -3,11 +3,11 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Search, Menu, X, Sun, Moon, Bell, User, Home, ChevronDown, Bookmark, Headphones, Megaphone, Newspaper, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { apiService } from "@/services/api";
 import {useAuth} from "@/components/Context/AuthContext.jsx";
 import { useTheme } from "@/components/ThemeToggle.jsx";
 import { useLanguage } from "@/contexts/LanguageContext.jsx";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher.jsx";
+import { useCategories } from "@/contexts/CategoryContext.jsx";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,8 +16,6 @@ export function Header() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
-  const [categoriesWithSubs, setCategoriesWithSubs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -31,6 +29,19 @@ export function Header() {
   const location = useLocation();
   const context = useAuth();
   const { t, language } = useLanguage();
+  const { categories, loading: isLoading } = useCategories();
+
+  // Transform categories to match component format
+  const categoriesWithSubs = categories.map(cat => ({
+    name: cat.name,
+    slug: cat.slug,
+    href: cat.slug === "home" ? "/" : `/danh-muc/${cat.slug}`,
+    subs: cat.subCategories ? cat.subCategories.map(sub => ({
+      name: sub.name,
+      slug: sub.slug,
+      href: `/danh-muc/${cat.slug}/${sub.slug}`,
+    })) : [],
+  }));
 
   // Format date based on current language
   const formatDate = (date) => {
@@ -58,65 +69,49 @@ export function Header() {
 
   const currentCategorySlug = getCurrentCategorySlug();
 
-  // Fetch categories from API
+  // Scroll detection for collapsing header with hysteresis to prevent flickering
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setIsLoading(true);
-        const data = await apiService.getCategories(language);
-
-        // Transform API data to match component format
-        const transformedCategories = data.map(cat => ({
-          name: cat.name,
-          slug: cat.slug,
-          href: cat.slug === "home" ? "/" : `/danh-muc/${cat.slug}`,
-          subs: cat.subCategories ? cat.subCategories.map(sub => ({
-            name: sub.name,
-            slug: sub.slug,
-            href: `/danh-muc/${cat.slug}/${sub.slug}`,
-          })) : [],
-        }));
-
-        setCategoriesWithSubs(transformedCategories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setCategoriesWithSubs([]);
-      } finally {
-        setIsLoading(false);
+    let ticking = false;
+    let lastScrollY = window.scrollY;
+    const SCROLL_THRESHOLD = 200; // Minimum scroll delta to trigger change
+    const COLLAPSE_POINT = 10; // Scroll position to start collapsing
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollDelta = currentScrollY - lastScrollY;
+          
+          // Chỉ xử lý nếu scroll delta đủ lớn (tránh giật)
+          if (Math.abs(scrollDelta) > SCROLL_THRESHOLD) {
+            // Scroll xuống và đã vượt qua điểm collapse
+            if (scrollDelta > 0 && currentScrollY > COLLAPSE_POINT) {
+              setIsCollapsed(true);
+            } 
+            // Scroll lên và gần top
+            else if (scrollDelta < 0 && currentScrollY < COLLAPSE_POINT) {
+              setIsCollapsed(false);
+            }
+            
+            lastScrollY = currentScrollY;
+          }
+          
+          // Luôn expand khi ở top
+          if (currentScrollY < 5) {
+            setIsCollapsed(false);
+            lastScrollY = currentScrollY;
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    fetchCategories();
-  }, [language]);
-
-  // Scroll detection for collapsing header with debounce
-  useEffect(() => {
-  let ticking = false;
-  let lastScrollY = window.scrollY;
-  
-  const handleScroll = () => {
-    const currentScrollY = window.scrollY;
-    
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        const scrollingDown = currentScrollY > lastScrollY;
-        
-        if (scrollingDown && currentScrollY > 100) {
-          setIsCollapsed(true);
-        } else if (!scrollingDown && currentScrollY < 5) {
-          setIsCollapsed(false);
-        }
-        
-        lastScrollY = currentScrollY;
-        ticking = false;
-      });
-      ticking = true;
-    }
-  };
-
-  window.addEventListener("scroll", handleScroll, { passive: true });
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Click outside to close user menu
   useEffect(() => {
@@ -565,11 +560,11 @@ export function Header() {
         "bg-primary text-white overflow-hidden transition-all duration-300 ease-out",
         isCollapsed ? "h-0 opacity-0" : "h-12 opacity-100"
       )}>
-        <div className="container mx-auto px-4 py-1.5 flex items-center text-sm">
+        <div className="container mx-auto px-4 h-full flex items-center text-sm">
           <span className="bg-red-700 px-2 py-0.5 rounded text-xs font-bold mr-4 shrink-0 uppercase">
             {t('header.hotNews')}
           </span>
-          <div className="overflow-hidden relative flex-1">
+          <div className="overflow-hidden relative flex-1 h-full flex items-center">
             <div className="animate-marquee whitespace-nowrap flex items-center gap-4">
               {t('header.hotNewsItems').map((item, index) => (
                 <>

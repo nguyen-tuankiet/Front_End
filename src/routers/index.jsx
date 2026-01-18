@@ -10,6 +10,7 @@ import {GoldPrice} from "@/components/extensions/GoldPrice.jsx";
 import {LotteryResult} from "@/components/extensions/LotteryResult.jsx";
 import {StockMarket} from "@/components/extensions/StockMarket.jsx";
 import {Calendar} from "@/components/extensions/Calendar.jsx";
+import FootballSchedule from "@/components/extensions/FootballSchedule.jsx";
 
 // Lazy load các pages
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -19,6 +20,7 @@ const SearchPage = lazy(() => import("../pages/SearchPage"));
 const AdvertisingPage = lazy(() => import("../pages/AdvertisingPage"));
 const OrderPage = lazy(() => import("../pages/OrderPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
+const PodcastPage = lazy(() => import("../pages/PodcastPage"));
 
 // Lazy load auth pages
 const LoginPage = lazy(() => import("../components/LoginAndRegister/LoginPage"));
@@ -54,12 +56,14 @@ const routes = createBrowserRouter([
             { path: "quang-cao", element: <LazyComponent><AdvertisingPage /></LazyComponent> },
             { path: "dat-bao", element: <LazyComponent><OrderPage /></LazyComponent> },
             { path: "lien-he", element: <LazyComponent><ContactPage /></LazyComponent> },
+            { path: "podcast", element: <LazyComponent><PodcastPage /></LazyComponent> },
             { path: "ho-so", element:  <LazyComponent><ProfilePage /></LazyComponent> },
             { path: "tien-ich/thoi-tiet", element: <LazyComponent><Weather /></LazyComponent> },
             { path: "tien-ich/ty-gia", element: <LazyComponent><ExchangeRate /></LazyComponent> },
             { path: "tien-ich/gia-vang", element: <LazyComponent><GoldPrice /></LazyComponent> },
             { path: "tien-ich/kqsx", element: <LazyComponent><LotteryResult /></LazyComponent> },
             { path: "tien-ich/chung-khoan", element: <LazyComponent><StockMarket /></LazyComponent> },
+            { path: "tien-ich/bong-da", element: <LazyComponent><FootballSchedule /></LazyComponent> },
             { path: "lich", element: <LazyComponent><Calendar /></LazyComponent> },
         ],
     },
